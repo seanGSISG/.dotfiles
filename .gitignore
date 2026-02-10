@@ -1,4 +1,5 @@
-# Age encryption keys - NEVER commit
+# Secrets - never commit
+.secrets.env
 key.txt
 key.txt.bak
 *.age.key
@@ -6,6 +7,8 @@ key.txt.bak
 # Local chezmoi state
 .chezmoidata.json
 
-# OS artifacts
+# Editor/OS artifacts
 .DS_Store
 Thumbs.db
+*.swp
+*~
