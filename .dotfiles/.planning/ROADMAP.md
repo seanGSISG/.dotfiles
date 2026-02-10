@@ -39,7 +39,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Install chezmoi + age, backup existing dotfiles, initialize repo with age encryption (3 min)
-- [ ] 01-02-PLAN.md — Safety guardrails (gitignore, pre-commit hooks, detect-secrets) and secret extraction
+- [x] 01-02-PLAN.md — Safety guardrails (gitignore, pre-commit hooks, detect-secrets) and secret extraction (3 min)
 - [ ] 01-03-PLAN.md — README, chezmoi.toml.tmpl, remote origin, initial commit and push
 
 ### Phase 2: Package Management & Tool Inventory
