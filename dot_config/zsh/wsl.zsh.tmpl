@@ -1,0 +1,32 @@
+{{- if eq .chezmoi.os "linux" }}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# WSL2-specific integrations
+
+# --- GNOME Keyring + dbus ---
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+  eval "$(dbus-launch --sh-syntax)"
+  dbus-update-activation-environment --all 2>/dev/null
+fi
+
+if [ -z "$GNOME_KEYRING_CONTROL" ]; then
+  eval "$(echo '' | gnome-keyring-daemon --unlock 2>/dev/null)"
+fi
+
+if [ -d "$XDG_RUNTIME_DIR/keyring" ]; then
+  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/keyring/ssh"
+fi
+
+# --- WezTerm OSC 7 ---
+if [[ "$TERM_PROGRAM" == "WezTerm" ]] || command -v wezterm.exe &>/dev/null; then
+  if [ -f /usr/share/wezterm/shell-integration/wezterm.sh ]; then
+    source /usr/share/wezterm/shell-integration/wezterm.sh
+  else
+    __wezterm_osc7() {
+      printf "\033]7;file://%s%s\033\\" "${HOST}" "${PWD}"
+    }
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd __wezterm_osc7
+  fi
+fi
+{{-   end }}
+{{- end }}
