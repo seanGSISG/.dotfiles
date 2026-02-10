@@ -142,9 +142,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | SEC-03 | Phase 1 | Complete |
 | SEC-04 | Phase 1 | Complete |
 | SEC-05 | Phase 1 | Complete |
-| PKG-01 | Phase 2 | Pending |
-| PKG-02 | Phase 2 | Pending |
-| PKG-03 | Phase 2 | Pending |
+| PKG-01 | Phase 2 | Complete |
+| PKG-02 | Phase 2 | Complete |
+| PKG-03 | Phase 2 | Complete |
 | SHELL-01 | Phase 3 | Pending |
 | SHELL-02 | Phase 3 | Pending |
 | SHELL-03 | Phase 3 | Pending |
@@ -193,4 +193,4 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 — Phase 1 requirements marked Complete*
+*Last updated: 2026-02-10 — Phase 2 requirements marked Complete*

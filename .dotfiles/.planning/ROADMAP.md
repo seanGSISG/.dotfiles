@@ -12,8 +12,8 @@ This project transforms a heavily customized WSL2 Ubuntu dev environment into a 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Repository Foundation & Safety** - Establish chezmoi structure and secret management
-- [ ] **Phase 2: Package Management & Tool Inventory** - Generate declarative package lists
+- [x] **Phase 1: Repository Foundation & Safety** - Establish chezmoi structure and secret management
+- [x] **Phase 2: Package Management & Tool Inventory** - Generate declarative package lists
 - [ ] **Phase 3: Shell Configuration** - Migrate zsh/bash configs and aliases
 - [ ] **Phase 4: Tool Configs** - Set up git, tmux, and Starship prompt
 - [ ] **Phase 5: Bootstrap Implementation** - Build idempotent installer script
@@ -57,8 +57,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Auto-discover and curate apt-packages.txt from apt-mark showmanual
-- [ ] 02-02-PLAN.md — Create uv-tools.txt and binary-installs.txt for non-apt tools
+- [x] 02-01-PLAN.md — Auto-discover and curate apt-packages.txt from apt-mark showmanual (1 min)
+- [x] 02-02-PLAN.md — Create uv-tools.txt and binary-installs.txt for non-apt tools (1 min)
 
 ### Phase 3: Shell Configuration
 **Goal**: Migrate zsh as primary shell with antidote plugin management, Starship prompt, and modular alias system; bash becomes minimal fallback.
@@ -154,7 +154,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Repository Foundation & Safety | 3/3 | Complete | 2026-02-10 |
-| 2. Package Management & Tool Inventory | 0/2 | Planned | - |
+| 2. Package Management & Tool Inventory | 2/2 | Complete | 2026-02-10 |
 | 3. Shell Configuration | 0/TBD | Not started | - |
 | 4. Tool Configs | 0/TBD | Not started | - |
 | 5. Bootstrap Implementation | 0/TBD | Not started | - |
@@ -162,4 +162,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-10 - Phase 2 planned (2 plans in 1 wave)*
+*Last updated: 2026-02-10 - Phase 2 complete (2 plans executed in 1 wave)*
