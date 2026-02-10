@@ -1,0 +1,39 @@
+# ~/.zshrc - Modular zsh configuration
+# Managed by chezmoi - edit source at ~/.dotfiles/dot_zshrc.tmpl
+#
+# Load order:
+#   1. exports.zsh   - PATH, env vars, history
+#   2. plugins.zsh   - antidote, completion system
+#   3. tools.zsh     - fnm, fzf, zoxide
+#   4. functions.zsh - custom functions, alias help
+#   5. aliases/      - categorized alias files
+#   6. wsl.zsh       - WSL2-specific (conditional)
+#   7. Starship      - prompt (must be last)
+
+ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
+
+# Source modular config files
+source "$ZDOTDIR/exports.zsh"
+source "$ZDOTDIR/plugins.zsh"
+source "$ZDOTDIR/tools.zsh"
+source "$ZDOTDIR/functions.zsh"
+
+# Source all alias files
+for f in "$ZDOTDIR/aliases"/*.zsh; do
+  [[ -r "$f" ]] && source "$f"
+done
+
+# WSL2-specific integrations (conditional via chezmoi template)
+{{ if eq .chezmoi.os "linux" -}}
+{{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+[[ -f "$ZDOTDIR/wsl.zsh" ]] && source "$ZDOTDIR/wsl.zsh"
+{{   end -}}
+{{ end -}}
+
+# Load secrets from age-encrypted chezmoi-managed file
+[[ -f "$HOME/.secrets.env" ]] && source "$HOME/.secrets.env"
+
+# Starship prompt (must be last - it modifies precmd hooks)
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+fi
