@@ -1,0 +1,11 @@
+# Age encryption keys - NEVER commit
+key.txt
+key.txt.bak
+*.age.key
+
+# Local chezmoi state
+.chezmoidata.json
+
+# OS artifacts
+.DS_Store
+Thumbs.db

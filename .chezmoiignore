@@ -1,0 +1,7 @@
+README.md
+LICENSE
+.pre-commit-config.yaml
+.secrets.baseline
+.secrets.env.example
+.planning/
+.github/
