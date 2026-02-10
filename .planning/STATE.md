@@ -6,23 +6,23 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** One command (`bootstrap.sh`) sets up a fresh WSL2 Ubuntu machine with the complete dev environment — zsh with Starship prompt, all tools installed, all configs managed by chezmoi, ready to code.
 
-**Current focus:** Phase 2.1 - Repository Consolidation (INSERTED)
+**Current focus:** Phase 3 - Shell Configuration
 
 ## Current Position
 
-Phase: 2.1 of 6 (Repository Consolidation)
-Plan: 2 of 2 complete
-Status: Phase complete
-Last activity: 2026-02-10 — Completed 02.1-02-PLAN.md (Repository Consolidation Cleanup)
+Phase: 3 of 6 (Shell Configuration)
+Plan: 1 of 4 complete in current phase
+Status: In progress
+Last activity: 2026-02-10 — Completed 03-01-PLAN.md (Zsh Foundation)
 
-Progress: [███████████] 100% overall (7/7 plans complete across Phases 1-2.1)
+Progress: [████████████░░░░] 50% overall (8/16 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 2.1 min
-- Total execution time: 0.25 hours
+- Total plans completed: 8
+- Average duration: 2.0 min
+- Total execution time: 0.27 hours
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [███████████] 100% overall (7/7 plans complete a
 | 1. Repository Foundation & Safety | 3 | 10 min | 3.3 min |
 | 2. Package Management & Tool Inventory | 2 | 2 min | 1.0 min |
 | 2.1. Repository Consolidation | 2 | 4 min | 2.0 min |
+| 3. Shell Configuration | 1 | 1 min | 1.0 min |
 
 **Recent Trend:**
-- Last 5 plans: [02-01: 1min, 02-02: 1min, 02.1-01: 2min, 02.1-02: 2min]
-- Trend: Strong velocity, repository consolidation complete
+- Last 5 plans: [02-02: 1min, 02.1-01: 2min, 02.1-02: 2min, 03-01: 1min]
+- Trend: Excellent velocity, Phase 3 started
 
 *Updated after each plan completion*
 
@@ -74,6 +75,10 @@ Recent decisions affecting current work:
 - Package manifests stored in packages/ subdirectory for clear organization (02.1-02)
 - Force-pushed unified history to GitHub to establish single source of truth (02.1-02)
 - Cleaned up all stale repos and artifacts (~/git, ~/.planning, ~/.local/share/chezmoi, ~/key.txt) (02.1-02)
+- Auto-install antidote if missing for graceful fresh machine setup (03-01)
+- Day-based .zcompdump caching to optimize completion init time (03-01)
+- Single authoritative PATH in exports.zsh (no duplication across files) (03-01)
+- 100k history entries with comprehensive deduplication (8 setopts) (03-01)
 
 ### Pending Todos
 
@@ -89,7 +94,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-10T20:15:42Z
-Stopped at: Completed 02.1-02-PLAN.md (Repository Consolidation Cleanup)
+Last session: 2026-02-10T22:48:35Z
+Stopped at: Completed 03-01-PLAN.md (Zsh Foundation)
 Resume file: None
-Next: Phase 2.1 complete - ready for Phase 3 (Config File Consolidation)
+Next: Ready for 03-02-PLAN.md
