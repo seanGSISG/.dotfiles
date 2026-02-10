@@ -1,0 +1,68 @@
+# apt-packages.txt — System packages for WSL2 dev environment
+# Format: one package per line, # comments explain purpose
+# Consumed by: bootstrap.sh (Phase 5)
+# Generated from: apt-mark showmanual on current machine, then curated
+#
+# Version constraints: package>=X.Y means minimum version required
+# Repo annotations: # repo: <url> means package requires external APT repo
+# Auth annotations: # auth: manual means post-install authentication needed
+
+# === Build Tools ===
+build-essential       # GCC, g++, make, libc-dev — essential for compiling native extensions and C/C++ projects
+ca-certificates       # SSL/TLS certificates for HTTPS connections (curl, wget, git, package managers)
+
+# === Version Control ===
+git>=2.40             # Modern git with switch, restore, and sparse-checkout improvements
+
+# === Shell & Terminal ===
+zsh                   # Primary shell (replacing bash as default in this environment)
+bash-completion       # Tab completion for bash fallback and system scripts
+
+# === File & Text Utilities ===
+bat                   # cat replacement with syntax highlighting and git integration
+eza                   # ls replacement with color, icons, git integration
+ripgrep               # Fast recursive grep (rg command) with smart case and gitignore support
+jq                    # JSON parsing and manipulation for CLI workflows
+tree                  # Directory structure visualization
+file                  # File type detection utility
+findutils             # GNU find, xargs, locate — essential for file searching
+glow                  # Markdown renderer for terminal viewing
+htop                  # Interactive process viewer, better than top
+
+# === Search & Navigation ===
+zoxide                # Smart cd replacement with fuzzy matching (z command)
+
+# === Archive & Network ===
+curl                  # URL transfer tool for API testing and downloads
+wget                  # HTTP/FTP file retrieval
+zip                   # Create ZIP archives
+unzip                 # Extract ZIP archives
+
+# === Python Development ===
+python3               # Python 3 interpreter (required for uv and general Python development)
+python3-pip           # Python package installer (required for bootstrapping uv)
+python3.12            # Specific Python version for this environment
+python3.12-venv       # Virtual environment support for Python 3.12
+
+# === Security & Credentials ===
+gnome-keyring         # Credential storage daemon for git/gh authentication on WSL2
+gnupg2                # GPG encryption and signing (git commit signing, secret management)
+libsecret-1-0         # Secret storage library (runtime)
+libsecret-1-dev       # Secret storage library (development headers for building tools)
+libsecret-tools       # CLI tools for libsecret (secret-tool command)
+
+# === System Libraries ===
+libfuse2t64           # FUSE filesystem support (required for AppImage execution)
+fuse                  # Filesystem in Userspace (mount AppImages and other FUSE filesystems)
+libattr1              # Extended attribute support (required by some file operations)
+
+# === Windows/WSL Integration ===
+wslu                  # WSL utilities for Windows integration (wslview, wslpath, etc.)
+powershell            # PowerShell Core for Windows/WSL2 interop and automation scripts
+
+# === External Repo Packages ===
+# These require adding PPAs or external repositories before installation
+
+gh                    # GitHub CLI for repo management, PRs, issues
+# repo: https://cli.github.com/packages
+# auth: manual — run 'gh auth login' after installation
