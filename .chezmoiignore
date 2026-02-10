@@ -6,3 +6,5 @@ LICENSE
 .planning/
 .github/
 apt-packages.txt
+uv-tools.txt
+binary-installs.txt

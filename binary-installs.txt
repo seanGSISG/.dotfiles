@@ -1,0 +1,56 @@
+# binary-installs.txt — Tools installed via official scripts or direct binaries
+# Format: name|source_url|version|method
+# Methods: script (curl|bash), binary (GitHub release), git (clone), npm (global install)
+# Consumed by: bootstrap.sh (Phase 5) — bootstrap owns the actual install logic
+#
+# Version: "latest" = always get newest, "vX.Y.Z+" = minimum version required
+# Post-install annotations tell bootstrap what setup is needed after install
+# Auth annotations indicate tools requiring manual login after install
+
+# === Package Managers & Toolchains ===
+
+uv|https://astral.sh/uv/install.sh|latest|script
+# Python package manager and tool installer (replaces pip, pipx)
+# post-install: shell integration automatic (adds to PATH via .local/bin)
+
+chezmoi|https://get.chezmoi.io|v2.69.3+|script
+# Dotfiles manager with templating and encryption
+# post-install: chezmoi init --apply (handled by bootstrap itself)
+
+# === JavaScript Runtimes ===
+
+fnm|https://fnm.vercel.app/install|latest|script
+# Fast Node Manager (40x faster than nvm, Rust-based)
+# post-install: eval "$(fnm env --use-on-cd --shell zsh)" in .zshrc
+# post-install: fnm install 22 && fnm default 22 (Node LTS)
+# note: Node.js LTS 22.x — fnm manages Node versions, not installed directly
+
+bun|https://bun.sh/install|v1.3.4+|script
+# JavaScript runtime, bundler, test runner, package manager (all-in-one)
+# Primary JS runtime for new projects; Node via fnm for compatibility
+# post-install: shell integration automatic
+
+# === Shell & Prompt ===
+
+starship|https://starship.rs/install.sh|latest|script
+# Cross-shell prompt with git, node, python, duration modules
+# post-install: eval "$(starship init zsh)" in .zshrc
+
+antidote|https://github.com/mattmc3/antidote|latest|git
+# Lightweight zsh plugin manager (replaces Oh My Zsh)
+# install: git clone --depth=1 to ~/.antidote
+# post-install: source ~/.antidote/antidote.zsh in .zshrc
+
+# === Security ===
+
+age|https://github.com/FiloSottile/age/releases|v1.2.1+|binary
+# Modern file encryption (used by chezmoi for secret management)
+# install: download binary from GitHub releases to ~/.local/bin/
+# post-install: none (key setup handled in Phase 1)
+
+# === Developer Tools ===
+
+claude-code|npm:@anthropic-ai/claude-code|latest|npm
+# Claude Code CLI (AI coding assistant)
+# install: bun install -g @anthropic-ai/claude-code (or npm)
+# auth: manual — run 'claude login' after install
