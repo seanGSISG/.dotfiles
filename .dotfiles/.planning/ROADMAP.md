@@ -40,7 +40,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Install chezmoi + age, backup existing dotfiles, initialize repo with age encryption (3 min)
 - [x] 01-02-PLAN.md — Safety guardrails (gitignore, pre-commit hooks, detect-secrets) and secret extraction (3 min)
-- [ ] 01-03-PLAN.md — README, chezmoi.toml.tmpl, remote origin, initial commit and push
+- [x] 01-03-PLAN.md — README, chezmoi.toml.tmpl, remote origin, initial commit and push (4 min)
 
 ### Phase 2: Package Management & Tool Inventory
 **Goal**: Generate declarative package lists documenting all system packages, uv-managed tools, and direct binary installs needed for environment reproduction.
@@ -152,7 +152,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Repository Foundation & Safety | 1/3 | In progress | - |
+| 1. Repository Foundation & Safety | 3/3 | Complete | 2026-02-10 |
 | 2. Package Management & Tool Inventory | 0/TBD | Not started | - |
 | 3. Shell Configuration | 0/TBD | Not started | - |
 | 4. Tool Configs | 0/TBD | Not started | - |
@@ -161,4 +161,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-10 17:45 - Completed 01-01*
+*Last updated: 2026-02-10 18:04 - Completed 01-03 (Phase 1 complete)*
