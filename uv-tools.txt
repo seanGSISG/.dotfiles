@@ -1,0 +1,15 @@
+# uv-tools.txt — Python CLI tools managed by uv
+# Install with: uv tool install <name>
+# Consumed by: bootstrap.sh (Phase 5)
+#
+# uv isolates each tool in its own virtual environment
+# No version pins unless specific version matters
+# Post-install annotations tell bootstrap what setup is needed
+
+basedpyright     # Python type checker (actively maintained Pyright fork)
+detect-secrets   # Pre-commit hook for secret scanning
+# post-install: detect-secrets scan > .secrets.baseline
+just             # Command runner (Makefile alternative, Rust-based)
+pre-commit       # Git hook framework for code quality
+# post-install: pre-commit install (in each repo)
+virtualenv       # Virtual environment creation (used by pre-commit internally)
