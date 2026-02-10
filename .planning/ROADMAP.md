@@ -96,12 +96,13 @@ Plans:
   4. Developer can source .bashrc and get minimal fallback with hint to use zsh
   5. All configs use $HOME or chezmoi templates, no hardcoded /home/vscode paths
 
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
+- [ ] 03-01-PLAN.md -- Zsh foundation: exports.zsh (PATH, env vars, history), plugins.zsh (antidote, completion), .zsh_plugins.txt
+- [ ] 03-02-PLAN.md -- Tool integrations: tools.zsh (fnm, fzf, zoxide) and wsl.zsh.tmpl (GNOME Keyring, dbus, WezTerm OSC 7)
+- [ ] 03-03-PLAN.md -- Aliases and functions: audit + split 308-line file into 6 categories, alias-help system, shell functions
+- [ ] 03-04-PLAN.md -- Shell entry points: .zshrc (pure sourcer), .bashrc (fallback with banner), .profile (minimal clean)
 
 ### Phase 4: Tool Configs
 **Goal**: Clean up and template git, tmux, and Starship configurations for portability and modern aesthetics.
@@ -178,11 +179,11 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 6
 | 1. Repository Foundation & Safety | 3/3 | Complete | 2026-02-10 |
 | 2. Package Management & Tool Inventory | 2/2 | Complete | 2026-02-10 |
 | 2.1 Repository Consolidation (INSERTED) | 2/2 | Complete | 2026-02-10 |
-| 3. Shell Configuration | 0/TBD | Not started | - |
+| 3. Shell Configuration | 0/4 | Planned | - |
 | 4. Tool Configs | 0/TBD | Not started | - |
 | 5. Bootstrap Implementation | 0/TBD | Not started | - |
 | 6. Migration & Testing | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-10 - Phase 2.1 complete (repository consolidation)*
+*Last updated: 2026-02-10 - Phase 3 planned (4 plans in 2 waves)*
