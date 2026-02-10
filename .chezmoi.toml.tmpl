@@ -1,0 +1,11 @@
+# Managed by chezmoi - edit source, not this file
+# Source: ~/.local/share/chezmoi/.chezmoi.toml.tmpl
+
+encryption = "age"
+[age]
+identity = "~/key.txt"
+recipient = "age1jlfdynhp3lzz88evlm5dtnd70ndusz25cfudllgdyh8eka9lh5rq07kg3r"
+
+[data]
+hostname = "{{ .chezmoi.hostname }}"
+username = "{{ .chezmoi.username }}"
