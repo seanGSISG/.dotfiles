@@ -5,3 +5,4 @@ LICENSE
 .secrets.env.example
 .planning/
 .github/
+apt-packages.txt
