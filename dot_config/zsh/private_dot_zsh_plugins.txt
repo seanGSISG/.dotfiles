@@ -1,0 +1,14 @@
+# Zsh plugins managed by antidote
+# Order matters: syntax-highlighting should be last of the "visual" plugins
+
+# Additional completion definitions
+zsh-users/zsh-completions path:src kind:fpath
+
+# Fish-like autosuggestions
+zsh-users/zsh-autosuggestions
+
+# History substring search (arrow key navigation)
+zsh-users/zsh-history-substring-search
+
+# Real-time syntax highlighting (load last)
+zsh-users/zsh-syntax-highlighting
