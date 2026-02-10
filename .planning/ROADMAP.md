@@ -12,8 +12,9 @@ This project transforms a heavily customized WSL2 Ubuntu dev environment into a 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Repository Foundation & Safety** - Establish chezmoi structure and secret management
-- [ ] **Phase 2: Package Management & Tool Inventory** - Generate declarative package lists
+- [x] **Phase 1: Repository Foundation & Safety** - Establish chezmoi structure and secret management
+- [x] **Phase 2: Package Management & Tool Inventory** - Generate declarative package lists
+- [x] **Phase 2.1: Repository Consolidation** - Unify chezmoi source, .dotfiles, and .planning into single repo (INSERTED)
 - [ ] **Phase 3: Shell Configuration** - Migrate zsh/bash configs and aliases
 - [ ] **Phase 4: Tool Configs** - Set up git, tmux, and Starship prompt
 - [ ] **Phase 5: Bootstrap Implementation** - Build idempotent installer script
@@ -40,7 +41,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Install chezmoi + age, backup existing dotfiles, initialize repo with age encryption (3 min)
 - [x] 01-02-PLAN.md — Safety guardrails (gitignore, pre-commit hooks, detect-secrets) and secret extraction (3 min)
-- [ ] 01-03-PLAN.md — README, chezmoi.toml.tmpl, remote origin, initial commit and push
+- [x] 01-03-PLAN.md — README, chezmoi.toml.tmpl, remote origin, initial commit and push (4 min)
 
 ### Phase 2: Package Management & Tool Inventory
 **Goal**: Generate declarative package lists documenting all system packages, uv-managed tools, and direct binary installs needed for environment reproduction.
@@ -54,10 +55,32 @@ Plans:
   2. File uv-tools.txt exists listing all uv-managed tools (basedpyright, pre-commit, virtualenv, just)
   3. Package lists are committed to chezmoi repo and can be consumed by bootstrap script
 
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [x] 02-01-PLAN.md — Auto-discover and curate apt-packages.txt from apt-mark showmanual (1 min)
+- [x] 02-02-PLAN.md — Create uv-tools.txt and binary-installs.txt for non-apt tools (1 min)
+
+### Phase 2.1: Repository Consolidation (INSERTED)
+**Goal**: Consolidate the split repo structure into a single `~/.dotfiles` directory — move chezmoi source from `~/.local/share/chezmoi` to `~/.dotfiles`, merge the `.planning/` files into the same repo, and clean up the accidental home-directory git repo.
+
+**Depends on**: Phase 2 (package lists exist in chezmoi source)
+
+**Requirements**: (Structural fix — no new requirements, but prerequisite for clean Phase 3+ work)
+
+**Success Criteria** (what must be TRUE):
+  1. `~/.dotfiles` IS the chezmoi source directory (`chezmoi source-path` returns `~/.dotfiles`)
+  2. All chezmoi files (dotfile sources, package lists, encrypted secrets) are in `~/.dotfiles`
+  3. `.planning/` directory is inside `~/.dotfiles` and tracked by the same git repo
+  4. `~/.dotfiles` has its own `.git` directory (single repo for everything)
+  5. No git repo at `~/` (home directory is NOT a git repo)
+  6. `git log` in `~/.dotfiles` shows all prior commit history preserved
+
+**Plans**: 2 plans
+
+Plans:
+- [x] 02.1-01-PLAN.md — Move chezmoi source to ~/.dotfiles, merge home repo history, configure chezmoi sourceDir, relocate age key to XDG path (2 min)
+- [x] 02.1-02-PLAN.md — Move package lists to packages/ subdirectory, clean up old repos, verify success criteria, push to GitHub (2 min)
 
 ### Phase 3: Shell Configuration
 **Goal**: Migrate zsh as primary shell with antidote plugin management, Starship prompt, and modular alias system; bash becomes minimal fallback.
@@ -148,12 +171,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Repository Foundation & Safety | 1/3 | In progress | - |
-| 2. Package Management & Tool Inventory | 0/TBD | Not started | - |
+| 1. Repository Foundation & Safety | 3/3 | Complete | 2026-02-10 |
+| 2. Package Management & Tool Inventory | 2/2 | Complete | 2026-02-10 |
+| 2.1 Repository Consolidation (INSERTED) | 2/2 | Complete | 2026-02-10 |
 | 3. Shell Configuration | 0/TBD | Not started | - |
 | 4. Tool Configs | 0/TBD | Not started | - |
 | 5. Bootstrap Implementation | 0/TBD | Not started | - |
@@ -161,4 +185,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-10 17:45 - Completed 01-01*
+*Last updated: 2026-02-10 - Phase 2.1 complete (repository consolidation)*
