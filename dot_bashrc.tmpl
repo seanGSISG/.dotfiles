@@ -1,0 +1,84 @@
+# ~/.bashrc - Minimal bash fallback
+# Managed by chezmoi - edit source at ~/.dotfiles/dot_bashrc.tmpl
+# For full dev environment, use zsh
+
+# Only run in interactive sessions
+case $- in
+  *i*) ;;
+    *) return;;
+esac
+
+# --- Colored banner: hint to use zsh ---
+if [ -t 1 ]; then
+  echo -e "\033[1;33m+------------------------------------------+\033[0m"
+  echo -e "\033[1;33m|  Bash fallback - limited environment     |\033[0m"
+  echo -e "\033[1;33m|  Run 'zsh' for full dev setup            |\033[0m"
+  echo -e "\033[1;33m+------------------------------------------+\033[0m"
+  echo ""
+fi
+
+# --- PATH ---
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.bun/bin:$HOME/.fzf/bin:$PATH"
+
+# --- Environment ---
+export EDITOR="${EDITOR:-code}"
+export LANG="${LANG:-en_US.UTF-8}"
+export ENABLE_LSP_TOOLS=1
+export BUN_INSTALL="$HOME/.bun"
+
+# --- Secrets ---
+[ -f "$HOME/.secrets.env" ] && source "$HOME/.secrets.env"
+
+# --- fnm (Fast Node Manager) ---
+if command -v fnm &>/dev/null; then
+  eval "$(fnm env --use-on-cd --shell bash)"
+fi
+
+# --- fzf ---
+if [ -f ~/.fzf.bash ]; then
+  source ~/.fzf.bash
+elif command -v fzf &>/dev/null; then
+  eval "$(fzf --bash)"
+fi
+
+# --- zoxide ---
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init bash)"
+fi
+
+# --- Source shared alias files ---
+for f in "$HOME/.config/zsh/aliases"/*.zsh; do
+  [ -r "$f" ] && source "$f"
+done
+
+# --- Source shared functions ---
+[ -f "$HOME/.config/zsh/functions.zsh" ] && source "$HOME/.config/zsh/functions.zsh"
+
+# --- Bash-specific prompt ---
+PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
+# --- History ---
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend
+
+{{ if eq .chezmoi.os "linux" -}}
+{{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+# --- WSL2: GNOME Keyring + dbus ---
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+  eval "$(dbus-launch --sh-syntax)"
+fi
+
+# --- WSL2: WezTerm OSC 7 ---
+__wezterm_osc7() {
+  printf "\033]7;file://%s%s\033\\" "$HOSTNAME" "$PWD"
+}
+PROMPT_COMMAND="__wezterm_osc7${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+{{   end -}}
+{{ end -}}
+
+# --- Starship prompt (if available, overrides PS1) ---
+if command -v starship &>/dev/null; then
+  eval "$(starship init bash)"
+fi
