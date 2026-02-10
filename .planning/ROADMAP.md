@@ -35,12 +35,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Secrets template (.secrets.env.example) exists in repo with placeholder values for documentation
   5. Age encryption key can be stored in Bitwarden and documented for multi-machine setup
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [ ] 01-01-PLAN.md — Install chezmoi + age, backup existing dotfiles, initialize repo with age encryption
+- [ ] 01-02-PLAN.md — Safety guardrails (gitignore, pre-commit hooks, detect-secrets) and secret extraction
+- [ ] 01-03-PLAN.md — README, chezmoi.toml.tmpl, remote origin, initial commit and push
 
 ### Phase 2: Package Management & Tool Inventory
 **Goal**: Generate declarative package lists documenting all system packages, uv-managed tools, and direct binary installs needed for environment reproduction.
@@ -148,11 +148,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Repository Foundation & Safety | 0/TBD | Not started | - |
+| 1. Repository Foundation & Safety | 0/3 | Planned | - |
 | 2. Package Management & Tool Inventory | 0/TBD | Not started | - |
 | 3. Shell Configuration | 0/TBD | Not started | - |
 | 4. Tool Configs | 0/TBD | Not started | - |
