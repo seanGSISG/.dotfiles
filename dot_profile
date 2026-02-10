@@ -1,0 +1,7 @@
+# ~/.profile: executed by login shells
+# Managed by chezmoi - edit source at ~/.dotfiles/dot_profile
+
+# Source .bashrc for bash login shells
+if [ -n "$BASH_VERSION" ]; then
+  [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+fi
