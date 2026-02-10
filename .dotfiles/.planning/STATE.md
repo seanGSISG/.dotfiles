@@ -11,28 +11,28 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 2 of 6 (Package Management & Tool Inventory)
-Plan: 1 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-10 — Completed 02-01-PLAN.md (Apt Package Inventory)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-10 — Completed 02-02-PLAN.md (uv Tools and Binary Installs)
 
-Progress: [███░░░░░░░] 33% of Phase 2 (1/3 plans)
+Progress: [██████████] 100% of Phase 2 (2/2 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 2.75 min
-- Total execution time: 0.18 hours
+- Total plans completed: 5
+- Average duration: 2.4 min
+- Total execution time: 0.20 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Repository Foundation & Safety | 3 | 10 min | 3.3 min |
-| 2. Package Management & Tool Inventory | 1 | 1 min | 1.0 min |
+| 2. Package Management & Tool Inventory | 2 | 2 min | 1.0 min |
 
 **Recent Trend:**
-- Last 5 plans: [01-01: 3min, 01-02: 3min, 01-03: 4min, 02-01: 1min]
+- Last 5 plans: [01-02: 3min, 01-03: 4min, 02-01: 1min, 02-02: 1min]
 - Trend: Strong velocity, Phase 2 progressing efficiently
 
 *Updated after each plan completion*
@@ -63,6 +63,10 @@ Recent decisions affecting current work:
 - Curate apt packages from 101 to 34 by removing GUI/desktop and base system packages (02-01)
 - Store package manifests in chezmoi repo but exclude from apply (repo-only files) (02-01)
 - Annotate all packages with purpose, repo source, and auth requirements (02-01)
+- Curate uv tools list - exclude experimental AI tools (amplifier, kimi, openhands) (02-02)
+- Document Node.js LTS 22.x via fnm (not direct install) (02-02)
+- Use structured format for binary-installs.txt: name|source|version|method (02-02)
+- Annotate auth-required tools with # auth: manual (02-02)
 
 ### Pending Todos
 
@@ -74,7 +78,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-10T19:23:35Z
-Stopped at: Completed 02-01-PLAN.md (Apt Package Inventory)
+Last session: 2026-02-10T19:25:12Z
+Stopped at: Completed 02-02-PLAN.md (uv Tools and Binary Installs)
 Resume file: None
-Next: Ready for 02-02-PLAN.md (Binary Install Inventory)
+Next: Ready for 02-03-PLAN.md (remaining Phase 2 plan)
