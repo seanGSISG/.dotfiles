@@ -132,13 +132,65 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated during roadmap creation) | | |
+| CZMOI-01 | Phase 1 | Pending |
+| CZMOI-02 | Phase 1 | Pending |
+| CZMOI-03 | Phase 1 | Pending |
+| CZMOI-04 | Phase 1 | Pending |
+| CZMOI-05 | Phase 1 | Pending |
+| SEC-01 | Phase 1 | Pending |
+| SEC-02 | Phase 1 | Pending |
+| SEC-03 | Phase 1 | Pending |
+| SEC-04 | Phase 1 | Pending |
+| SEC-05 | Phase 1 | Pending |
+| PKG-01 | Phase 2 | Pending |
+| PKG-02 | Phase 2 | Pending |
+| PKG-03 | Phase 2 | Pending |
+| SHELL-01 | Phase 3 | Pending |
+| SHELL-02 | Phase 3 | Pending |
+| SHELL-03 | Phase 3 | Pending |
+| SHELL-04 | Phase 3 | Pending |
+| SHELL-05 | Phase 3 | Pending |
+| SHELL-06 | Phase 3 | Pending |
+| SHELL-07 | Phase 3 | Pending |
+| SHELL-08 | Phase 3 | Pending |
+| SHELL-09 | Phase 3 | Pending |
+| SHELL-10 | Phase 3 | Pending |
+| ALIAS-01 | Phase 3 | Pending |
+| ALIAS-02 | Phase 3 | Pending |
+| ALIAS-03 | Phase 3 | Pending |
+| ALIAS-04 | Phase 3 | Pending |
+| CONF-01 | Phase 4 | Pending |
+| CONF-02 | Phase 4 | Pending |
+| CONF-03 | Phase 4 | Pending |
+| STAR-01 | Phase 4 | Pending |
+| STAR-02 | Phase 4 | Pending |
+| STAR-03 | Phase 4 | Pending |
+| BOOT-01 | Phase 5 | Pending |
+| BOOT-02 | Phase 5 | Pending |
+| BOOT-03 | Phase 5 | Pending |
+| BOOT-04 | Phase 5 | Pending |
+| BOOT-05 | Phase 5 | Pending |
+| BOOT-06 | Phase 5 | Pending |
+| BOOT-07 | Phase 5 | Pending |
+| BOOT-08 | Phase 5 | Pending |
+| BOOT-09 | Phase 5 | Pending |
+| BOOT-10 | Phase 5 | Pending |
+| BOOT-11 | Phase 5 | Pending |
+| BOOT-12 | Phase 5 | Pending |
+| WSL-01 | Phase 5 | Pending |
+| WSL-02 | Phase 5 | Pending |
+| WSL-03 | Phase 5 | Pending |
+| SSH-01 | Phase 5 | Pending |
+| SSH-02 | Phase 5 | Pending |
+| SSH-03 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 45 total
-- Mapped to phases: 0
-- Unmapped: 45 (awaiting roadmap)
+- v1 requirements: 51 total
+- Mapped to phases: 51
+- Unmapped: 0
+
+**Phase 6 Note:** Phase 6 (Migration & Testing) performs cross-cutting validation of all 51 requirements on the new machine rather than mapping to specific new requirements.
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 after initial definition*
+*Last updated: 2026-02-10 after roadmap creation*
