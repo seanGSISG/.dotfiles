@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/skills/continuous-learning-v2/hooks/observe.sh pre"
+      }],
+      "description": "Capture tool use for learning system"
+    }],
+    "PostToolUse": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "~/.claude/skills/continuous-learning-v2/hooks/observe.sh post"
+      }],
+      "description": "Capture tool results for learning system"
+    }],
+    "PreCompact": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "node ~/.claude/scripts/hooks/pre-compact.js"
+      }],
+      "description": "Save state before context compaction"
+    }],
+    "SessionStart": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "node ~/.claude/scripts/hooks/session-start.js"
+      }],
+      "description": "Load previous context on new session"
+    }],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [{
+          "type": "command",
+          "command": "node ~/.claude/scripts/hooks/session-end.js"
+        }],
+        "description": "Persist session state on end"
+      },
+      {
+        "matcher": "*",
+        "hooks": [{
+          "type": "command",
+          "command": "node ~/.claude/scripts/hooks/evaluate-session.js"
+        }],
+        "description": "Evaluate session for extractable patterns"
+      }
+    ]
+  }
+}
