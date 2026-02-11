@@ -1,176 +1,133 @@
 # dotfiles
 
-Personal dotfiles managed by chezmoi with age encryption for secrets. One command sets up a fresh WSL2 Ubuntu machine with the complete dev environment.
+WSL2 Ubuntu dev environment managed by chezmoi. One command sets up everything.
 
-## Stack
+## What Gets Installed
 
-- **chezmoi** - Dotfile management with templating and secrets
-- **age** - Modern encryption for secrets (keys, tokens, API credentials)
-- **zsh** - Primary shell
-- **Starship** - Fast, minimal prompt
-- **antidote** - Lightweight zsh plugin manager
-- **fnm** - Fast Node.js version manager (40x faster than nvm)
-- **fzf** - Fuzzy finder for command history and file navigation
-- **zoxide** - Smarter cd command with frecency algorithm
-- **pre-commit + detect-secrets** - Prevent accidental secret commits
+**Shell:** zsh (default) with antidote plugins, Starship prompt, 100k history with dedup
+**Tools:** fnm (Node.js), fzf (fuzzy finder), zoxide (smart cd), uv (Python), bun (JS runtime)
+**Configs:** git (templated), tmux (TPM, XDG paths), Starship (Pure-style theme)
+**Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv, Claude Code
+**System:** GitHub CLI, PowerShell, age encryption, 34 curated apt packages
 
 ## Quick Start (New Machine)
 
-Bootstrap a fresh machine in three steps:
-
 ```bash
-# 1. Install chezmoi
-sh -c "$(curl -fsLS get.chezmoi.io)"
-
-# 2. Retrieve age key from Bitwarden, save to ~/key.txt
-# (See "Secrets & Encryption" section below)
-
-# 3. Initialize and apply dotfiles
-chezmoi init --apply https://github.com/seanGSISG/.dotfiles.git
-
-# 4. Source secrets into current shell
-source ~/.secrets.env
+# Clone and run bootstrap
+git clone https://github.com/seanGSISG/.dotfiles.git ~/.dotfiles
+~/.dotfiles/bootstrap.sh
 ```
 
-The `chezmoi init` step will:
-- Clone this repo to `~/.local/share/chezmoi/`
-- Render `.chezmoi.toml` from the template using your machine's hostname/username
-- Apply all managed files to your home directory
-- Decrypt `~/.secrets.env` using the age key
+Or from an existing clone:
+
+```bash
+~/.dotfiles/bootstrap.sh
+```
+
+The bootstrap script is idempotent — safe to re-run. It will skip anything already installed.
+
+### What Bootstrap Does
+
+1. Configures WSL2 (`/etc/wsl.conf` with systemd)
+2. Adds APT repos (GitHub CLI, PowerShell) and installs system packages
+3. Installs binary tools (Starship, fnm, fzf, uv, bun, age)
+4. Installs antidote (zsh plugin manager)
+5. Installs Python tools via uv and Node.js 22 LTS via fnm
+6. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
+7. Deploys all configs via `chezmoi init --apply`
+8. Changes default shell to zsh
+9. Copies SSH keys (interactive, skippable)
+
+### Post-Install Checklist
+
+After bootstrap completes, it prints this checklist:
+
+1. **Age key** — Retrieve from Bitwarden, save to `~/.config/age/keys.txt`, run `chezmoi apply`
+2. **GitHub auth** — `gh auth login`
+3. **Tmux plugins** — Open tmux, press `prefix + I`
+4. **Claude Code** — `claude login`
+5. **SSH verify** — `ssh -T git@github.com`
+6. **WSL restart** — `wsl.exe --shutdown` from PowerShell (enables systemd)
 
 ## Secrets & Encryption
 
-### How It Works
-
-Secrets are stored in `~/.secrets.env`, encrypted in the repo as `encrypted_dot_secrets.env.age`. The age encryption key (`~/key.txt`) is stored in Bitwarden and never committed to git.
-
-Shell configs (`.bashrc`, `.zshrc`, `.profile`) source `~/.secrets.env` if it exists:
+Secrets are stored in `~/.secrets.env`, encrypted in the repo as `encrypted_dot_secrets.env.age`. The age key (`~/.config/age/keys.txt`) lives in Bitwarden, never in git.
 
 ```bash
-[ -f ~/.secrets.env ] && source ~/.secrets.env
-```
-
-### Current Secrets
-
-- `GITHUB_PERSONAL_ACCESS_TOKEN` - GitHub CLI authentication
-- `EXA_API_KEY` - Exa search API
-- `GREPTILE_API_KEY` - Greptile code search API
-
-### Adding New Secrets
-
-```bash
-# Edit secrets file (opens decrypted in $EDITOR)
+# Edit secrets (opens decrypted in $EDITOR)
 chezmoi edit ~/.secrets.env
-
-# Review changes
-chezmoi diff
 
 # Apply (re-encrypts)
 chezmoi apply --verbose
 ```
 
-### Retrieving the Age Key
+On a new machine, retrieve the age key from Bitwarden and save to `~/.config/age/keys.txt` before running `chezmoi apply` to decrypt secrets.
 
-The encryption key is stored in Bitwarden as a secure note titled "dotfiles age key" (or similar).
+## Shell Configuration
 
-On a new machine:
-1. Install Bitwarden CLI: `npm install -g @bitwarden/cli`
-2. Login: `bw login`
-3. Get the key: `bw get notes "dotfiles age key" > ~/key.txt`
-4. Secure it: `chmod 600 ~/key.txt`
+Zsh is the primary shell with a modular config structure:
 
-Alternative: Copy the key manually from Bitwarden vault to `~/key.txt`
+```
+~/.config/zsh/
+├── exports.zsh          # PATH, env vars, history settings
+├── plugins.zsh          # antidote + completion system
+├── tools.zsh            # fnm, fzf, zoxide integrations
+├── wsl.zsh              # GNOME Keyring, dbus, WezTerm OSC 7
+├── functions.zsh        # alias-help system, reload, mkcd
+├── .zsh_plugins.txt     # antidote plugin list
+└── aliases/
+    ├── aliases-navigation.zsh
+    ├── aliases-git.zsh
+    ├── aliases-docker.zsh
+    ├── aliases-dev.zsh
+    ├── aliases-utilities.zsh
+    └── aliases-system.zsh
+```
 
-### Storing the Age Key (First Time)
+`.zshrc` is a pure sourcer — it only sources these files. Run `halp` or `?` for categorized alias help.
 
-After initial setup, store `~/key.txt` in Bitwarden:
-
-1. Open Bitwarden vault
-2. Create new secure note: "dotfiles age key"
-3. Paste contents of `~/key.txt`
-4. Save
-
-**CRITICAL**: The age key is the only way to decrypt your secrets. Losing it means losing access to all encrypted data.
+Bash is a minimal fallback that sources the same alias files and shows a hint to use zsh.
 
 ## Directory Structure
 
 ```
-~/.local/share/chezmoi/          # chezmoi source directory (this repo)
-├── .chezmoi.toml.tmpl           # Template for machine-specific config
-├── .chezmoiignore               # Files to not apply to home directory
-├── .gitignore                   # Blocks age keys from git
-├── .pre-commit-config.yaml      # Pre-commit hooks
-├── .secrets.baseline            # detect-secrets baseline
-├── .secrets.env.example         # Template for secrets file
-├── encrypted_dot_secrets.env.age # Encrypted secrets (safe to commit)
-├── dot_bashrc                   # Managed .bashrc
-├── dot_zshrc                    # Managed .zshrc
-├── dot_profile                  # Managed .profile
-└── README.md                    # This file (not applied to ~/)
+~/.dotfiles/                       # chezmoi source (this repo)
+├── bootstrap.sh                   # Idempotent installer script
+├── dot_zshrc.tmpl                 # .zshrc template
+├── dot_bashrc.tmpl                # .bashrc template
+├── dot_profile                    # .profile
+├── dot_gitconfig.tmpl             # .gitconfig template
+├── dot_config/
+│   ├── starship.toml              # Starship prompt config
+│   ├── tmux/tmux.conf             # tmux config (XDG path)
+│   └── zsh/                       # All zsh config modules + aliases
+├── encrypted_dot_secrets.env.age  # Encrypted secrets
+├── packages/
+│   ├── apt-packages.txt           # System packages manifest
+│   ├── uv-tools.txt               # Python tools manifest
+│   └── binary-installs.txt        # Binary tools reference
+└── .planning/                     # Project planning docs
 ```
-
-Files prefixed with `dot_` become hidden files in your home directory (e.g., `dot_bashrc` → `~/.bashrc`).
-
-Files with `.age` suffix are encrypted and decrypted automatically by chezmoi.
 
 ## Day-to-Day Usage
 
 ```bash
-# View current status
-chezmoi status
-
-# See what would change (always dry-run first)
-chezmoi diff
-
-# Edit a managed file
-chezmoi edit ~/.bashrc
-
-# Edit encrypted secrets
-chezmoi edit ~/.secrets.env
-
-# Apply changes
-chezmoi apply --verbose
-
-# Add a new file to chezmoi
-chezmoi add ~/.gitconfig
-
-# Add a new secret file (encrypted)
-chezmoi add --encrypt ~/.aws/credentials
-
-# Commit and push changes
-cd ~/.local/share/chezmoi
-git add [files]
-git commit -m "description"
-git push
+chezmoi status              # View current status
+chezmoi diff                # Dry-run — see what would change
+chezmoi edit ~/.bashrc      # Edit a managed file
+chezmoi edit ~/.secrets.env # Edit encrypted secrets
+chezmoi apply --verbose     # Apply changes
+chezmoi add ~/.config/foo   # Add a new file to chezmoi
+chezmoi add --encrypt ~/.keys  # Add encrypted file
 ```
 
-## Safety Notes
+## Safety
 
-1. **Never edit target files directly** - Always use `chezmoi edit` or modify source files
-2. **Always dry-run first** - Use `chezmoi diff` before `chezmoi apply`
-3. **Pre-commit hooks protect you** - detect-secrets scans for plaintext secrets before commits
-4. **Encrypted files are safe** - Only `.age` files are committed, never plaintext secrets
-5. **Keep age key secure** - Store in Bitwarden, never commit to git
-6. **Test on a VM first** - Before applying major changes, test in a disposable environment
-
-## Troubleshooting
-
-**Decryption fails:**
-- Verify `~/key.txt` exists and matches the public key in `.chezmoi.toml`
-- Check file permissions: `chmod 600 ~/key.txt`
-
-**Pre-commit hook blocks commit:**
-- Review flagged files: `git diff --cached`
-- If false positive: Update baseline with `detect-secrets scan > .secrets.baseline`
-- If real secret: Move to `~/.secrets.env` and encrypt
-
-**Changes not applying:**
-- Check ignored files: `cat ~/.local/share/chezmoi/.chezmoiignore`
-- Verify source file exists in chezmoi directory
-- Run with verbose output: `chezmoi apply --verbose --dry-run`
+- **Pre-commit hooks** scan for plaintext secrets via detect-secrets
+- **Age encryption** ensures only `.age` files are committed, never plaintext
+- Always `chezmoi diff` before `chezmoi apply`
+- Edit managed files via `chezmoi edit`, not directly
 
 ## References
 
-- [chezmoi documentation](https://www.chezmoi.io/)
-- [age encryption](https://github.com/FiloSottile/age)
-- [detect-secrets](https://github.com/Yelp/detect-secrets)
+- [chezmoi](https://www.chezmoi.io/) | [age](https://github.com/FiloSottile/age) | [Starship](https://starship.rs/) | [antidote](https://getantidote.github.io/) | [fnm](https://github.com/Schniz/fnm)
