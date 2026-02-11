@@ -117,11 +117,11 @@ Plans:
   3. Developer sees Starship prompt showing git branch/status, virtualenv, node version, command duration
   4. Starship theme is visually comparable or better than current Powerlevel10k setup
 
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md -- Git config templated with chezmoi variables (name, email, editor) + update .chezmoi.toml.tmpl [data] section
+- [ ] 04-02-PLAN.md -- Tmux config (XDG-compliant, TPM auto-install) + Starship prompt config (P10k Pure style)
 
 ### Phase 5: Bootstrap Implementation
 **Goal**: Build idempotent bootstrap.sh that installs all dependencies, sets up zsh as default shell, configures WSL2, handles SSH keys, and deploys chezmoi configs.
