@@ -6,3 +6,7 @@ LICENSE
 .planning/
 .github/
 packages/
+
+# Claude Code learning system runtime data (never managed by chezmoi)
+.claude/insights/
+.claude/insights/**
