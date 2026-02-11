@@ -11,18 +11,18 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 5.1 of 6 in progress (Phase 5.1 - Bootstrap Folders & Claude Code Command Center)
-Plan: 2 of 6 complete in Phase 5.1
+Plan: 3 of 6 complete in Phase 5.1
 Status: In progress
-Last activity: 2026-02-11 — Completed 05.1-02-PLAN.md (Hook Scripts & Utility Library)
+Last activity: 2026-02-11 — Completed 05.1-01-PLAN.md (Workspace Folders & Claude Installer)
 
-Progress: [██████████████████░░] 89% overall (18/20 plans complete)
+Progress: [███████████████████░] 95% overall (19/20 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18
+- Total plans completed: 19
 - Average duration: 1.9 min
-- Total execution time: 0.58 hours
+- Total execution time: 0.65 hours
 
 **By Phase:**
 
@@ -34,11 +34,11 @@ Progress: [██████████████████░░] 89% ove
 | 3. Shell Configuration | 4 | 5.5 min | 1.4 min |
 | 4. Tool Configs | 2 | 3.6 min | 1.8 min |
 | 5. Bootstrap Implementation | 2 | 6.6 min | 3.3 min |
-| 5.1. Bootstrap Folders & Claude Command Center | 2 | 4 min | 2.0 min |
+| 5.1. Bootstrap Folders & Claude Command Center | 3 | 8 min | 2.7 min |
 
 **Recent Trend:**
-- Last 5 plans: [04-02: 2min, 05-01: 2.1min, 05-02: 4.5min, 05.1-01: 2min, 05.1-02: 2min]
-- Trend: Phase 5.1 executing workspace and Claude Code setup
+- Last 5 plans: [05-01: 2.1min, 05-02: 4.5min, 05.1-01: 2min, 05.1-02: 2min, 05.1-01: 4min]
+- Trend: Phase 5.1 completing workspace and Claude Code setup
 
 *Updated after each plan completion*
 
@@ -120,6 +120,10 @@ Recent decisions affecting current work:
 - "insights" directory name replaces "homunculus" (05.1-02)
 - create_ prefix for ~/.claude/ configs (initial deploy only) (05.1-02)
 - Linux-only deployment (WSL2 Ubuntu) (05.1-02)
+- Use official Claude Code installer (claude.ai/install.sh) instead of bun/npm (05.1-01)
+- Claude Code installs before chezmoi apply (configs deploy after installation) (05.1-01)
+- Exclude .claude/insights/ from chezmoi management (runtime-generated data) (05.1-01)
+- Workspace boundary files (CLAUDE.md) define Claude Code scope for each workspace (05.1-01)
 
 ### Pending Todos
 
@@ -137,6 +141,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 05.1-02-PLAN.md (Hook Scripts & Utility Library)
+Stopped at: Completed 05.1-01-PLAN.md (Workspace Folders & Claude Installer)
 Resume file: None
-Next: Continue Phase 5.1 - 4 more plans (MCP servers, learning system, hooks.json, bootstrap integration)
+Next: Continue Phase 5.1 - 3 more plans (MCP servers, learning system, hooks.json/final integration)
