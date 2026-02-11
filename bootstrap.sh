@@ -227,3 +227,331 @@ install_apt_packages() {
   echo ""
   log_success "APT packages: $installed installed, $skipped skipped"
 }
+
+#===============================================================================
+# Binary Tools Installation
+#===============================================================================
+
+install_binary_tools() {
+  section_header "Binary Tools"
+
+  # Ensure ~/.local/bin is in PATH for this session
+  export PATH="$HOME/.local/bin:$PATH"
+
+  # Starship prompt
+  install_starship
+
+  # fnm (Fast Node Manager)
+  install_fnm
+
+  # fzf (fuzzy finder)
+  install_fzf
+
+  # uv (Python package manager)
+  install_uv
+
+  # bun (JavaScript runtime)
+  install_bun
+
+  # age (encryption tool)
+  install_age
+}
+
+install_starship() {
+  if command -v starship &>/dev/null; then
+    log_skip "Starship already installed"
+    SKIPPED+=("Starship")
+    return 0
+  fi
+
+  log_info "Installing Starship..."
+  if curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin" >/dev/null 2>&1; then
+    log_success "Starship installed"
+    INSTALLED+=("Starship")
+  else
+    log_error "Starship installation failed"
+    FAILED_STEPS+=("Starship")
+    return 1
+  fi
+}
+
+install_fnm() {
+  if command -v fnm &>/dev/null; then
+    log_skip "fnm already installed"
+    SKIPPED+=("fnm")
+    return 0
+  fi
+
+  log_info "Installing fnm..."
+  if curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell >/dev/null 2>&1; then
+    log_success "fnm installed"
+    INSTALLED+=("fnm")
+  else
+    log_error "fnm installation failed"
+    FAILED_STEPS+=("fnm")
+    return 1
+  fi
+}
+
+install_fzf() {
+  if command -v fzf &>/dev/null; then
+    log_skip "fzf already installed"
+    SKIPPED+=("fzf")
+    return 0
+  fi
+
+  log_info "Installing fzf..."
+  if [ -d "$HOME/.fzf" ]; then
+    log_skip "fzf directory already exists"
+    SKIPPED+=("fzf")
+    return 0
+  fi
+
+  if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf" >/dev/null 2>&1 && \
+     "$HOME/.fzf/install" --key-bindings --completion --no-update-rc --no-bash --no-fish >/dev/null 2>&1; then
+    log_success "fzf installed"
+    INSTALLED+=("fzf")
+  else
+    log_error "fzf installation failed"
+    FAILED_STEPS+=("fzf")
+    return 1
+  fi
+}
+
+install_uv() {
+  if command -v uv &>/dev/null; then
+    log_skip "uv already installed"
+    SKIPPED+=("uv")
+    return 0
+  fi
+
+  log_info "Installing uv..."
+  if curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1; then
+    log_success "uv installed"
+    INSTALLED+=("uv")
+  else
+    log_error "uv installation failed"
+    FAILED_STEPS+=("uv")
+    return 1
+  fi
+}
+
+install_bun() {
+  if command -v bun &>/dev/null; then
+    log_skip "bun already installed"
+    SKIPPED+=("bun")
+    return 0
+  fi
+
+  log_info "Installing bun..."
+  if curl -fsSL https://bun.sh/install | bash >/dev/null 2>&1; then
+    log_success "bun installed"
+    INSTALLED+=("bun")
+  else
+    log_error "bun installation failed"
+    FAILED_STEPS+=("bun")
+    return 1
+  fi
+}
+
+install_age() {
+  if command -v age &>/dev/null; then
+    log_skip "age already installed"
+    SKIPPED+=("age")
+    return 0
+  fi
+
+  # Check if age is available in apt repositories
+  log_info "Installing age..."
+  if sudo apt-get install -y -qq age >/dev/null 2>&1; then
+    log_success "age installed"
+    INSTALLED+=("age")
+  else
+    # Fallback to GitHub release if apt install fails
+    log_info "Installing age from GitHub releases..."
+    local age_version="v1.2.1"
+    local age_url="https://github.com/FiloSottile/age/releases/download/${age_version}/age-${age_version}-linux-amd64.tar.gz"
+
+    if curl -fsSL "$age_url" | tar -xz -C /tmp && \
+       cp /tmp/age/age /tmp/age/age-keygen "$HOME/.local/bin/" && \
+       chmod +x "$HOME/.local/bin/age" "$HOME/.local/bin/age-keygen"; then
+      log_success "age installed from GitHub releases"
+      INSTALLED+=("age")
+      rm -rf /tmp/age
+    else
+      log_error "age installation failed"
+      FAILED_STEPS+=("age")
+      return 1
+    fi
+  fi
+}
+
+#===============================================================================
+# Plugin Manager Installation
+#===============================================================================
+
+install_plugin_managers() {
+  section_header "Plugin Managers"
+
+  # antidote (zsh plugin manager)
+  install_antidote
+
+  # TPM note (managed by chezmoi)
+  log_info "TPM (Tmux Plugin Manager) will be installed via chezmoi .chezmoiexternal.toml"
+}
+
+install_antidote() {
+  if [ -d "$HOME/.antidote" ]; then
+    log_skip "antidote already installed"
+    SKIPPED+=("antidote")
+    return 0
+  fi
+
+  log_info "Installing antidote..."
+  if git clone --depth=1 https://github.com/mattmc3/antidote.git "$HOME/.antidote" >/dev/null 2>&1; then
+    log_success "antidote installed"
+    INSTALLED+=("antidote")
+  else
+    log_error "antidote installation failed"
+    FAILED_STEPS+=("antidote")
+    return 1
+  fi
+}
+
+#===============================================================================
+# Python Tools Installation
+#===============================================================================
+
+install_python_tools() {
+  section_header "Python Tools"
+
+  # Verify uv is available
+  if ! command -v uv &>/dev/null; then
+    log_error "uv not found - Python tools installation skipped"
+    FAILED_STEPS+=("Python tools (uv required)")
+    return 1
+  fi
+
+  # Ensure uv is in PATH for this session
+  export PATH="$HOME/.local/bin:$PATH"
+
+  local tools_file="$DOTFILES_DIR/packages/uv-tools.txt"
+
+  if [ ! -f "$tools_file" ]; then
+    log_error "Tools list not found: $tools_file"
+    return 1
+  fi
+
+  # Read tools (ignore comments and empty lines)
+  local tools=()
+  while IFS= read -r line; do
+    # Skip comments and empty lines
+    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+    [[ -z "$line" ]] && continue
+
+    # Extract tool name
+    local tool=$(echo "$line" | xargs)
+    [[ -n "$tool" ]] && tools+=("$tool")
+  done < "$tools_file"
+
+  local installed=0
+  local skipped=0
+
+  for tool in "${tools[@]}"; do
+    # Check if tool is already installed
+    if uv tool list 2>/dev/null | grep -q "^$tool "; then
+      log_skip "$tool already installed"
+      SKIPPED+=("$tool")
+      ((skipped++))
+    else
+      log_info "Installing $tool..."
+      if uv tool install "$tool" >/dev/null 2>&1; then
+        log_success "$tool installed"
+        INSTALLED+=("$tool")
+        ((installed++))
+      else
+        log_error "$tool installation failed"
+        FAILED_STEPS+=("Python tool: $tool")
+      fi
+    fi
+  done
+
+  echo ""
+  log_success "Python tools: $installed installed, $skipped skipped"
+}
+
+#===============================================================================
+# Node.js and JavaScript Tools Installation
+#===============================================================================
+
+install_node_tools() {
+  section_header "Node.js & JavaScript Tools"
+
+  # Verify fnm is available
+  if ! command -v fnm &>/dev/null; then
+    log_error "fnm not found - Node.js tools installation skipped"
+    FAILED_STEPS+=("Node.js tools (fnm required)")
+    return 1
+  fi
+
+  # Source fnm into current shell
+  export PATH="$HOME/.local/share/fnm:$PATH"
+  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
+
+  # Check if Node LTS is already installed
+  if fnm list 2>/dev/null | grep -q "22"; then
+    log_skip "Node.js 22 (LTS) already installed"
+    SKIPPED+=("Node.js 22")
+  else
+    log_info "Installing Node.js 22 (LTS)..."
+    if fnm install 22 >/dev/null 2>&1 && fnm default 22 >/dev/null 2>&1; then
+      log_success "Node.js 22 (LTS) installed"
+      INSTALLED+=("Node.js 22")
+    else
+      log_error "Node.js installation failed"
+      FAILED_STEPS+=("Node.js 22")
+      return 1
+    fi
+  fi
+
+  # Install Claude Code
+  install_claude_code
+}
+
+install_claude_code() {
+  # Refresh PATH after Node installation
+  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
+
+  if command -v claude &>/dev/null; then
+    log_skip "Claude Code already installed"
+    SKIPPED+=("Claude Code")
+    return 0
+  fi
+
+  log_info "Installing Claude Code..."
+
+  # Prefer bun if available, fallback to npm
+  if command -v bun &>/dev/null; then
+    if bun install -g @anthropic-ai/claude-code >/dev/null 2>&1; then
+      log_success "Claude Code installed (via bun)"
+      INSTALLED+=("Claude Code")
+    else
+      log_error "Claude Code installation failed"
+      FAILED_STEPS+=("Claude Code")
+      return 1
+    fi
+  elif command -v npm &>/dev/null; then
+    if npm install -g @anthropic-ai/claude-code >/dev/null 2>&1; then
+      log_success "Claude Code installed (via npm)"
+      INSTALLED+=("Claude Code")
+    else
+      log_error "Claude Code installation failed"
+      FAILED_STEPS+=("Claude Code")
+      return 1
+    fi
+  else
+    log_error "Neither bun nor npm available - Claude Code installation skipped"
+    FAILED_STEPS+=("Claude Code (bun/npm required)")
+    return 1
+  fi
+}
