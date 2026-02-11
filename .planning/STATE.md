@@ -11,18 +11,18 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 4 of 6 in progress (Phase 4 - Tool Configs)
-Plan: 1 of 4 complete in Phase 4
+Plan: 2 of 4 complete in Phase 4
 Status: In progress
-Last activity: 2026-02-10 — Completed 04-01-PLAN.md (Git Configuration)
+Last activity: 2026-02-10 — Completed 04-02-PLAN.md (Tmux & Starship Configuration)
 
-Progress: [███████████████░] 81% overall (13/16 plans complete)
+Progress: [███████████████░] 88% overall (14/16 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: 1.8 min
-- Total execution time: 0.40 hours
+- Total execution time: 0.43 hours
 
 **By Phase:**
 
@@ -32,11 +32,11 @@ Progress: [███████████████░] 81% overall (13/16 
 | 2. Package Management & Tool Inventory | 2 | 2 min | 1.0 min |
 | 2.1. Repository Consolidation | 2 | 4 min | 2.0 min |
 | 3. Shell Configuration | 4 | 5.5 min | 1.4 min |
-| 4. Tool Configs | 1 | 1.6 min | 1.6 min |
+| 4. Tool Configs | 2 | 3.6 min | 1.8 min |
 
 **Recent Trend:**
-- Last 5 plans: [03-02: 1min, 03-03: 1.5min, 03-04: 2min, 04-01: 1.6min]
-- Trend: Excellent velocity maintained, Phase 4 started
+- Last 5 plans: [03-03: 1.5min, 03-04: 2min, 04-01: 1.6min, 04-02: 2min]
+- Trend: Excellent velocity maintained, Phase 4 in progress
 
 *Updated after each plan completion*
 
@@ -96,6 +96,11 @@ Recent decisions affecting current work:
 - Preserve gh credential helper for GitHub authentication (04-01)
 - Remove non-portable sections from gitconfig (coderabbit, gtr) (04-01)
 - Add modern git defaults: main branch, autocrlf=input, autoSetupRemote (04-01)
+- Use XDG-compliant paths for tmux (~/.config/tmux/ instead of ~/.tmux/) (04-02)
+- Auto-clone TPM via .chezmoiexternal.toml (not manual git clone) (04-02)
+- Show only virtualenv name in Python module, not version (reduce noise) (04-02)
+- 5-second threshold for cmd_duration (matches P10k default) (04-02)
+- Disable package and time modules in Starship (reduce noise) (04-02)
 
 ### Pending Todos
 
@@ -112,6 +117,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 04-01-PLAN.md (Git Configuration)
+Stopped at: Completed 04-02-PLAN.md (Tmux & Starship Configuration)
 Resume file: None
-Next: Continue Phase 4 — 3 more plans remaining
+Next: Continue Phase 4 — 2 more plans remaining
