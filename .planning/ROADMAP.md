@@ -18,6 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Shell Configuration** - Migrate zsh/bash configs and aliases
 - [x] **Phase 4: Tool Configs** - Set up git, tmux, and Starship prompt
 - [x] **Phase 5: Bootstrap Implementation** - Build idempotent installer script
+- [ ] **Phase 5.1: Bootstrap Folders & Claude Code Command Center** - Set up bootstrap folder structure and central Claude Code config (INSERTED)
 - [ ] **Phase 6: Migration & Testing** - Deploy and validate on new machine
 
 ## Phase Details
@@ -146,6 +147,29 @@ Plans:
 - [x] 05-01-PLAN.md -- Scaffolding, system config, apt packages, binary tools, plugin managers, Python/Node tools (2.1 min)
 - [x] 05-02-PLAN.md -- Dotfile backup, chezmoi deploy, shell change, SSH keys, summary/checklist, main() wiring (4.5 min)
 
+### Phase 5.1: Bootstrap Folders & Claude Code Command Center (INSERTED)
+**Goal**: Deploy reproducible workspace structure and complete Claude Code environment via chezmoi — workspace folders with boundary files, hook scripts, learning system, and encrypted MCP configs.
+
+**Depends on**: Phase 5 (bootstrap script exists)
+
+**Requirements**: (Structural enhancement — prepares environment for Claude Code workflows)
+
+**Success Criteria** (what must be TRUE):
+  1. Workspace folders (~/projects/, ~/labs/, ~/tools/, ~/tmp/, ~/command-center/) created by chezmoi apply with CLAUDE.md boundary files
+  2. Central command center has CLAUDE.md with workspace map, learning system docs, and safety rules
+  3. Claude Code hooks.json deployed with session + learning hooks (no linting hooks)
+  4. Hook scripts (session-start, session-end, pre-compact, evaluate-session) deployed to ~/.claude/scripts/hooks/
+  5. Continuous-learning-v2 skill deployed with observation hooks, instinct CLI, and observer agent
+  6. MCP server configs age-encrypted and deployed via chezmoi
+  7. Bootstrap.sh uses official Claude Code installer (not bun/npm)
+
+**Plans**: 3 plans
+
+Plans:
+- [ ] 05.1-01-PLAN.md — Workspace folders with CLAUDE.md boundary files + bootstrap.sh Claude Code installer update
+- [ ] 05.1-02-PLAN.md — Hook scripts and shared utility library for ~/.claude/scripts/
+- [ ] 05.1-03-PLAN.md — Claude Code config (hooks.json, settings.json), continuous-learning-v2 skill, encrypted MCP servers
+
 ### Phase 6: Migration & Testing
 **Goal**: Deploy complete environment to new machine (user adminuser) and validate all functionality works end-to-end.
 
@@ -170,7 +194,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 6
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 5.1 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -180,8 +204,9 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 6
 | 3. Shell Configuration | 4/4 | Complete | 2026-02-10 |
 | 4. Tool Configs | 2/2 | Complete | 2026-02-10 |
 | 5. Bootstrap Implementation | 2/2 | Complete | 2026-02-10 |
+| 5.1 Bootstrap Folders & Claude Code Command Center (INSERTED) | 0/3 | In Progress | - |
 | 6. Migration & Testing | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-10 - Phase 5 complete (2/2 plans)*
+*Last updated: 2026-02-11 - Phase 5.1 planned with 3 plans in 1 wave*
