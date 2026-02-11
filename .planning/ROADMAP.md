@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2.1: Repository Consolidation** - Unify chezmoi source, .dotfiles, and .planning into single repo (INSERTED)
 - [x] **Phase 3: Shell Configuration** - Migrate zsh/bash configs and aliases
 - [x] **Phase 4: Tool Configs** - Set up git, tmux, and Starship prompt
-- [ ] **Phase 5: Bootstrap Implementation** - Build idempotent installer script
+- [x] **Phase 5: Bootstrap Implementation** - Build idempotent installer script
 - [ ] **Phase 6: Migration & Testing** - Deploy and validate on new machine
 
 ## Phase Details
@@ -143,8 +143,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md -- Scaffolding, system config, apt packages, binary tools, plugin managers, Python/Node tools
-- [ ] 05-02-PLAN.md -- Dotfile backup, chezmoi deploy, shell change, SSH keys, summary/checklist, main() wiring
+- [x] 05-01-PLAN.md -- Scaffolding, system config, apt packages, binary tools, plugin managers, Python/Node tools (2.1 min)
+- [x] 05-02-PLAN.md -- Dotfile backup, chezmoi deploy, shell change, SSH keys, summary/checklist, main() wiring (4.5 min)
 
 ### Phase 6: Migration & Testing
 **Goal**: Deploy complete environment to new machine (user adminuser) and validate all functionality works end-to-end.
@@ -179,9 +179,9 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 6
 | 2.1 Repository Consolidation (INSERTED) | 2/2 | Complete | 2026-02-10 |
 | 3. Shell Configuration | 4/4 | Complete | 2026-02-10 |
 | 4. Tool Configs | 2/2 | Complete | 2026-02-10 |
-| 5. Bootstrap Implementation | 0/TBD | Not started | - |
+| 5. Bootstrap Implementation | 2/2 | Complete | 2026-02-10 |
 | 6. Migration & Testing | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-10 - Phase 4 complete (2/2 plans)*
+*Last updated: 2026-02-10 - Phase 5 complete (2/2 plans)*

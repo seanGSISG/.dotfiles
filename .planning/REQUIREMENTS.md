@@ -57,9 +57,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### WSL2 Integration
 
-- [ ] **WSL-01**: Configs auto-detect WSL2 and load WSL-specific settings conditionally
-- [ ] **WSL-02**: GNOME Keyring / dbus integration works in WSL2
-- [ ] **WSL-03**: Bootstrap configures /etc/wsl.conf (systemd=true)
+- [x] **WSL-01**: Configs auto-detect WSL2 and load WSL-specific settings conditionally
+- [x] **WSL-02**: GNOME Keyring / dbus integration works in WSL2
+- [x] **WSL-03**: Bootstrap configures /etc/wsl.conf (systemd=true)
 
 ### Package Management
 
@@ -69,24 +69,24 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### SSH & Credentials Migration
 
-- [ ] **SSH-01**: Bootstrap copies ~/.ssh/ directory (keys, config, known_hosts) with correct permissions (700/600)
-- [ ] **SSH-02**: SSH config preserved — especially production Azure VM key (idm-prod-key)
-- [ ] **SSH-03**: Bootstrap verifies SSH key permissions are correct after copy
+- [x] **SSH-01**: Bootstrap copies ~/.ssh/ directory (keys, config, known_hosts) with correct permissions (700/600)
+- [x] **SSH-02**: SSH config preserved — especially production Azure VM key (idm-prod-key)
+- [x] **SSH-03**: Bootstrap verifies SSH key permissions are correct after copy
 
 ### Bootstrap Script
 
-- [ ] **BOOT-01**: bootstrap.sh is idempotent — safe to re-run without breaking anything
-- [ ] **BOOT-02**: Bootstrap installs apt packages from apt-packages.txt (with custom repo setup)
-- [ ] **BOOT-03**: Bootstrap installs antidote (zsh plugin manager)
-- [ ] **BOOT-04**: Bootstrap installs Starship prompt
-- [ ] **BOOT-05**: Bootstrap installs fnm + latest LTS Node
-- [ ] **BOOT-06**: Bootstrap installs fzf, zoxide, uv, bun, tmux plugin manager
-- [ ] **BOOT-07**: Bootstrap installs Claude Code
-- [ ] **BOOT-08**: Bootstrap sets zsh as default shell (chsh)
-- [ ] **BOOT-09**: Bootstrap runs `chezmoi init` and `chezmoi apply` to deploy configs
-- [ ] **BOOT-10**: Bootstrap backs up existing dotfiles to ~/.dotfiles-backup/<timestamp>/
-- [ ] **BOOT-11**: Bootstrap prints post-install checklist (age key from Bitwarden, gh auth, SSH keys, tmux prefix+I, claude login)
-- [ ] **BOOT-12**: Bootstrap has basic error handling (set -euo pipefail, colored output)
+- [x] **BOOT-01**: bootstrap.sh is idempotent — safe to re-run without breaking anything
+- [x] **BOOT-02**: Bootstrap installs apt packages from apt-packages.txt (with custom repo setup)
+- [x] **BOOT-03**: Bootstrap installs antidote (zsh plugin manager)
+- [x] **BOOT-04**: Bootstrap installs Starship prompt
+- [x] **BOOT-05**: Bootstrap installs fnm + latest LTS Node
+- [x] **BOOT-06**: Bootstrap installs fzf, zoxide, uv, bun, tmux plugin manager
+- [x] **BOOT-07**: Bootstrap installs Claude Code
+- [x] **BOOT-08**: Bootstrap sets zsh as default shell (chsh)
+- [x] **BOOT-09**: Bootstrap runs `chezmoi init` and `chezmoi apply` to deploy configs
+- [x] **BOOT-10**: Bootstrap backs up existing dotfiles to ~/.dotfiles-backup/<timestamp>/
+- [x] **BOOT-11**: Bootstrap prints post-install checklist (age key from Bitwarden, gh auth, SSH keys, tmux prefix+I, claude login)
+- [x] **BOOT-12**: Bootstrap has basic error handling (set -euo pipefail, colored output)
 
 ## v2 Requirements
 
@@ -165,24 +165,24 @@ Deferred to future release. Tracked but not in current roadmap.
 | STAR-01 | Phase 4 | Complete |
 | STAR-02 | Phase 4 | Complete |
 | STAR-03 | Phase 4 | Complete |
-| BOOT-01 | Phase 5 | Pending |
-| BOOT-02 | Phase 5 | Pending |
-| BOOT-03 | Phase 5 | Pending |
-| BOOT-04 | Phase 5 | Pending |
-| BOOT-05 | Phase 5 | Pending |
-| BOOT-06 | Phase 5 | Pending |
-| BOOT-07 | Phase 5 | Pending |
-| BOOT-08 | Phase 5 | Pending |
-| BOOT-09 | Phase 5 | Pending |
-| BOOT-10 | Phase 5 | Pending |
-| BOOT-11 | Phase 5 | Pending |
-| BOOT-12 | Phase 5 | Pending |
-| WSL-01 | Phase 5 | Pending |
-| WSL-02 | Phase 5 | Pending |
-| WSL-03 | Phase 5 | Pending |
-| SSH-01 | Phase 5 | Pending |
-| SSH-02 | Phase 5 | Pending |
-| SSH-03 | Phase 5 | Pending |
+| BOOT-01 | Phase 5 | Complete |
+| BOOT-02 | Phase 5 | Complete |
+| BOOT-03 | Phase 5 | Complete |
+| BOOT-04 | Phase 5 | Complete |
+| BOOT-05 | Phase 5 | Complete |
+| BOOT-06 | Phase 5 | Complete |
+| BOOT-07 | Phase 5 | Complete |
+| BOOT-08 | Phase 5 | Complete |
+| BOOT-09 | Phase 5 | Complete |
+| BOOT-10 | Phase 5 | Complete |
+| BOOT-11 | Phase 5 | Complete |
+| BOOT-12 | Phase 5 | Complete |
+| WSL-01 | Phase 5 | Complete |
+| WSL-02 | Phase 5 | Complete |
+| WSL-03 | Phase 5 | Complete |
+| SSH-01 | Phase 5 | Complete |
+| SSH-02 | Phase 5 | Complete |
+| SSH-03 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 51 total
@@ -193,4 +193,4 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 - Phase 4 requirements marked Complete*
+*Last updated: 2026-02-10 - Phase 5 requirements marked Complete (BOOT-01 through BOOT-12, WSL-01 through WSL-03, SSH-01 through SSH-03)*
