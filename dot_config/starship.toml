@@ -1,0 +1,92 @@
+# Starship Prompt Configuration
+# Matches Powerlevel10k Pure aesthetic: clean, minimal, informative
+
+# Format string - controls what appears and order
+format = """
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$cmd_duration\
+$line_break\
+$character"""
+
+# ===================================
+# Character (Prompt Symbol)
+# ===================================
+[character]
+success_symbol = '[❯](bold magenta)'
+error_symbol = '[❯](bold red)'
+
+# ===================================
+# Directory
+# ===================================
+[directory]
+style = 'bold blue'
+truncation_length = 3
+truncate_to_repo = true
+format = '[$path]($style) '
+
+# ===================================
+# Git
+# ===================================
+[git_branch]
+symbol = ' '
+format = 'on [$symbol$branch]($style) '
+style = 'bold cyan'
+truncation_length = 20
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = 'bold red'
+conflicted = '🏳'
+ahead = '⇡${count}'
+behind = '⇣${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+up_to_date = '✓'
+untracked = '?'
+stashed = '$'
+modified = '!'
+staged = '+'
+renamed = '»'
+deleted = '✘'
+
+# ===================================
+# Python (Virtual Environment)
+# ===================================
+[python]
+symbol = ' '
+format = 'via [$symbol$virtualenv]($style) '
+style = 'dimmed yellow'
+# Only show virtualenv name, not Python version (too noisy)
+python_binary = ['python3', 'python']
+detect_extensions = ['py']
+detect_files = ['.python-version', 'Pipfile', 'pyproject.toml', 'requirements.txt', 'setup.py']
+
+# ===================================
+# Node.js
+# ===================================
+[nodejs]
+symbol = ' '
+format = 'via [$symbol($version )]($style)'
+style = 'bold green'
+detect_files = ['package.json', '.node-version', '.nvmrc']
+detect_folders = ['node_modules']
+
+# ===================================
+# Command Duration
+# ===================================
+[cmd_duration]
+min_time = 5_000  # 5 seconds (matches P10k default threshold)
+format = 'took [$duration]($style) '
+style = 'bold yellow'
+
+# ===================================
+# Disabled Modules (Reduce Noise)
+# ===================================
+[package]
+disabled = true
+
+[time]
+disabled = true
