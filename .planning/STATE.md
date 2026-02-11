@@ -13,7 +13,7 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 Phase: 5.1 of 6 in progress (Phase 5.1 - Bootstrap Folders & Claude Code Command Center)
 Plan: 3 of 6 complete in Phase 5.1
 Status: In progress
-Last activity: 2026-02-11 — Completed 05.1-01-PLAN.md (Workspace Folders & Claude Installer)
+Last activity: 2026-02-11 — Completed 05.1-03-PLAN.md (Claude Code Configuration)
 
 Progress: [███████████████████░] 95% overall (19/20 plans complete)
 
@@ -21,8 +21,8 @@ Progress: [███████████████████░] 95% ove
 
 **Velocity:**
 - Total plans completed: 19
-- Average duration: 1.9 min
-- Total execution time: 0.65 hours
+- Average duration: 2.0 min
+- Total execution time: 0.72 hours
 
 **By Phase:**
 
@@ -34,10 +34,10 @@ Progress: [███████████████████░] 95% ove
 | 3. Shell Configuration | 4 | 5.5 min | 1.4 min |
 | 4. Tool Configs | 2 | 3.6 min | 1.8 min |
 | 5. Bootstrap Implementation | 2 | 6.6 min | 3.3 min |
-| 5.1. Bootstrap Folders & Claude Command Center | 3 | 8 min | 2.7 min |
+| 5.1. Bootstrap Folders & Claude Command Center | 3 | 12.5 min | 4.2 min |
 
 **Recent Trend:**
-- Last 5 plans: [05-01: 2.1min, 05-02: 4.5min, 05.1-01: 2min, 05.1-02: 2min, 05.1-01: 4min]
+- Last 5 plans: [05-02: 4.5min, 05.1-01: 2min, 05.1-02: 2min, 05.1-01: 4min, 05.1-03: 4.5min]
 - Trend: Phase 5.1 completing workspace and Claude Code setup
 
 *Updated after each plan completion*
@@ -124,6 +124,9 @@ Recent decisions affecting current work:
 - Claude Code installs before chezmoi apply (configs deploy after installation) (05.1-01)
 - Exclude .claude/insights/ from chezmoi management (runtime-generated data) (05.1-01)
 - Workspace boundary files (CLAUDE.md) define Claude Code scope for each workspace (05.1-01)
+- No linting hooks — session + learning hooks only (05.1-03)
+- Observer agent disabled by default (enabled: false) (05.1-03)
+- MCP servers age-encrypted (key at ~/.config/age/keys.txt) (05.1-03)
 
 ### Pending Todos
 
@@ -141,6 +144,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 05.1-01-PLAN.md (Workspace Folders & Claude Installer)
+Stopped at: Completed 05.1-03-PLAN.md (Claude Code Configuration)
 Resume file: None
 Next: Continue Phase 5.1 - 3 more plans (MCP servers, learning system, hooks.json/final integration)
