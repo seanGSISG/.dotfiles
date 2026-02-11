@@ -512,45 +512,22 @@ install_node_tools() {
       return 1
     fi
   fi
-
-  # Install Claude Code
-  install_claude_code
 }
 
 install_claude_code() {
-  # Refresh PATH after Node installation
-  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
-
   if command -v claude &>/dev/null; then
     log_skip "Claude Code already installed"
     SKIPPED+=("Claude Code")
     return 0
   fi
 
-  log_info "Installing Claude Code..."
-
-  # Prefer bun if available, fallback to npm
-  if command -v bun &>/dev/null; then
-    if bun install -g @anthropic-ai/claude-code >/dev/null 2>&1; then
-      log_success "Claude Code installed (via bun)"
-      INSTALLED+=("Claude Code")
-    else
-      log_error "Claude Code installation failed"
-      FAILED_STEPS+=("Claude Code")
-      return 1
-    fi
-  elif command -v npm &>/dev/null; then
-    if npm install -g @anthropic-ai/claude-code >/dev/null 2>&1; then
-      log_success "Claude Code installed (via npm)"
-      INSTALLED+=("Claude Code")
-    else
-      log_error "Claude Code installation failed"
-      FAILED_STEPS+=("Claude Code")
-      return 1
-    fi
+  log_info "Installing Claude Code via official installer..."
+  if curl -fsSL https://claude.ai/install.sh | bash >/dev/null 2>&1; then
+    log_success "Claude Code installed"
+    INSTALLED+=("Claude Code")
   else
-    log_error "Neither bun nor npm available - Claude Code installation skipped"
-    FAILED_STEPS+=("Claude Code (bun/npm required)")
+    log_error "Claude Code installation failed"
+    FAILED_STEPS+=("Claude Code")
     return 1
   fi
 }
@@ -856,6 +833,7 @@ main() {
   run_step "Plugin Managers" install_plugin_managers
   run_step "Python Tools" install_python_tools
   run_step "Node.js Tools" install_node_tools
+  run_step "Claude Code" install_claude_code
   run_step "Dotfile Backup" backup_dotfiles
   run_step "Chezmoi Configuration" setup_chezmoi
   run_step "Default Shell" change_default_shell
