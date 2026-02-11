@@ -10,19 +10,19 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 5 of 6 in progress (Phase 5 - Bootstrap Implementation)
-Plan: 1 of 2 complete in Phase 5
-Status: Phase 5 in progress
-Last activity: 2026-02-10 — Completed 05-01-PLAN.md (Bootstrap Scaffolding)
+Phase: 5 of 6 complete (Phase 5 - Bootstrap Implementation)
+Plan: 2 of 2 complete in Phase 5
+Status: Phase 5 complete
+Last activity: 2026-02-10 — Completed 05-02-PLAN.md (Bootstrap Finalization)
 
-Progress: [█████████████████] 94% overall (15/16 plans complete)
+Progress: [██████████████████] 100% overall (16/16 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
-- Average duration: 1.8 min
-- Total execution time: 0.46 hours
+- Total plans completed: 16
+- Average duration: 1.9 min
+- Total execution time: 0.51 hours
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [█████████████████] 94% overall (15/
 | 2.1. Repository Consolidation | 2 | 4 min | 2.0 min |
 | 3. Shell Configuration | 4 | 5.5 min | 1.4 min |
 | 4. Tool Configs | 2 | 3.6 min | 1.8 min |
-| 5. Bootstrap Implementation | 1 | 2.1 min | 2.1 min |
+| 5. Bootstrap Implementation | 2 | 6.6 min | 3.3 min |
 
 **Recent Trend:**
-- Last 5 plans: [03-04: 2min, 04-01: 1.6min, 04-02: 2min, 05-01: 2.1min]
-- Trend: Excellent velocity maintained, Phase 5 in progress
+- Last 5 plans: [04-01: 1.6min, 04-02: 2min, 05-01: 2.1min, 05-02: 4.5min]
+- Trend: All implementation phases complete, ready for Phase 6 (Migration & Testing)
 
 *Updated after each plan completion*
 
@@ -108,6 +108,13 @@ Recent decisions affecting current work:
 - Try apt install for age before GitHub releases fallback (05-01)
 - Install fzf from git with --no-update-rc flags (shell integration in zsh config) (05-01)
 - Prefer bun over npm for Claude Code installation (faster, already installed) (05-01)
+- Auto-detect GitHub repo from git remote origin (falls back to placeholder) (05-02)
+- Chezmoi handles two cases: existing clone (apply) vs fresh machine (clone + apply) (05-02)
+- SSH key setup is interactive (prompts for source path, skippable) (05-02)
+- chsh prompts for password naturally (no automation workaround) (05-02)
+- Post-install checklist has 6 items covering all manual steps (05-02)
+- Continue-on-failure pattern: set +e in main, set -e after (05-02)
+- exec zsh at end lands user in new shell immediately (05-02)
 
 ### Pending Todos
 
@@ -124,6 +131,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 05-01-PLAN.md (Bootstrap Scaffolding) — 2 tasks executed, 2 commits
+Stopped at: Completed 05-02-PLAN.md (Bootstrap Finalization) — Phase 5 complete, all 16 plans done
 Resume file: None
-Next: Ready for 05-02 (Bootstrap Finalization) — add main function, chezmoi, shell change, SSH, backup, summary
+Next: Ready for Phase 6 (Migration & Testing) — deploy bootstrap.sh to fresh WSL2 Ubuntu machine and validate end-to-end
