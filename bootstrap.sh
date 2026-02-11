@@ -21,14 +21,14 @@ GITHUB_REPO="${GITHUB_REPO:-YOUR_GITHUB_USERNAME/dotfiles}"
 # Colors and Formatting
 #===============================================================================
 
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
+RED=$(tput setaf 1 2>/dev/null || echo "")
+GREEN=$(tput setaf 2 2>/dev/null || echo "")
+YELLOW=$(tput setaf 3 2>/dev/null || echo "")
+BLUE=$(tput setaf 4 2>/dev/null || echo "")
+MAGENTA=$(tput setaf 5 2>/dev/null || echo "")
+CYAN=$(tput setaf 6 2>/dev/null || echo "")
+BOLD=$(tput bold 2>/dev/null || echo "")
+RESET=$(tput sgr0 2>/dev/null || echo "")
 
 #===============================================================================
 # Logging Functions
@@ -170,14 +170,10 @@ setup_apt_repos() {
     repos_added=1
   fi
 
-  # Update package cache if repos were added
-  if [ $repos_added -eq 1 ]; then
-    log_info "Updating package cache..."
-    sudo apt-get update -qq
-    log_success "Package cache updated"
-  else
-    log_skip "No new repositories to add"
-  fi
+  # Always update package cache (needed for fresh machines and after repo additions)
+  log_info "Updating package cache..."
+  sudo apt-get update -qq
+  log_success "Package cache updated"
 }
 
 #===============================================================================
@@ -186,9 +182,6 @@ setup_apt_repos() {
 
 install_apt_packages() {
   section_header "Installing System Packages"
-
-  log_info "Updating package cache..."
-  sudo apt-get update -qq
 
   local packages_file="$DOTFILES_DIR/packages/apt-packages.txt"
 
@@ -219,7 +212,7 @@ install_apt_packages() {
       ((skipped++))
     else
       log_info "Installing $pkg..."
-      if sudo apt-get install -y -qq "$pkg" 2>&1 | grep -v "^debconf:"; then
+      if sudo apt-get install -y -qq "$pkg" >/dev/null 2>&1; then
         log_success "$pkg installed"
         INSTALLED+=("$pkg")
         ((installed++))
