@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Package Management & Tool Inventory** - Generate declarative package lists
 - [x] **Phase 2.1: Repository Consolidation** - Unify chezmoi source, .dotfiles, and .planning into single repo (INSERTED)
 - [x] **Phase 3: Shell Configuration** - Migrate zsh/bash configs and aliases
-- [ ] **Phase 4: Tool Configs** - Set up git, tmux, and Starship prompt
+- [x] **Phase 4: Tool Configs** - Set up git, tmux, and Starship prompt
 - [ ] **Phase 5: Bootstrap Implementation** - Build idempotent installer script
 - [ ] **Phase 6: Migration & Testing** - Deploy and validate on new machine
 
@@ -140,13 +140,11 @@ Plans:
   7. Bootstrap copies ~/.ssh/ with correct permissions (700/600) preserving production keys
   8. WSL2-specific settings applied (/etc/wsl.conf with systemd=true, GNOME Keyring/dbus integration)
 
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
-- [ ] 05-04: TBD
+- [ ] 05-01-PLAN.md -- Scaffolding, system config, apt packages, binary tools, plugin managers, Python/Node tools
+- [ ] 05-02-PLAN.md -- Dotfile backup, chezmoi deploy, shell change, SSH keys, summary/checklist, main() wiring
 
 ### Phase 6: Migration & Testing
 **Goal**: Deploy complete environment to new machine (user adminuser) and validate all functionality works end-to-end.
