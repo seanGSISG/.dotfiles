@@ -6,23 +6,23 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** One command (`bootstrap.sh`) sets up a fresh WSL2 Ubuntu machine with the complete dev environment — zsh with Starship prompt, all tools installed, all configs managed by chezmoi, ready to code.
 
-**Current focus:** Phase 6 - Migration & Testing (next)
+**Current focus:** Phase 5.1 - Bootstrap Folders & Claude Code Command Center (next)
 
 ## Current Position
 
-Phase: 5 of 6 complete (Phase 5 - Bootstrap Implementation)
-Plan: 2 of 2 complete in Phase 5
-Status: Phase 5 complete
-Last activity: 2026-02-10 — Completed 05-02-PLAN.md (Bootstrap Finalization)
+Phase: 5.1 of 6 in progress (Phase 5.1 - Bootstrap Folders & Claude Code Command Center)
+Plan: 2 of 6 complete in Phase 5.1
+Status: In progress
+Last activity: 2026-02-11 — Completed 05.1-02-PLAN.md (Hook Scripts & Utility Library)
 
-Progress: [██████████████████] 100% overall (16/16 plans complete)
+Progress: [██████████████████░░] 89% overall (18/20 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
+- Total plans completed: 18
 - Average duration: 1.9 min
-- Total execution time: 0.51 hours
+- Total execution time: 0.58 hours
 
 **By Phase:**
 
@@ -34,10 +34,11 @@ Progress: [██████████████████] 100% overall 
 | 3. Shell Configuration | 4 | 5.5 min | 1.4 min |
 | 4. Tool Configs | 2 | 3.6 min | 1.8 min |
 | 5. Bootstrap Implementation | 2 | 6.6 min | 3.3 min |
+| 5.1. Bootstrap Folders & Claude Command Center | 2 | 4 min | 2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: [04-01: 1.6min, 04-02: 2min, 05-01: 2.1min, 05-02: 4.5min]
-- Trend: All implementation phases complete, ready for Phase 6 (Migration & Testing)
+- Last 5 plans: [04-02: 2min, 05-01: 2.1min, 05-02: 4.5min, 05.1-01: 2min, 05.1-02: 2min]
+- Trend: Phase 5.1 executing workspace and Claude Code setup
 
 *Updated after each plan completion*
 
@@ -115,6 +116,10 @@ Recent decisions affecting current work:
 - Post-install checklist has 6 items covering all manual steps (05-02)
 - Continue-on-failure pattern: set +e in main, set -e after (05-02)
 - exec zsh at end lands user in new shell immediately (05-02)
+- Hardcoded ~/.claude/ paths in hook scripts (not CLAUDE_PLUGIN_ROOT) (05.1-02)
+- "insights" directory name replaces "homunculus" (05.1-02)
+- create_ prefix for ~/.claude/ configs (initial deploy only) (05.1-02)
+- Linux-only deployment (WSL2 Ubuntu) (05.1-02)
 
 ### Pending Todos
 
@@ -123,6 +128,7 @@ None yet.
 ### Roadmap Evolution
 
 - Phase 2.1 inserted after Phase 2: Repository Consolidation (URGENT) — unified split repositories into single source at ~/.dotfiles
+- Phase 5.1 inserted after Phase 5: Bootstrap Folders & Claude Code Command Center (URGENT) — set up bootstrap folder structure and central Claude Code config
 
 ### Blockers/Concerns
 
@@ -130,7 +136,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-10
-Stopped at: Phase 5 complete and verified (8/8 must-haves, 18/18 requirements). All 16 plans done across 6 phases.
-Resume file: .planning/phases/05-bootstrap-implementation/.continue-here.md
-Next: Phase 6 (Migration & Testing) — deploy bootstrap.sh to fresh WSL2 Ubuntu machine and validate end-to-end. Phase 6 has no plans yet (TBD).
+Last session: 2026-02-11
+Stopped at: Completed 05.1-02-PLAN.md (Hook Scripts & Utility Library)
+Resume file: None
+Next: Continue Phase 5.1 - 4 more plans (MCP servers, learning system, hooks.json, bootstrap integration)
