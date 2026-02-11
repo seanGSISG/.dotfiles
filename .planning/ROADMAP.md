@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Shell Configuration** - Migrate zsh/bash configs and aliases
 - [x] **Phase 4: Tool Configs** - Set up git, tmux, and Starship prompt
 - [x] **Phase 5: Bootstrap Implementation** - Build idempotent installer script
-- [ ] **Phase 5.1: Bootstrap Folders & Claude Code Command Center** - Set up bootstrap folder structure and central Claude Code config (INSERTED)
+- [x] **Phase 5.1: Bootstrap Folders & Claude Code Command Center** - Set up bootstrap folder structure and central Claude Code config (INSERTED)
 - [ ] **Phase 6: Migration & Testing** - Deploy and validate on new machine
 
 ## Phase Details
@@ -166,9 +166,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05.1-01-PLAN.md — Workspace folders with CLAUDE.md boundary files + bootstrap.sh Claude Code installer update
-- [ ] 05.1-02-PLAN.md — Hook scripts and shared utility library for ~/.claude/scripts/
-- [ ] 05.1-03-PLAN.md — Claude Code config (hooks.json, settings.json), continuous-learning-v2 skill, encrypted MCP servers
+- [x] 05.1-01-PLAN.md — Workspace folders with CLAUDE.md boundary files + bootstrap.sh Claude Code installer update
+- [x] 05.1-02-PLAN.md — Hook scripts and shared utility library for ~/.claude/scripts/
+- [x] 05.1-03-PLAN.md — Claude Code config (hooks.json, settings.json), continuous-learning-v2 skill, encrypted MCP servers
 
 ### Phase 6: Migration & Testing
 **Goal**: Deploy complete environment to new machine (user adminuser) and validate all functionality works end-to-end.
@@ -204,9 +204,9 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 5.1 -> 6
 | 3. Shell Configuration | 4/4 | Complete | 2026-02-10 |
 | 4. Tool Configs | 2/2 | Complete | 2026-02-10 |
 | 5. Bootstrap Implementation | 2/2 | Complete | 2026-02-10 |
-| 5.1 Bootstrap Folders & Claude Code Command Center (INSERTED) | 0/3 | In Progress | - |
+| 5.1 Bootstrap Folders & Claude Code Command Center (INSERTED) | 3/3 | Complete | 2026-02-11 |
 | 6. Migration & Testing | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-11 - Phase 5.1 planned with 3 plans in 1 wave*
+*Last updated: 2026-02-11 - Phase 5.1 complete (3/3 plans, 7/7 must-haves verified)*

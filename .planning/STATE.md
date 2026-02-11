@@ -6,23 +6,23 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** One command (`bootstrap.sh`) sets up a fresh WSL2 Ubuntu machine with the complete dev environment — zsh with Starship prompt, all tools installed, all configs managed by chezmoi, ready to code.
 
-**Current focus:** Phase 5.1 - Bootstrap Folders & Claude Code Command Center (next)
+**Current focus:** Phase 6 - Migration & Testing (next)
 
 ## Current Position
 
-Phase: 5.1 of 6 in progress (Phase 5.1 - Bootstrap Folders & Claude Code Command Center)
-Plan: 3 of 6 complete in Phase 5.1
-Status: In progress
-Last activity: 2026-02-11 — Completed 05.1-03-PLAN.md (Claude Code Configuration)
+Phase: 5.1 of 6 complete (Phase 5.1 - Bootstrap Folders & Claude Code Command Center)
+Plan: 3 of 3 complete in Phase 5.1
+Status: Phase 5.1 complete, verified (7/7 must-haves)
+Last activity: 2026-02-11 — Completed Phase 5.1 execution and verification
 
-Progress: [███████████████████░] 95% overall (19/20 plans complete)
+Progress: [████████████████████] 100% overall (19/19 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 19
-- Average duration: 2.0 min
-- Total execution time: 0.72 hours
+- Average duration: 2.1 min
+- Total execution time: 0.73 hours
 
 **By Phase:**
 
@@ -37,8 +37,8 @@ Progress: [███████████████████░] 95% ove
 | 5.1. Bootstrap Folders & Claude Command Center | 3 | 12.5 min | 4.2 min |
 
 **Recent Trend:**
-- Last 5 plans: [05-02: 4.5min, 05.1-01: 2min, 05.1-02: 2min, 05.1-01: 4min, 05.1-03: 4.5min]
-- Trend: Phase 5.1 completing workspace and Claude Code setup
+- Last 5 plans: [05-02: 4.5min, 05.1-01: 4min, 05.1-02: 2.3min, 05.1-03: 4.5min]
+- Trend: All implementation phases complete, ready for Phase 6 (Migration & Testing)
 
 *Updated after each plan completion*
 
@@ -144,6 +144,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 05.1-03-PLAN.md (Claude Code Configuration)
+Stopped at: Phase 5.1 complete and verified (7/7 must-haves, 19/19 plans across 7 phases)
 Resume file: None
-Next: Continue Phase 5.1 - 3 more plans (MCP servers, learning system, hooks.json/final integration)
+Next: Phase 6 (Migration & Testing) — deploy and validate on new machine. Phase 6 has no plans yet (TBD).
