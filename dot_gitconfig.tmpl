@@ -1,0 +1,27 @@
+# Managed by chezmoi - edit source, not this file
+# Source: ~/.dotfiles/dot_gitconfig.tmpl
+
+[user]
+	name = {{ .git_name | quote }}
+	email = {{ .git_email | quote }}
+
+[core]
+	editor = {{ .editor | default "code --wait" | quote }}
+	autocrlf = input
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[push]
+	autoSetupRemote = true
+
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
