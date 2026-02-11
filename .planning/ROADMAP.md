@@ -117,11 +117,11 @@ Plans:
   3. Developer sees Starship prompt showing git branch/status, virtualenv, node version, command duration
   4. Starship theme is visually comparable or better than current Powerlevel10k setup
 
-**Plans**: 2 plans
+**Plans**: 2 plans (2 complete)
 
 Plans:
-- [ ] 04-01-PLAN.md -- Git config templated with chezmoi variables (name, email, editor) + update .chezmoi.toml.tmpl [data] section
-- [ ] 04-02-PLAN.md -- Tmux config (XDG-compliant, TPM auto-install) + Starship prompt config (P10k Pure style)
+- [x] 04-01-PLAN.md -- Git config templated with chezmoi variables (name, email, editor) + update .chezmoi.toml.tmpl [data] section
+- [x] 04-02-PLAN.md -- Tmux config (XDG-compliant, TPM auto-install) + Starship prompt config (P10k Pure style)
 
 ### Phase 5: Bootstrap Implementation
 **Goal**: Build idempotent bootstrap.sh that installs all dependencies, sets up zsh as default shell, configures WSL2, handles SSH keys, and deploys chezmoi configs.
@@ -180,10 +180,10 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 6
 | 2. Package Management & Tool Inventory | 2/2 | Complete | 2026-02-10 |
 | 2.1 Repository Consolidation (INSERTED) | 2/2 | Complete | 2026-02-10 |
 | 3. Shell Configuration | 4/4 | Complete | 2026-02-10 |
-| 4. Tool Configs | 0/TBD | Not started | - |
+| 4. Tool Configs | 2/2 | Complete | 2026-02-10 |
 | 5. Bootstrap Implementation | 0/TBD | Not started | - |
 | 6. Migration & Testing | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-10 - Phase 3 complete (4/4 plans)*
+*Last updated: 2026-02-10 - Phase 4 complete (2/2 plans)*
