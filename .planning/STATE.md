@@ -10,19 +10,19 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 4 of 6 complete (next: Phase 5 - Bootstrap Implementation)
-Plan: 2 of 2 complete in Phase 4
-Status: Phase 4 complete, Phase 5 not started
-Last activity: 2026-02-10 — Completed Phase 4 (Tool Configs)
+Phase: 5 of 6 in progress (Phase 5 - Bootstrap Implementation)
+Plan: 1 of 2 complete in Phase 5
+Status: Phase 5 in progress
+Last activity: 2026-02-10 — Completed 05-01-PLAN.md (Bootstrap Scaffolding)
 
-Progress: [████████████████░] 88% overall (14/16 plans complete)
+Progress: [█████████████████] 94% overall (15/16 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
+- Total plans completed: 15
 - Average duration: 1.8 min
-- Total execution time: 0.43 hours
+- Total execution time: 0.46 hours
 
 **By Phase:**
 
@@ -33,10 +33,11 @@ Progress: [████████████████░] 88% overall (14/
 | 2.1. Repository Consolidation | 2 | 4 min | 2.0 min |
 | 3. Shell Configuration | 4 | 5.5 min | 1.4 min |
 | 4. Tool Configs | 2 | 3.6 min | 1.8 min |
+| 5. Bootstrap Implementation | 1 | 2.1 min | 2.1 min |
 
 **Recent Trend:**
-- Last 5 plans: [03-03: 1.5min, 03-04: 2min, 04-01: 1.6min, 04-02: 2min]
-- Trend: Excellent velocity maintained, Phase 4 completed in single wave
+- Last 5 plans: [03-04: 2min, 04-01: 1.6min, 04-02: 2min, 05-01: 2.1min]
+- Trend: Excellent velocity maintained, Phase 5 in progress
 
 *Updated after each plan completion*
 
@@ -101,6 +102,12 @@ Recent decisions affecting current work:
 - Show only virtualenv name in Python module, not version (reduce noise) (04-02)
 - 5-second threshold for cmd_duration (matches P10k default) (04-02)
 - Disable package and time modules in Starship (reduce noise) (04-02)
+- Use tput for colored output instead of raw ANSI codes (more portable) (05-01)
+- Continue-on-failure pattern with error collection for bootstrap scripts (05-01)
+- Strip version constraints from apt-packages.txt during parsing (05-01)
+- Try apt install for age before GitHub releases fallback (05-01)
+- Install fzf from git with --no-update-rc flags (shell integration in zsh config) (05-01)
+- Prefer bun over npm for Claude Code installation (faster, already installed) (05-01)
 
 ### Pending Todos
 
@@ -117,6 +124,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed Phase 4 (Tool Configs) — all 2 plans executed, verified (11/11 pass)
+Stopped at: Completed 05-01-PLAN.md (Bootstrap Scaffolding) — 2 tasks executed, 2 commits
 Resume file: None
-Next: Ready for Phase 5 (Bootstrap Implementation) — plan-phase then execute
+Next: Ready for 05-02 (Bootstrap Finalization) — add main function, chezmoi, shell change, SSH, backup, summary
