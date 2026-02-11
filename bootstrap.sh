@@ -11,6 +11,12 @@ set -euo pipefail
 
 DOTFILES_DIR="$HOME/.dotfiles"
 
+# Detect GitHub repo from existing git remote, or use default
+if [ -d "$DOTFILES_DIR/.git" ]; then
+  GITHUB_REPO=$(git -C "$DOTFILES_DIR" remote get-url origin 2>/dev/null | sed 's|.*github.com[:/]||;s|\.git$||' || echo "")
+fi
+GITHUB_REPO="${GITHUB_REPO:-YOUR_GITHUB_USERNAME/dotfiles}"
+
 #===============================================================================
 # Colors and Formatting
 #===============================================================================
@@ -555,3 +561,335 @@ install_claude_code() {
     return 1
   fi
 }
+
+#===============================================================================
+# Dotfile Backup
+#===============================================================================
+
+backup_dotfiles() {
+  section_header "Dotfile Backup"
+
+  local backup_dir="$HOME/.dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
+  local files_to_backup=(.zshrc .bashrc .profile .gitconfig .tmux.conf)
+  local dirs_to_backup=(.config/zsh .config/tmux .config/starship.toml)
+  local backed_up=0
+
+  # Check files
+  for file in "${files_to_backup[@]}"; do
+    if [ -f "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
+      if [ $backed_up -eq 0 ]; then
+        log_info "Backing up existing dotfiles to $backup_dir..."
+        mkdir -p "$backup_dir"
+        backed_up=1
+      fi
+      cp -aL "$HOME/$file" "$backup_dir/"
+      log_info "Backed up: $file"
+    fi
+  done
+
+  # Check directories
+  for dir in "${dirs_to_backup[@]}"; do
+    if [ -d "$HOME/$dir" ] && [ ! -L "$HOME/$dir" ]; then
+      if [ $backed_up -eq 0 ]; then
+        log_info "Backing up existing dotfiles to $backup_dir..."
+        mkdir -p "$backup_dir"
+        backed_up=1
+      fi
+      mkdir -p "$backup_dir/$(dirname "$dir")"
+      cp -aL "$HOME/$dir" "$backup_dir/$dir"
+      log_info "Backed up: $dir"
+    fi
+  done
+
+  if [ $backed_up -eq 1 ]; then
+    log_success "Dotfiles backed up to $backup_dir"
+    INSTALLED+=("Dotfile backup")
+  else
+    log_skip "No existing dotfiles to backup"
+    SKIPPED+=("Dotfile backup")
+  fi
+}
+
+#===============================================================================
+# Chezmoi Setup
+#===============================================================================
+
+setup_chezmoi() {
+  section_header "Chezmoi Configuration"
+
+  # Check if chezmoi is installed
+  if ! command -v chezmoi &>/dev/null; then
+    log_info "Installing chezmoi..."
+    if sh -c "$(curl -fsLS https://get.chezmoi.io)" -- -b "$HOME/.local/bin" >/dev/null 2>&1; then
+      log_success "chezmoi installed"
+      INSTALLED+=("chezmoi")
+      # Ensure it's in PATH for this session
+      export PATH="$HOME/.local/bin:$PATH"
+    else
+      log_error "chezmoi installation failed"
+      FAILED_STEPS+=("chezmoi")
+      return 1
+    fi
+  else
+    log_skip "chezmoi already installed"
+    SKIPPED+=("chezmoi")
+  fi
+
+  # Check if dotfiles repo already cloned
+  if [ -d "$DOTFILES_DIR/.git" ]; then
+    log_info "Dotfiles repo exists, running chezmoi apply..."
+    if chezmoi init --apply --source "$DOTFILES_DIR" >/dev/null 2>&1; then
+      log_success "chezmoi configurations applied"
+      INSTALLED+=("chezmoi apply")
+    else
+      log_error "chezmoi apply failed"
+      FAILED_STEPS+=("chezmoi apply")
+      return 1
+    fi
+  else
+    log_info "Cloning dotfiles repo from GitHub..."
+    if git clone "https://github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" >/dev/null 2>&1; then
+      log_success "Dotfiles repo cloned"
+      log_info "Running chezmoi init --apply..."
+      if chezmoi init --apply --source "$DOTFILES_DIR" >/dev/null 2>&1; then
+        log_success "chezmoi configurations applied"
+        INSTALLED+=("chezmoi init + apply")
+      else
+        log_error "chezmoi apply failed"
+        FAILED_STEPS+=("chezmoi apply")
+        return 1
+      fi
+    else
+      log_error "Failed to clone dotfiles repo"
+      FAILED_STEPS+=("dotfiles clone")
+      return 1
+    fi
+  fi
+
+  # Check for age key
+  if [ ! -f "$HOME/.config/age/keys.txt" ]; then
+    echo ""
+    echo "${YELLOW}⚠${RESET}  Age encryption key not found at ~/.config/age/keys.txt"
+    echo "${YELLOW}   Encrypted files were skipped. Add the key and run 'chezmoi apply' again.${RESET}"
+  fi
+}
+
+#===============================================================================
+# Shell Change
+#===============================================================================
+
+change_default_shell() {
+  section_header "Default Shell"
+
+  local target_shell="/usr/bin/zsh"
+
+  # Check if already using zsh
+  if [ "$SHELL" = "$target_shell" ]; then
+    log_skip "Shell already set to zsh"
+    SKIPPED+=("Shell change")
+    return 0
+  fi
+
+  # Verify zsh is in /etc/shells
+  if ! grep -q "^$target_shell$" /etc/shells 2>/dev/null; then
+    log_info "Adding zsh to /etc/shells..."
+    echo "$target_shell" | sudo tee -a /etc/shells >/dev/null
+  fi
+
+  log_info "Changing default shell to zsh..."
+  echo "${YELLOW}Note: You'll be prompted for your password${RESET}"
+
+  # chsh requires interactive password
+  if chsh -s "$target_shell"; then
+    log_success "Default shell changed to zsh (takes effect on next login)"
+    INSTALLED+=("zsh as default shell")
+  else
+    log_error "Failed to change default shell"
+    FAILED_STEPS+=("Shell change")
+    return 1
+  fi
+}
+
+#===============================================================================
+# SSH Key Setup
+#===============================================================================
+
+setup_ssh_keys() {
+  section_header "SSH Keys"
+
+  echo ""
+  echo "${CYAN}SSH Key Setup${RESET}"
+  echo "Enter path to existing SSH directory (e.g., /mnt/c/Users/YourName/.ssh)"
+  echo "or press Enter to skip:"
+  read -r ssh_source
+
+  # Skip if user pressed Enter
+  if [ -z "$ssh_source" ]; then
+    log_skip "SSH key setup skipped"
+    SKIPPED+=("SSH keys")
+    return 0
+  fi
+
+  # Validate source directory exists
+  if [ ! -d "$ssh_source" ]; then
+    log_error "SSH source directory not found: $ssh_source"
+    FAILED_STEPS+=("SSH keys")
+    return 1
+  fi
+
+  log_info "Copying SSH keys from $ssh_source..."
+
+  # Create .ssh directory with correct permissions
+  mkdir -p "$HOME/.ssh"
+  chmod 700 "$HOME/.ssh"
+
+  # Copy all files
+  if cp -r "$ssh_source"/* "$HOME/.ssh/" 2>/dev/null; then
+    log_success "SSH keys copied"
+  else
+    log_error "Failed to copy SSH keys"
+    FAILED_STEPS+=("SSH keys")
+    return 1
+  fi
+
+  # Fix permissions
+  log_info "Setting correct permissions..."
+  chmod 700 "$HOME/.ssh"
+  find "$HOME/.ssh" -type f -name "id_*" ! -name "*.pub" -exec chmod 600 {} \; 2>/dev/null || true
+  find "$HOME/.ssh" -type f -name "*.pub" -exec chmod 644 {} \; 2>/dev/null || true
+  [ -f "$HOME/.ssh/config" ] && chmod 600 "$HOME/.ssh/config"
+  [ -f "$HOME/.ssh/known_hosts" ] && chmod 644 "$HOME/.ssh/known_hosts"
+
+  # Verify permissions
+  local ssh_perms=$(stat -c '%a' "$HOME/.ssh" 2>/dev/null || echo "000")
+  if [ "$ssh_perms" = "700" ]; then
+    log_success "SSH keys configured with correct permissions (700/600/644)"
+    INSTALLED+=("SSH keys")
+  else
+    log_error "SSH directory permissions incorrect: $ssh_perms (expected 700)"
+    FAILED_STEPS+=("SSH key permissions")
+    return 1
+  fi
+}
+
+#===============================================================================
+# Summary and Checklist
+#===============================================================================
+
+print_summary() {
+  echo ""
+  echo "${BOLD}${GREEN}═══════════════════════════════════════════════════════${RESET}"
+  echo "${BOLD}${GREEN}  Bootstrap Complete!${RESET}"
+  echo "${BOLD}${GREEN}═══════════════════════════════════════════════════════${RESET}"
+  echo ""
+
+  # Print installed items
+  if [ ${#INSTALLED[@]} -gt 0 ]; then
+    echo "${BOLD}${GREEN}Installed:${RESET}"
+    for item in "${INSTALLED[@]}"; do
+      echo "  ${GREEN}✓${RESET} $item"
+    done
+    echo ""
+  fi
+
+  # Print skipped items
+  if [ ${#SKIPPED[@]} -gt 0 ]; then
+    echo "${BOLD}${YELLOW}Skipped (already installed):${RESET}"
+    for item in "${SKIPPED[@]}"; do
+      echo "  ${YELLOW}⊘${RESET} $item"
+    done
+    echo ""
+  fi
+
+  # Print failed items
+  if [ ${#FAILED_STEPS[@]} -gt 0 ]; then
+    echo "${BOLD}${RED}Failed:${RESET}"
+    for item in "${FAILED_STEPS[@]}"; do
+      echo "  ${RED}✗${RESET} $item"
+    done
+    echo ""
+  fi
+
+  # Post-install checklist
+  echo "${BOLD}${CYAN}Post-Install Checklist:${RESET}"
+  echo ""
+  echo "  ${BOLD}1. Age Encryption Key${RESET}"
+  echo "     Retrieve from Bitwarden and save to: ${CYAN}~/.config/age/keys.txt${RESET}"
+  echo "     Then run: ${CYAN}chezmoi apply${RESET}"
+  echo ""
+  echo "  ${BOLD}2. GitHub Authentication${RESET}"
+  echo "     Run: ${CYAN}gh auth login${RESET}"
+  echo ""
+  echo "  ${BOLD}3. Tmux Plugins${RESET}"
+  echo "     Open tmux and press: ${CYAN}prefix + I${RESET} (Install plugins)"
+  echo ""
+  echo "  ${BOLD}4. Claude Code Authentication${RESET}"
+  echo "     Run: ${CYAN}claude login${RESET}"
+  echo ""
+  echo "  ${BOLD}5. SSH Verification${RESET}"
+  echo "     Test SSH keys: ${CYAN}ssh -T git@github.com${RESET}"
+  echo ""
+  echo "  ${BOLD}6. WSL Restart${RESET}"
+  echo "     From PowerShell, run: ${CYAN}wsl.exe --shutdown${RESET}"
+  echo "     Then restart WSL to enable systemd"
+  echo ""
+}
+
+#===============================================================================
+# Main Execution
+#===============================================================================
+
+main() {
+  echo "${BOLD}${CYAN}"
+  echo "╔═══════════════════════════════════════════════════════════════╗"
+  echo "║                                                               ║"
+  echo "║           WSL2 Dev Environment Bootstrap                      ║"
+  echo "║                                                               ║"
+  echo "╚═══════════════════════════════════════════════════════════════╝"
+  echo "${RESET}"
+  echo ""
+
+  # Check prerequisites (under set -euo pipefail)
+  check_prerequisites
+
+  # Disable exit-on-error for main sections (continue-on-failure pattern)
+  set +e
+
+  # Run all sections via run_step
+  run_step "WSL2 Configuration" configure_wsl
+  run_step "APT Repository Setup" setup_apt_repos
+  run_step "System Packages" install_apt_packages
+  run_step "Binary Tools" install_binary_tools
+  run_step "Plugin Managers" install_plugin_managers
+  run_step "Python Tools" install_python_tools
+  run_step "Node.js Tools" install_node_tools
+  run_step "Dotfile Backup" backup_dotfiles
+  run_step "Chezmoi Configuration" setup_chezmoi
+  run_step "Default Shell" change_default_shell
+  run_step "SSH Keys" setup_ssh_keys
+
+  # Re-enable exit-on-error
+  set -e
+
+  # Print summary
+  print_summary
+
+  # Handle failures
+  if [ ${#FAILED_STEPS[@]} -gt 0 ]; then
+    echo ""
+    echo "${BOLD}${RED}═══════════════════════════════════════════════════════${RESET}"
+    echo "${BOLD}${RED}  Some steps failed. See above for details.${RESET}"
+    echo "${BOLD}${RED}═══════════════════════════════════════════════════════${RESET}"
+    echo ""
+    echo "Re-run this script to retry failed steps."
+    exit 1
+  fi
+
+  # Auto-start zsh
+  echo ""
+  echo "${CYAN}Starting new zsh shell...${RESET}"
+  exec zsh
+}
+
+# Execute main function
+main "$@"
