@@ -1,6 +1,9 @@
 # Starship Prompt Configuration
 # Matches Powerlevel10k Pure aesthetic: clean, minimal, informative
 
+# Allow more time for directory scanning (default 30ms too short for large dirs)
+scan_timeout = 100
+
 # Format string - controls what appears and order
 format = """
 $directory\
