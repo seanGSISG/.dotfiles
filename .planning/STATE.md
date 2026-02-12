@@ -148,11 +148,11 @@ None yet.
 
 ### Blockers/Concerns
 
-None yet.
+- Bootstrap first deployment failed — fixed stdin safety, ordering, and auth issues (9bf529c). Awaiting user re-run.
 
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 06-02-PLAN.md (bootstrap logging & verify.sh)
-Resume file: None
-Next: All planning complete (21/21 plans done). Ready for deployment to target machine (adminuser).
+Stopped at: Plan 06-03 Task 2 checkpoint — first deployment failed, fixes pushed, awaiting re-run
+Resume file: .planning/phases/06-migration-testing/.continue-here.md
+Next: User re-runs bootstrap on fresh machine, shares verify.sh output. Then complete 06-03, verify phase, finish milestone.
