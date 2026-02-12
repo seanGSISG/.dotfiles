@@ -6,7 +6,7 @@ export ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
 
 # --- PATH Construction ---
 # Single authoritative location - no duplication
-export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.bun/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:$HOME/.bun/bin:$HOME/.fzf/bin:$PATH"
 
 # --- Environment Variables ---
 export EDITOR="${EDITOR:-code}"
