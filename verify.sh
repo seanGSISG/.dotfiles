@@ -31,17 +31,17 @@ WARNINGS=0
 
 check_pass() {
   echo "${GREEN}  ✓${RESET} $1"
-  ((PASSED++))
+  PASSED=$((PASSED + 1))
 }
 
 check_fail() {
   echo "${RED}  ✗${RESET} $1"
-  ((FAILED++))
+  FAILED=$((FAILED + 1))
 }
 
 check_warn() {
   echo "${YELLOW}  ⚠${RESET} $1"
-  ((WARNINGS++))
+  WARNINGS=$((WARNINGS + 1))
 }
 
 section_header() {
