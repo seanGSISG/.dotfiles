@@ -53,17 +53,6 @@ log_error() {
   echo "${RED}✗${RESET} $1" >&2
 }
 
-spin() {
-  local pid=$1
-  local frames='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
-  local i=0
-  while kill -0 "$pid" 2>/dev/null; do
-    printf "\r  %s " "${frames:i++%${#frames}:1}"
-    sleep 0.1
-  done
-  printf "\r    \r"
-}
-
 section_header() {
   echo ""
   echo "${BOLD}${MAGENTA}═══════════════════════════════════════════════════════${RESET}"
@@ -709,18 +698,19 @@ setup_age_key() {
 apply_chezmoi() {
   section_header "Chezmoi Apply"
 
-  log_info "Applying chezmoi configurations (this may take a minute)..."
-  chezmoi init --apply --source "$DOTFILES_DIR" >/dev/null 2>&1 &
-  local pid=$!
-  spin "$pid"
-  if wait "$pid"; then
+  log_info "Applying chezmoi configurations..."
+  set -o pipefail
+  if chezmoi init --apply --source "$DOTFILES_DIR" --verbose </dev/null 2>&1 | \
+     awk '{n++; printf "\r  \033[36m%d items processed\033[0m", n} END {print ""}'; then
     log_success "chezmoi configurations applied"
     INSTALLED+=("chezmoi apply")
   else
     log_error "chezmoi apply failed"
     FAILED_STEPS+=("chezmoi apply")
+    set +o pipefail
     return 1
   fi
+  set +o pipefail
 }
 
 #===============================================================================
