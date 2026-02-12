@@ -725,7 +725,7 @@ apply_chezmoi() {
   # Skip if config already exists (avoids potential git operations on re-runs)
   if [ ! -f "$HOME/.config/chezmoi/chezmoi.toml" ]; then
     log_info "Initializing chezmoi configuration..."
-    if ! timeout 30 chezmoi init --source "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
+    if ! timeout 30 chezmoi init --source "$DOTFILES_DIR" --no-pager --no-tty </dev/null >/dev/null 2>&1; then
       log_error "chezmoi init failed or timed out"
       FAILED_STEPS+=("chezmoi init")
       return 1
@@ -733,10 +733,11 @@ apply_chezmoi() {
   fi
 
   # Apply managed files, excluding externals (TPM handled in install_plugin_managers)
-  # No --verbose pipe — the verbose|awk pipeline deadlocks under exec>(tee) logging
+  # --force: don't prompt for overwrite confirmation (we already backed up dotfiles)
+  # --no-pager --no-tty: prevent pager/TTY deadlock (chezmoi issue #4874)
   log_info "Applying chezmoi configurations..."
   local chezmoi_output
-  if chezmoi_output=$(timeout 120 chezmoi apply --source "$DOTFILES_DIR" --exclude=externals </dev/null 2>&1); then
+  if chezmoi_output=$(timeout 120 chezmoi apply --source "$DOTFILES_DIR" --force --no-pager --no-tty --exclude=externals </dev/null 2>&1); then
     log_success "chezmoi configurations applied"
     INSTALLED+=("chezmoi apply")
   else
