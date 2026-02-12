@@ -10,19 +10,19 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 ## Current Position
 
-Phase: 5.1 of 6 complete (Phase 5.1 - Bootstrap Folders & Claude Code Command Center)
-Plan: 3 of 3 complete in Phase 5.1
-Status: Phase 5.1 complete, verified (7/7 must-haves)
-Last activity: 2026-02-11 — Completed Phase 5.1 execution and verification
+Phase: 6 of 6 in progress (Phase 6 - Migration & Testing)
+Plan: 1 complete in Phase 6
+Status: In progress
+Last activity: 2026-02-12 — Completed 06-01-PLAN.md
 
-Progress: [████████████████████] 100% overall (19/19 plans complete)
+Progress: [████████████████████░] 95% overall (20/21 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: 2.1 min
-- Total execution time: 0.73 hours
+- Total plans completed: 20
+- Average duration: 2.0 min
+- Total execution time: 0.77 hours
 
 **By Phase:**
 
@@ -35,10 +35,11 @@ Progress: [████████████████████] 100% ov
 | 4. Tool Configs | 2 | 3.6 min | 1.8 min |
 | 5. Bootstrap Implementation | 2 | 6.6 min | 3.3 min |
 | 5.1. Bootstrap Folders & Claude Command Center | 3 | 12.5 min | 4.2 min |
+| 6. Migration & Testing | 1 | 2 min | 2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: [05-02: 4.5min, 05.1-01: 4min, 05.1-02: 2.3min, 05.1-03: 4.5min]
-- Trend: All implementation phases complete, ready for Phase 6 (Migration & Testing)
+- Last 5 plans: [05.1-02: 2.3min, 05.1-03: 4.5min, 06-01: 2min]
+- Trend: Phase 6 started, SSH key automation complete
 
 *Updated after each plan completion*
 
@@ -127,6 +128,10 @@ Recent decisions affecting current work:
 - No linting hooks — session + learning hooks only (05.1-03)
 - Observer agent disabled by default (enabled: false) (05.1-03)
 - MCP servers age-encrypted (key at ~/.config/age/keys.txt) (05.1-03)
+- SSH keys stored age-encrypted in chezmoi repo for automatic deployment (06-01)
+- Age key prompt runs before chezmoi apply to ensure decryption works (06-01)
+- Split setup_chezmoi() into install_chezmoi() + setup_age_key() + apply_chezmoi() (06-01)
+- Remove interactive SSH copy function (replaced by chezmoi-managed keys) (06-01)
 
 ### Pending Todos
 
@@ -143,7 +148,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: Phase 5.1 complete and verified (7/7 must-haves, 19/19 plans across 7 phases)
+Last session: 2026-02-12
+Stopped at: Completed 06-01-PLAN.md (SSH keys & age prompt)
 Resume file: None
-Next: Phase 6 (Migration & Testing) — deploy and validate on new machine. Phase 6 has no plans yet (TBD).
+Next: Continue Phase 6 (Migration & Testing) — more plans TBD for actual deployment testing.
