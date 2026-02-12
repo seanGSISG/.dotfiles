@@ -11,18 +11,18 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 6 of 6 in progress (Phase 6 - Migration & Testing)
-Plan: 1 complete in Phase 6
+Plan: 2 complete in Phase 6
 Status: In progress
-Last activity: 2026-02-12 — Completed 06-01-PLAN.md
+Last activity: 2026-02-12 — Completed 06-02-PLAN.md
 
-Progress: [████████████████████░] 95% overall (20/21 plans complete)
+Progress: [█████████████████████] 100% overall (21/21 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
+- Total plans completed: 21
 - Average duration: 2.0 min
-- Total execution time: 0.77 hours
+- Total execution time: 0.80 hours
 
 **By Phase:**
 
@@ -35,11 +35,11 @@ Progress: [████████████████████░] 95% 
 | 4. Tool Configs | 2 | 3.6 min | 1.8 min |
 | 5. Bootstrap Implementation | 2 | 6.6 min | 3.3 min |
 | 5.1. Bootstrap Folders & Claude Command Center | 3 | 12.5 min | 4.2 min |
-| 6. Migration & Testing | 1 | 2 min | 2.0 min |
+| 6. Migration & Testing | 2 | 4 min | 2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: [05.1-02: 2.3min, 05.1-03: 4.5min, 06-01: 2min]
-- Trend: Phase 6 started, SSH key automation complete
+- Last 5 plans: [05.1-03: 4.5min, 06-01: 2min, 06-02: 2min]
+- Trend: Phase 6 complete — all planning artifacts done, ready for deployment
 
 *Updated after each plan completion*
 
@@ -132,6 +132,10 @@ Recent decisions affecting current work:
 - Age key prompt runs before chezmoi apply to ensure decryption works (06-01)
 - Split setup_chezmoi() into install_chezmoi() + setup_age_key() + apply_chezmoi() (06-01)
 - Remove interactive SSH copy function (replaced by chezmoi-managed keys) (06-01)
+- Bootstrap logs to timestamped file via tee for post-mortem debugging (06-02)
+- Log file: ~/.dotfiles-bootstrap-YYYYMMDD_HHMMSS.log (06-02)
+- verify.sh with 38 checks across 8 categories for environment validation (06-02)
+- verify.sh exit code 0 for success, 1 for failures (scriptable) (06-02)
 
 ### Pending Todos
 
@@ -149,6 +153,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 06-01-PLAN.md (SSH keys & age prompt)
+Stopped at: Completed 06-02-PLAN.md (bootstrap logging & verify.sh)
 Resume file: None
-Next: Continue Phase 6 (Migration & Testing) — more plans TBD for actual deployment testing.
+Next: All planning complete (21/21 plans done). Ready for deployment to target machine (adminuser).
