@@ -64,11 +64,18 @@ verify_shell_config() {
     check_fail "Default shell is not zsh (current: $SHELL)"
   fi
 
-  # .zshrc exists
-  if [ -f ~/.zshrc ]; then
-    check_pass ".zshrc exists"
+  # .zshenv exists (sets ZDOTDIR)
+  if [ -f ~/.zshenv ]; then
+    check_pass ".zshenv exists"
   else
-    check_fail ".zshrc not found"
+    check_fail ".zshenv not found"
+  fi
+
+  # .zshrc exists in ZDOTDIR
+  if [ -f ~/.config/zsh/.zshrc ]; then
+    check_pass ".config/zsh/.zshrc exists"
+  else
+    check_fail "~/.config/zsh/.zshrc not found"
   fi
 
   # Zsh config directory exists
@@ -117,7 +124,8 @@ verify_config_files() {
   section_header "3. Config Files Deployed"
 
   local files=(
-    ~/.zshrc
+    ~/.zshenv
+    ~/.config/zsh/.zshrc
     ~/.bashrc
     ~/.profile
     ~/.gitconfig

@@ -1,5 +1,6 @@
-# ~/.zshrc - Modular zsh configuration
-# Managed by chezmoi - edit source at ~/.dotfiles/dot_zshrc.tmpl
+# ~/.config/zsh/.zshrc - Modular zsh configuration
+# Managed by chezmoi - edit source at ~/.dotfiles/dot_config/zsh/dot_zshrc.tmpl
+# ZDOTDIR is set in ~/.zshenv (dot_zshenv)
 #
 # Load order:
 #   1. exports.zsh   - PATH, env vars, history
@@ -9,8 +10,6 @@
 #   5. aliases/      - categorized alias files
 #   6. wsl.zsh       - WSL2-specific (conditional)
 #   7. Starship      - prompt (must be last)
-
-ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
 
 # Source modular config files
 source "$ZDOTDIR/exports.zsh"

@@ -1,0 +1,2 @@
+# ~/.zshrc - Modular zsh configuration
+# Real config is in ~/.config/zsh/.zshrc (ZDOTDIR set by ~/.zshenv)

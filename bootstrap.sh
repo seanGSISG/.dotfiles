@@ -587,7 +587,7 @@ backup_dotfiles() {
   section_header "Dotfile Backup"
 
   local backup_dir="$HOME/.dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
-  local files_to_backup=(.zshrc .bashrc .profile .gitconfig .tmux.conf)
+  local files_to_backup=(.zshenv .zshrc .bashrc .profile .gitconfig .tmux.conf)
   local dirs_to_backup=(.config/zsh .config/tmux .config/starship.toml)
   local backed_up=0
 
