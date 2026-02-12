@@ -416,8 +416,31 @@ install_plugin_managers() {
   # antidote (zsh plugin manager)
   install_antidote
 
-  # TPM note (managed by chezmoi)
-  log_info "TPM (Tmux Plugin Manager) will be installed via chezmoi .chezmoiexternal.toml"
+  # TPM (Tmux Plugin Manager) — cloned here instead of via chezmoi externals
+  # to avoid hanging on slow git clones during bootstrap
+  install_tpm
+}
+
+install_tpm() {
+  local tpm_dir="$HOME/.config/tmux/plugins/tpm"
+
+  if [ -d "$tpm_dir" ]; then
+    log_skip "TPM already installed"
+    SKIPPED+=("TPM")
+    return 0
+  fi
+
+  log_info "Installing TPM (Tmux Plugin Manager)..."
+  mkdir -p "$(dirname "$tpm_dir")"
+  if timeout 30 git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir" </dev/null >/dev/null 2>&1; then
+    log_success "TPM installed"
+    INSTALLED+=("TPM")
+  else
+    log_error "TPM installation timed out or failed"
+    log_info "Install manually: git clone https://github.com/tmux-plugins/tpm $tpm_dir"
+    FAILED_STEPS+=("TPM")
+    return 1
+  fi
 }
 
 install_antidote() {
@@ -698,9 +721,19 @@ setup_age_key() {
 apply_chezmoi() {
   section_header "Chezmoi Apply"
 
+  # Initialize chezmoi config (creates ~/.config/chezmoi/chezmoi.toml from template)
+  log_info "Initializing chezmoi configuration..."
+  if ! chezmoi init --source "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
+    log_error "chezmoi init failed"
+    FAILED_STEPS+=("chezmoi init")
+    return 1
+  fi
+
+  # Apply managed files, excluding externals (TPM clone handled separately in
+  # install_plugin_managers to avoid hanging on slow git clones)
   log_info "Applying chezmoi configurations..."
   set -o pipefail
-  if chezmoi init --apply --source "$DOTFILES_DIR" --verbose </dev/null 2>&1 | \
+  if chezmoi apply --source "$DOTFILES_DIR" --verbose --exclude=externals </dev/null 2>&1 | \
      awk '{n++; printf "\r  \033[36m%d items processed\033[0m", n} END {print ""}'; then
     log_success "chezmoi configurations applied"
     INSTALLED+=("chezmoi apply")
@@ -739,11 +772,12 @@ setup_github_auth() {
     return 0
   fi
 
-  if printf '%s' "$GH_TOKEN" | gh auth login --with-token --git-protocol https >/dev/null 2>&1; then
+  local auth_output
+  if auth_output=$(printf '%s' "$GH_TOKEN" | gh auth login --with-token --git-protocol https 2>&1); then
     log_success "GitHub CLI authenticated"
     INSTALLED+=("GitHub auth")
   else
-    log_error "GitHub auth failed"
+    log_error "GitHub auth failed: $auth_output"
     log_info "Authenticate manually: gh auth login"
     FAILED_STEPS+=("GitHub auth")
   fi
