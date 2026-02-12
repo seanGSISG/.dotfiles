@@ -547,7 +547,7 @@ install_node_tools() {
     SKIPPED+=("Node.js 22")
   else
     log_info "Installing Node.js 22 (LTS)..."
-    if fnm install 22 >/dev/null 2>&1 && fnm default 22 >/dev/null 2>&1; then
+    if fnm install 22 >/dev/null 2>&1; then
       log_success "Node.js 22 (LTS) installed"
       INSTALLED+=("Node.js 22")
     else
@@ -556,6 +556,9 @@ install_node_tools() {
       return 1
     fi
   fi
+
+  # Always ensure default is set (may have been skipped on previous re-runs)
+  fnm default 22 >/dev/null 2>&1 || true
 }
 
 install_claude_code() {
