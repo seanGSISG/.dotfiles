@@ -681,68 +681,6 @@ change_default_shell() {
 }
 
 #===============================================================================
-# SSH Key Setup
-#===============================================================================
-
-setup_ssh_keys() {
-  section_header "SSH Keys"
-
-  echo ""
-  echo "${CYAN}SSH Key Setup${RESET}"
-  echo "Enter path to existing SSH directory (e.g., /mnt/c/Users/YourName/.ssh)"
-  echo "or press Enter to skip:"
-  read -r ssh_source
-
-  # Skip if user pressed Enter
-  if [ -z "$ssh_source" ]; then
-    log_skip "SSH key setup skipped"
-    SKIPPED+=("SSH keys")
-    return 0
-  fi
-
-  # Validate source directory exists
-  if [ ! -d "$ssh_source" ]; then
-    log_error "SSH source directory not found: $ssh_source"
-    FAILED_STEPS+=("SSH keys")
-    return 1
-  fi
-
-  log_info "Copying SSH keys from $ssh_source..."
-
-  # Create .ssh directory with correct permissions
-  mkdir -p "$HOME/.ssh"
-  chmod 700 "$HOME/.ssh"
-
-  # Copy all files
-  if cp -r "$ssh_source"/* "$HOME/.ssh/" 2>/dev/null; then
-    log_success "SSH keys copied"
-  else
-    log_error "Failed to copy SSH keys"
-    FAILED_STEPS+=("SSH keys")
-    return 1
-  fi
-
-  # Fix permissions
-  log_info "Setting correct permissions..."
-  chmod 700 "$HOME/.ssh"
-  find "$HOME/.ssh" -type f -name "id_*" ! -name "*.pub" -exec chmod 600 {} \; 2>/dev/null || true
-  find "$HOME/.ssh" -type f -name "*.pub" -exec chmod 644 {} \; 2>/dev/null || true
-  [ -f "$HOME/.ssh/config" ] && chmod 600 "$HOME/.ssh/config"
-  [ -f "$HOME/.ssh/known_hosts" ] && chmod 644 "$HOME/.ssh/known_hosts"
-
-  # Verify permissions
-  local ssh_perms=$(stat -c '%a' "$HOME/.ssh" 2>/dev/null || echo "000")
-  if [ "$ssh_perms" = "700" ]; then
-    log_success "SSH keys configured with correct permissions (700/600/644)"
-    INSTALLED+=("SSH keys")
-  else
-    log_error "SSH directory permissions incorrect: $ssh_perms (expected 700)"
-    FAILED_STEPS+=("SSH key permissions")
-    return 1
-  fi
-}
-
-#===============================================================================
 # Summary and Checklist
 #===============================================================================
 
@@ -837,7 +775,6 @@ main() {
   run_step "Dotfile Backup" backup_dotfiles
   run_step "Chezmoi Configuration" setup_chezmoi
   run_step "Default Shell" change_default_shell
-  run_step "SSH Keys" setup_ssh_keys
 
   # Re-enable exit-on-error
   set -e
