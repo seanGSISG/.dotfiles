@@ -722,28 +722,34 @@ apply_chezmoi() {
   section_header "Chezmoi Apply"
 
   # Initialize chezmoi config (creates ~/.config/chezmoi/chezmoi.toml from template)
-  log_info "Initializing chezmoi configuration..."
-  if ! chezmoi init --source "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
-    log_error "chezmoi init failed"
-    FAILED_STEPS+=("chezmoi init")
-    return 1
+  # Skip if config already exists (avoids potential git operations on re-runs)
+  if [ ! -f "$HOME/.config/chezmoi/chezmoi.toml" ]; then
+    log_info "Initializing chezmoi configuration..."
+    if ! timeout 30 chezmoi init --source "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
+      log_error "chezmoi init failed or timed out"
+      FAILED_STEPS+=("chezmoi init")
+      return 1
+    fi
   fi
 
-  # Apply managed files, excluding externals (TPM clone handled separately in
-  # install_plugin_managers to avoid hanging on slow git clones)
+  # Apply managed files, excluding externals (TPM handled in install_plugin_managers)
+  # No --verbose pipe — the verbose|awk pipeline deadlocks under exec>(tee) logging
   log_info "Applying chezmoi configurations..."
-  set -o pipefail
-  if chezmoi apply --source "$DOTFILES_DIR" --verbose --exclude=externals </dev/null 2>&1 | \
-     awk '{n++; printf "\r  \033[36m%d items processed\033[0m", n} END {print ""}'; then
+  local chezmoi_output
+  if chezmoi_output=$(timeout 120 chezmoi apply --source "$DOTFILES_DIR" --exclude=externals </dev/null 2>&1); then
     log_success "chezmoi configurations applied"
     INSTALLED+=("chezmoi apply")
   else
-    log_error "chezmoi apply failed"
+    local exit_code=$?
+    if [ $exit_code -eq 124 ]; then
+      log_error "chezmoi apply timed out after 120 seconds"
+    else
+      log_error "chezmoi apply failed (exit code: $exit_code)"
+    fi
+    [ -n "$chezmoi_output" ] && log_info "Output: $chezmoi_output"
     FAILED_STEPS+=("chezmoi apply")
-    set +o pipefail
     return 1
   fi
-  set +o pipefail
 }
 
 #===============================================================================
