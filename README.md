@@ -10,33 +10,28 @@ WSL2 Ubuntu dev environment managed by chezmoi. One command sets up everything.
 **Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv, Claude Code
 **System:** GitHub CLI, PowerShell, age encryption, 34 curated apt packages
 
-## Quick Start (New Machine)
+## Quick Start
 
 ```bash
-# Clone and run bootstrap
-git clone https://github.com/seanGSISG/.dotfiles.git ~/.dotfiles
-~/.dotfiles/bootstrap.sh
+curl -fsSL https://raw.githubusercontent.com/seanGSISG/.dotfiles/main/bootstrap.sh | bash
 ```
 
-Or from an existing clone:
+That's it. The script clones the repo, installs everything, and deploys configs. It's idempotent — safe to re-run. It will skip anything already installed.
 
-```bash
-~/.dotfiles/bootstrap.sh
-```
+You'll be prompted for your sudo password and age encryption key (from Bitwarden).
 
-The bootstrap script is idempotent — safe to re-run. It will skip anything already installed.
-
-### What Bootstrap Does
+### What It Does
 
 1. Configures WSL2 (`/etc/wsl.conf` with systemd)
-2. Adds APT repos (GitHub CLI, PowerShell) and installs system packages
-3. Installs binary tools (Starship, fnm, fzf, uv, bun, age)
-4. Installs antidote (zsh plugin manager)
-5. Installs Python tools via uv and Node.js 22 LTS via fnm
-6. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
-7. Deploys all configs via `chezmoi init --apply`
-8. Changes default shell to zsh
-9. Copies SSH keys (interactive, skippable)
+2. Adds APT repos (GitHub CLI, PowerShell, Charm) and installs 34 system packages
+3. Installs chezmoi and clones this repo
+4. Installs binary tools (Starship, fnm, fzf, uv, bun, age)
+5. Installs antidote (zsh plugin manager)
+6. Installs Python tools via uv and Node.js 22 LTS via fnm
+7. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
+8. Deploys all configs via `chezmoi apply`
+9. Authenticates GitHub CLI (via age-encrypted PAT)
+10. Changes default shell to zsh
 
 ### Post-Install Checklist
 
