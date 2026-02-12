@@ -185,11 +185,12 @@ Plans:
   5. Age-decrypted secrets are available in environment variables
   6. All tool configs (git, tmux) work correctly on new machine with user adminuser
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md -- SSH keys into chezmoi (age-encrypted) + age key paste prompt in bootstrap
+- [ ] 06-02-PLAN.md -- Bootstrap tee logging + standalone verify.sh script
+- [ ] 06-03-PLAN.md -- Push, deploy on fresh machine via curl, validate with verify.sh (checkpoint)
 
 ## Progress
 
@@ -205,8 +206,8 @@ Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 5.1 -> 6
 | 4. Tool Configs | 2/2 | Complete | 2026-02-10 |
 | 5. Bootstrap Implementation | 2/2 | Complete | 2026-02-10 |
 | 5.1 Bootstrap Folders & Claude Code Command Center (INSERTED) | 3/3 | Complete | 2026-02-11 |
-| 6. Migration & Testing | 0/TBD | Not started | - |
+| 6. Migration & Testing | 0/3 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-10*
-*Last updated: 2026-02-11 - Phase 5.1 complete (3/3 plans, 7/7 must-haves verified)*
+*Last updated: 2026-02-12 - Phase 6 planned (3 plans in 2 waves)*
