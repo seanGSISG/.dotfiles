@@ -5,37 +5,72 @@
 # Section 1: Alias Help System
 # ============================================
 
-BLUE='\033[0;34m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-RESET='\033[0m'
-
 alias-help() {
-  printf "\n${BLUE}%s${RESET}\n" "======================================="
-  printf "${GREEN}%s${RESET}\n" "  Available Aliases"
-  printf "${BLUE}%s${RESET}\n\n" "======================================="
+  local bold=$'\033[1m' dim=$'\033[2m'
+  local blue=$'\033[34m' yellow=$'\033[33m' cyan=$'\033[36m'
+  local magenta=$'\033[35m' reset=$'\033[0m'
+  local line name value category count dashes header_lines pending_section
+  local total_width=48
+
+  echo ""
+  printf " ${bold}${blue}╭──────────────────────────────────────────────╮${reset}\n"
+  printf " ${bold}${blue}│${reset}               ${bold}Shell Cheatsheet${reset}               ${bold}${blue}│${reset}\n"
+  printf " ${bold}${blue}╰──────────────────────────────────────────────╯${reset}\n"
 
   for category_file in "$HOME/.config/zsh/aliases"/aliases-*.zsh; do
     [ -r "$category_file" ] || continue
-    local category
     category=$(basename "$category_file" .zsh | sed 's/aliases-//' | tr '[:lower:]' '[:upper:]')
-    printf "${YELLOW}>>> %s${RESET}\n" "$category"
+    count=$(grep -c "^alias " "$category_file" 2>/dev/null || echo 0)
 
-    grep "^alias " "$category_file" | while IFS= read -r line; do
-      local name value
-      name=$(echo "$line" | sed "s/^alias //" | cut -d= -f1)
-      value=$(echo "$line" | cut -d= -f2- | sed "s/^'//" | sed "s/'$//" | sed 's/^"//' | sed 's/"$//')
-      printf "  ${CYAN}%-16s${RESET} %s\n" "$name" "$value"
-    done
+    dashes=$(printf '%*s' "$(( total_width - ${#category} - 2 ))" '' | tr ' ' '─')
+
     echo ""
+    printf " ${bold}${yellow}%s${reset} ${dim}%s${reset} ${dim}(%d)${reset}\n" "$category" "$dashes" "$count"
+
+    header_lines=0
+    pending_section=""
+    while IFS= read -r line; do
+      [[ -z "$line" ]] && continue
+
+      # Skip the first 2 comment lines (file header)
+      if [[ "$line" == \#* ]] && (( header_lines < 2 )); then
+        (( header_lines++ ))
+        continue
+      fi
+
+      # Sub-section comment (buffer it, only print if aliases follow)
+      if [[ "$line" == \#\ * ]]; then
+        pending_section="${line#\# }"
+        continue
+      fi
+
+      # Skip non-alias lines (functions, etc.)
+      [[ "$line" != alias\ * ]] && continue
+
+      # Print buffered sub-section header
+      if [[ -n "$pending_section" ]]; then
+        printf "\n   ${magenta}%s${reset}\n" "$pending_section"
+        pending_section=""
+      fi
+
+      # Parse alias name and value
+      name="${line#alias }"
+      name="${name%%=*}"
+      value="${line#*=}"
+      value="${value#\'}" ; value="${value%\'}"
+      value="${value#\"}" ; value="${value%\"}"
+
+      printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "$name" "$value"
+    done < "$category_file"
   done
 
-  printf "${YELLOW}>>> %s${RESET}\n" "QUICK REFERENCE"
-  printf "  ${CYAN}%-16s${RESET} %s\n" "z <query>" "Jump to directory (zoxide)"
-  printf "  ${CYAN}%-16s${RESET} %s\n" "Ctrl+R" "Fuzzy search history (fzf)"
-  printf "  ${CYAN}%-16s${RESET} %s\n" "Ctrl+T" "Fuzzy find files (fzf)"
-  printf "  ${CYAN}%-16s${RESET} %s\n" "Alt+C" "Fuzzy cd into subdirs (fzf)"
+  echo ""
+  dashes=$(printf '%*s' "$(( total_width - 17 ))" '' | tr ' ' '─')
+  printf " ${bold}${yellow}QUICK REFERENCE${reset} ${dim}%s${reset}\n\n" "$dashes"
+  printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "z <query>" "Jump to directory (zoxide)"
+  printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "Ctrl+R" "Fuzzy search history (fzf)"
+  printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "Ctrl+T" "Fuzzy find files (fzf)"
+  printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "Alt+C" "Fuzzy cd into subdirs (fzf)"
   echo ""
 }
 
