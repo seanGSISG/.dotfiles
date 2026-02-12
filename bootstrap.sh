@@ -18,7 +18,7 @@ DOTFILES_DIR="$HOME/.dotfiles"
 if [ -d "$DOTFILES_DIR/.git" ]; then
   GITHUB_REPO=$(git -C "$DOTFILES_DIR" remote get-url origin 2>/dev/null | sed 's|.*github.com[:/]||;s|\.git$||' || echo "")
 fi
-GITHUB_REPO="${GITHUB_REPO:-YOUR_GITHUB_USERNAME/dotfiles}"
+GITHUB_REPO="${GITHUB_REPO:-seanGSISG/.dotfiles}"
 
 #===============================================================================
 # Colors and Formatting
@@ -237,7 +237,8 @@ install_apt_packages() {
 install_binary_tools() {
   section_header "Binary Tools"
 
-  # Ensure ~/.local/bin is in PATH for this session
+  # Ensure ~/.local/bin exists and is in PATH for this session
+  mkdir -p "$HOME/.local/bin"
   export PATH="$HOME/.local/bin:$PATH"
 
   # Starship prompt
@@ -267,7 +268,7 @@ install_starship() {
   fi
 
   log_info "Installing Starship..."
-  if curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin" >/dev/null 2>&1; then
+  if bash -c "$(curl -sS https://starship.rs/install.sh)" -- -y --bin-dir "$HOME/.local/bin" </dev/null >/dev/null 2>&1; then
     log_success "Starship installed"
     INSTALLED+=("Starship")
   else
@@ -285,7 +286,7 @@ install_fnm() {
   fi
 
   log_info "Installing fnm..."
-  if curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell >/dev/null 2>&1; then
+  if bash -c "$(curl -fsSL https://fnm.vercel.app/install)" -- --skip-shell </dev/null >/dev/null 2>&1; then
     log_success "fnm installed"
     INSTALLED+=("fnm")
   else
@@ -328,7 +329,7 @@ install_uv() {
   fi
 
   log_info "Installing uv..."
-  if curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1; then
+  if bash -c "$(curl -LsSf https://astral.sh/uv/install.sh)" </dev/null >/dev/null 2>&1; then
     log_success "uv installed"
     INSTALLED+=("uv")
   else
@@ -346,7 +347,7 @@ install_bun() {
   fi
 
   log_info "Installing bun..."
-  if curl -fsSL https://bun.sh/install | bash >/dev/null 2>&1; then
+  if bash -c "$(curl -fsSL https://bun.sh/install)" </dev/null >/dev/null 2>&1; then
     log_success "bun installed"
     INSTALLED+=("bun")
   else
@@ -525,7 +526,7 @@ install_claude_code() {
   fi
 
   log_info "Installing Claude Code via official installer..."
-  if curl -fsSL https://claude.ai/install.sh | bash >/dev/null 2>&1; then
+  if bash -c "$(curl -fsSL https://claude.ai/install.sh)" </dev/null >/dev/null 2>&1; then
     log_success "Claude Code installed"
     INSTALLED+=("Claude Code")
   else
@@ -590,10 +591,14 @@ backup_dotfiles() {
 install_chezmoi() {
   section_header "Chezmoi Installation"
 
+  # Ensure install directory exists
+  mkdir -p "$HOME/.local/bin"
+  export PATH="$HOME/.local/bin:$PATH"
+
   # Check if chezmoi is installed
   if ! command -v chezmoi &>/dev/null; then
     log_info "Installing chezmoi..."
-    if sh -c "$(curl -fsLS https://get.chezmoi.io)" -- -b "$HOME/.local/bin" >/dev/null 2>&1; then
+    if bash -c "$(curl -fsLS https://get.chezmoi.io)" -- -b "$HOME/.local/bin" </dev/null >/dev/null 2>&1; then
       log_success "chezmoi installed"
       INSTALLED+=("chezmoi")
       # Ensure it's in PATH for this session
@@ -611,11 +616,51 @@ install_chezmoi() {
   # Check if dotfiles repo already cloned
   if [ ! -d "$DOTFILES_DIR/.git" ]; then
     log_info "Cloning dotfiles repo from GitHub..."
-    if git clone "https://github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" >/dev/null 2>&1; then
+
+    local clone_success=false
+
+    # Try 1: gh CLI (if available and authenticated)
+    if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
+      log_info "Using gh CLI for authenticated clone..."
+      if gh repo clone "$GITHUB_REPO" "$DOTFILES_DIR" -- --depth=1 >/dev/null 2>&1; then
+        clone_success=true
+      fi
+    fi
+
+    # Try 2: HTTPS clone (works for public repos)
+    if [ "$clone_success" = false ]; then
+      if git clone "https://github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
+        clone_success=true
+      fi
+    fi
+
+    # Try 3: Ask for GitHub token (private repos without gh)
+    if [ "$clone_success" = false ]; then
+      echo ""
+      echo "${YELLOW}Repository clone failed. This may be a private repo.${RESET}"
+      echo "Options:"
+      echo "  1. Enter a GitHub Personal Access Token (PAT)"
+      echo "  2. Press Enter to skip (you can clone manually later)"
+      echo ""
+      echo "Generate a PAT at: https://github.com/settings/tokens"
+      echo "Paste your token or press Enter to skip:"
+      read -r gh_token </dev/tty || gh_token=""
+
+      if [ -n "$gh_token" ]; then
+        if git clone "https://$gh_token@github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
+          clone_success=true
+          # Remove token from remote URL for safety
+          git -C "$DOTFILES_DIR" remote set-url origin "https://github.com/$GITHUB_REPO.git"
+        fi
+      fi
+    fi
+
+    if [ "$clone_success" = true ]; then
       log_success "Dotfiles repo cloned"
       INSTALLED+=("dotfiles clone")
     else
       log_error "Failed to clone dotfiles repo"
+      log_error "Clone manually: git clone https://github.com/$GITHUB_REPO.git $DOTFILES_DIR"
       FAILED_STEPS+=("dotfiles clone")
       return 1
     fi
@@ -641,7 +686,7 @@ setup_age_key() {
   echo ""
   echo "Paste your age secret key (starts with AGE-SECRET-KEY-1...)"
   echo "or press Enter to skip:"
-  read -r age_key
+  read -r age_key </dev/tty || age_key=""
 
   # Skip if user pressed Enter
   if [ -z "$age_key" ]; then
@@ -708,10 +753,9 @@ change_default_shell() {
   fi
 
   log_info "Changing default shell to zsh..."
-  echo "${YELLOW}Note: You'll be prompted for your password${RESET}"
 
-  # chsh requires interactive password
-  if chsh -s "$target_shell"; then
+  # Use sudo chsh to avoid PAM password prompt (fails in piped execution)
+  if sudo chsh -s "$target_shell" "$USER"; then
     log_success "Default shell changed to zsh (takes effect on next login)"
     INSTALLED+=("zsh as default shell")
   else
@@ -814,17 +858,26 @@ main() {
   # Disable exit-on-error for main sections (continue-on-failure pattern)
   set +e
 
+  # Ensure ~/.local/bin exists and is in PATH
+  mkdir -p "$HOME/.local/bin"
+  export PATH="$HOME/.local/bin:$PATH"
+
   # Run all sections via run_step
+  # Phase 1: System foundation + repo clone
   run_step "WSL2 Configuration" configure_wsl
   run_step "APT Repository Setup" setup_apt_repos
+  run_step "Chezmoi Installation" install_chezmoi
+
+  # Phase 2: Package installation (repo now available for package lists)
   run_step "System Packages" install_apt_packages
   run_step "Binary Tools" install_binary_tools
   run_step "Plugin Managers" install_plugin_managers
   run_step "Python Tools" install_python_tools
   run_step "Node.js Tools" install_node_tools
   run_step "Claude Code" install_claude_code
+
+  # Phase 3: Deploy configs
   run_step "Dotfile Backup" backup_dotfiles
-  run_step "Chezmoi Installation" install_chezmoi
   run_step "Age Key" setup_age_key
   run_step "Chezmoi Apply" apply_chezmoi
   run_step "Default Shell" change_default_shell
