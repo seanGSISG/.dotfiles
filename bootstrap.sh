@@ -779,14 +779,26 @@ setup_github_auth() {
     return 0
   fi
 
-  local auth_output
-  if auth_output=$(printf '%s' "$GH_TOKEN" | gh auth login --with-token --git-protocol https 2>&1); then
-    log_success "GitHub CLI authenticated"
+  # GH_TOKEN env var IS the auth method — gh CLI uses it automatically.
+  # Just verify it works by checking auth status.
+  if gh auth status >/dev/null 2>&1; then
+    log_success "GitHub CLI authenticated via GH_TOKEN"
     INSTALLED+=("GitHub auth")
   else
-    log_error "GitHub auth failed: $auth_output"
-    log_info "Authenticate manually: gh auth login"
-    FAILED_STEPS+=("GitHub auth")
+    # Token might be expired or invalid — try explicit login
+    # Must unset GH_TOKEN first or gh refuses to store credentials
+    local token="$GH_TOKEN"
+    unset GH_TOKEN
+    local auth_output
+    if auth_output=$(printf '%s' "$token" | gh auth login --with-token --git-protocol https 2>&1); then
+      log_success "GitHub CLI authenticated"
+      INSTALLED+=("GitHub auth")
+    else
+      export GH_TOKEN="$token"
+      log_error "GitHub auth failed: $auth_output"
+      log_info "GH_TOKEN is set but may be expired. Authenticate manually: gh auth login"
+      FAILED_STEPS+=("GitHub auth")
+    fi
   fi
 }
 
