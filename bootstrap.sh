@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # bootstrap.sh - Idempotent WSL2 Ubuntu dev environment setup
 # One command to transform a fresh WSL2 Ubuntu machine into a fully configured dev environment
+#
+# Output is logged to: ~/.dotfiles-bootstrap-YYYYMMDD_HHMMSS.log
+# Both screen output and log file are updated simultaneously via tee
 
 # Exit on error for prerequisites check only
 set -euo pipefail
@@ -741,6 +744,8 @@ print_summary() {
   echo "     From PowerShell, run: ${CYAN}wsl.exe --shutdown${RESET}"
   echo "     Then restart WSL to enable systemd"
   echo ""
+  echo "${BOLD}Log file:${RESET} $LOG_FILE"
+  echo ""
 }
 
 #===============================================================================
@@ -748,6 +753,10 @@ print_summary() {
 #===============================================================================
 
 main() {
+  # Set up logging to file and screen simultaneously
+  LOG_FILE="$HOME/.dotfiles-bootstrap-$(date +%Y%m%d_%H%M%S).log"
+  exec > >(tee -a "$LOG_FILE") 2>&1
+
   echo "${BOLD}${CYAN}"
   echo "╔═══════════════════════════════════════════════════════════════╗"
   echo "║                                                               ║"
@@ -755,6 +764,9 @@ main() {
   echo "║                                                               ║"
   echo "╚═══════════════════════════════════════════════════════════════╝"
   echo "${RESET}"
+  echo ""
+
+  log_info "Logging to: $LOG_FILE"
   echo ""
 
   # Check prerequisites (under set -euo pipefail)
