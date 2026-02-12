@@ -280,10 +280,15 @@ install_starship() {
   fi
 
   log_info "Installing Starship..."
-  if curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin" </dev/null >/dev/null 2>&1; then
+  local tmp
+  tmp=$(mktemp)
+  if curl -sS https://starship.rs/install.sh -o "$tmp" && \
+     sh "$tmp" -y --bin-dir "$HOME/.local/bin" </dev/null >/dev/null 2>&1; then
+    rm -f "$tmp"
     log_success "Starship installed"
     INSTALLED+=("Starship")
   else
+    rm -f "$tmp"
     log_error "Starship installation failed"
     FAILED_STEPS+=("Starship")
     return 1
@@ -502,16 +507,16 @@ install_python_tools() {
 install_node_tools() {
   section_header "Node.js & JavaScript Tools"
 
+  # Ensure fnm is on PATH (installs to ~/.local/share/fnm by default)
+  export PATH="$HOME/.local/share/fnm:$HOME/.local/bin:$PATH"
+  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
+
   # Verify fnm is available
   if ! command -v fnm &>/dev/null; then
     log_error "fnm not found - Node.js tools installation skipped"
     FAILED_STEPS+=("Node.js tools (fnm required)")
     return 1
   fi
-
-  # Source fnm into current shell
-  export PATH="$HOME/.local/bin:$PATH"
-  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
 
   # Check if Node LTS is already installed
   if fnm list 2>/dev/null | grep -q "22"; then
@@ -731,7 +736,7 @@ setup_github_auth() {
     return 0
   fi
 
-  if echo "$GH_TOKEN" | gh auth login --with-token --git-protocol https 2>/dev/null; then
+  if printf '%s' "$GH_TOKEN" | gh auth login --with-token --git-protocol https >/dev/null 2>&1; then
     log_success "GitHub CLI authenticated"
     INSTALLED+=("GitHub auth")
   else

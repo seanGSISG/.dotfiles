@@ -1,0 +1,269 @@
+[1m[36m
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║           WSL2 Dev Environment Bootstrap                      ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+(B[m
+
+[34m▶(B[m Logging to: /home/adminuser/.dotfiles-bootstrap-20260212_101811.log
+
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Checking Prerequisites(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[32m✓(B[m curl available
+[32m✓(B[m git available
+[32m✓(B[m sudo available
+[32m✓(B[m All prerequisites available
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  WSL2 Configuration(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m WSL2 already configured with systemd [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  APT Repository Setup(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m GitHub CLI repository already configured [33m(skipped)(B[m
+[33m⊘(B[m PowerShell repository already configured or PowerShell already installed [33m(skipped)(B[m
+[34m▶(B[m Adding Charm repository (for glow)...
+[32m✓(B[m Charm repository added
+[34m▶(B[m Updating package cache...
+[32m✓(B[m Package cache updated
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Chezmoi Installation(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m chezmoi already installed [33m(skipped)(B[m
+[33m⊘(B[m Dotfiles repo already exists [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Installing System Packages(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m build-essential already installed [33m(skipped)(B[m
+[33m⊘(B[m ca-certificates already installed [33m(skipped)(B[m
+[33m⊘(B[m git already installed [33m(skipped)(B[m
+[33m⊘(B[m zsh already installed [33m(skipped)(B[m
+[33m⊘(B[m bash-completion already installed [33m(skipped)(B[m
+[33m⊘(B[m bat already installed [33m(skipped)(B[m
+[33m⊘(B[m eza already installed [33m(skipped)(B[m
+[33m⊘(B[m ripgrep already installed [33m(skipped)(B[m
+[33m⊘(B[m jq already installed [33m(skipped)(B[m
+[33m⊘(B[m tree already installed [33m(skipped)(B[m
+[33m⊘(B[m file already installed [33m(skipped)(B[m
+[33m⊘(B[m findutils already installed [33m(skipped)(B[m
+[34m▶(B[m Installing glow...
+[32m✓(B[m glow installed
+[33m⊘(B[m htop already installed [33m(skipped)(B[m
+[33m⊘(B[m zoxide already installed [33m(skipped)(B[m
+[33m⊘(B[m curl already installed [33m(skipped)(B[m
+[33m⊘(B[m wget already installed [33m(skipped)(B[m
+[33m⊘(B[m zip already installed [33m(skipped)(B[m
+[33m⊘(B[m unzip already installed [33m(skipped)(B[m
+[33m⊘(B[m python3 already installed [33m(skipped)(B[m
+[33m⊘(B[m python3-pip already installed [33m(skipped)(B[m
+[33m⊘(B[m python3.12 already installed [33m(skipped)(B[m
+[33m⊘(B[m python3.12-venv already installed [33m(skipped)(B[m
+[33m⊘(B[m gnome-keyring already installed [33m(skipped)(B[m
+[33m⊘(B[m gnupg2 already installed [33m(skipped)(B[m
+[33m⊘(B[m libsecret-1-0 already installed [33m(skipped)(B[m
+[33m⊘(B[m libsecret-1-dev already installed [33m(skipped)(B[m
+[33m⊘(B[m libsecret-tools already installed [33m(skipped)(B[m
+[33m⊘(B[m libfuse2t64 already installed [33m(skipped)(B[m
+[33m⊘(B[m fuse already installed [33m(skipped)(B[m
+[33m⊘(B[m libattr1 already installed [33m(skipped)(B[m
+[33m⊘(B[m wslu already installed [33m(skipped)(B[m
+[33m⊘(B[m powershell already installed [33m(skipped)(B[m
+[33m⊘(B[m gh already installed [33m(skipped)(B[m
+
+[32m✓(B[m APT packages: 1 installed, 33 skipped
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Binary Tools(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Installing Starship...
+curl: (23) Failure writing output to destination
+[31m✗(B[m Starship installation failed
+[34m▶(B[m Installing fnm...
+[32m✓(B[m fnm installed
+[34m▶(B[m Installing fzf...
+[33m⊘(B[m fzf directory already exists [33m(skipped)(B[m
+[33m⊘(B[m uv already installed [33m(skipped)(B[m
+[34m▶(B[m Installing bun...
+[32m✓(B[m bun installed
+[33m⊘(B[m age already installed [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Plugin Managers(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m antidote already installed [33m(skipped)(B[m
+[34m▶(B[m TPM (Tmux Plugin Manager) will be installed via chezmoi .chezmoiexternal.toml
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Python Tools(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Installing basedpyright...
+[32m✓(B[m basedpyright installed
+[34m▶(B[m Installing detect-secrets...
+[32m✓(B[m detect-secrets installed
+[34m▶(B[m Installing just...
+[32m✓(B[m just installed
+[34m▶(B[m Installing pre-commit...
+[32m✓(B[m pre-commit installed
+[34m▶(B[m Installing virtualenv...
+[32m✓(B[m virtualenv installed
+
+[32m✓(B[m Python tools: 5 installed, 0 skipped
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Node.js & JavaScript Tools(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[31m✗(B[m fnm not found - Node.js tools installation skipped
+[31m✗(B[m Node.js Tools failed
+[33m⊘(B[m Claude Code already installed [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Dotfile Backup(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Backing up existing dotfiles to /home/adminuser/.dotfiles-backup/20260212_101828...
+[34m▶(B[m Backed up: .zshrc
+[34m▶(B[m Backed up: .bashrc
+[34m▶(B[m Backed up: .profile
+[34m▶(B[m Backed up: .gitconfig
+[34m▶(B[m Backed up: .config/zsh
+[34m▶(B[m Backed up: .config/tmux
+[32m✓(B[m Dotfiles backed up to /home/adminuser/.dotfiles-backup/20260212_101828
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Age Encryption Key(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m Age key already exists [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Chezmoi Apply(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Applying chezmoi configurations...
+[32m✓(B[m chezmoi configurations applied
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  GitHub Authentication(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[31m✗(B[m GitHub auth failed
+[34m▶(B[m Authenticate manually: gh auth login
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Default Shell(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Changing default shell to zsh...
+[32m✓(B[m Default shell changed to zsh (takes effect on next login)
+
+[1m[32m═══════════════════════════════════════════════════════(B[m
+[1m[32m  Bootstrap Complete!(B[m
+[1m[32m═══════════════════════════════════════════════════════(B[m
+
+[1m[32mInstalled:(B[m
+  [32m✓(B[m glow
+  [32m✓(B[m fnm
+  [32m✓(B[m bun
+  [32m✓(B[m basedpyright
+  [32m✓(B[m detect-secrets
+  [32m✓(B[m just
+  [32m✓(B[m pre-commit
+  [32m✓(B[m virtualenv
+  [32m✓(B[m Dotfile backup
+  [32m✓(B[m chezmoi apply
+  [32m✓(B[m zsh as default shell
+
+[1m[33mSkipped (already installed):(B[m
+  [33m⊘(B[m WSL2 configuration
+  [33m⊘(B[m chezmoi
+  [33m⊘(B[m dotfiles clone
+  [33m⊘(B[m build-essential
+  [33m⊘(B[m ca-certificates
+  [33m⊘(B[m git
+  [33m⊘(B[m zsh
+  [33m⊘(B[m bash-completion
+  [33m⊘(B[m bat
+  [33m⊘(B[m eza
+  [33m⊘(B[m ripgrep
+  [33m⊘(B[m jq
+  [33m⊘(B[m tree
+  [33m⊘(B[m file
+  [33m⊘(B[m findutils
+  [33m⊘(B[m htop
+  [33m⊘(B[m zoxide
+  [33m⊘(B[m curl
+  [33m⊘(B[m wget
+  [33m⊘(B[m zip
+  [33m⊘(B[m unzip
+  [33m⊘(B[m python3
+  [33m⊘(B[m python3-pip
+  [33m⊘(B[m python3.12
+  [33m⊘(B[m python3.12-venv
+  [33m⊘(B[m gnome-keyring
+  [33m⊘(B[m gnupg2
+  [33m⊘(B[m libsecret-1-0
+  [33m⊘(B[m libsecret-1-dev
+  [33m⊘(B[m libsecret-tools
+  [33m⊘(B[m libfuse2t64
+  [33m⊘(B[m fuse
+  [33m⊘(B[m libattr1
+  [33m⊘(B[m wslu
+  [33m⊘(B[m powershell
+  [33m⊘(B[m gh
+  [33m⊘(B[m fzf
+  [33m⊘(B[m uv
+  [33m⊘(B[m age
+  [33m⊘(B[m antidote
+  [33m⊘(B[m Claude Code
+  [33m⊘(B[m Age key
+
+[1m[31mFailed:(B[m
+  [31m✗(B[m Starship
+  [31m✗(B[m Node.js tools (fnm required)
+  [31m✗(B[m Node.js Tools
+  [31m✗(B[m GitHub auth
+
+[1m[36mPost-Install Checklist:(B[m
+
+  [1m1. Age Encryption Key(B[m
+     If skipped during setup, retrieve from Bitwarden and save to:
+     [36m~/.config/age/keys.txt(B[m
+     Then run: [36mchezmoi apply(B[m
+
+  [1m2. Tmux Plugins(B[m
+     Open tmux and press: [36mprefix + I(B[m (Install plugins)
+
+  [1m3. Claude Code Authentication(B[m
+     Run: [36mclaude login(B[m
+
+  [1m4. SSH Verification(B[m
+     Test SSH keys: [36mssh -T git@github.com(B[m
+
+  [1m5. WSL Restart(B[m
+     From PowerShell, run: [36mwsl.exe --shutdown(B[m
+     Then restart WSL to enable systemd
+
+[1mLog file:(B[m /home/adminuser/.dotfiles-bootstrap-20260212_101811.log
+
+
+[1m[31m═══════════════════════════════════════════════════════(B[m
+[1m[31m  Some steps failed. See above for details.(B[m
+[1m[31m═══════════════════════════════════════════════════════(B[m
+
+Re-run this script to retry failed steps.

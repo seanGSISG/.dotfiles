@@ -7,7 +7,7 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
 ╚═══════════════════════════════════════════════════════════════╝
 
 
-▶ Logging to: /home/adminuser/.dotfiles-bootstrap-20260212_100120.log
+▶ Logging to: /home/adminuser/.dotfiles-bootstrap-20260212_101811.log
 
 
 ═══════════════════════════════════════════════════════
@@ -31,92 +31,71 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
 
 ⊘ GitHub CLI repository already configured (skipped)
 ⊘ PowerShell repository already configured or PowerShell already installed (skipped)
+▶ Adding Charm repository (for glow)...
+✓ Charm repository added
 ▶ Updating package cache...
-[sudo] password for adminuser:
 ✓ Package cache updated
 
 ═══════════════════════════════════════════════════════
   Chezmoi Installation
 ═══════════════════════════════════════════════════════
 
-▶ Installing chezmoi...
-✓ chezmoi installed
-▶ Cloning dotfiles repo from GitHub...
-✓ Dotfiles repo cloned
+⊘ chezmoi already installed (skipped)
+⊘ Dotfiles repo already exists (skipped)
 
 ═══════════════════════════════════════════════════════
   Installing System Packages
 ═══════════════════════════════════════════════════════
 
-▶ Installing build-essential...
-✓ build-essential installed
+⊘ build-essential already installed (skipped)
 ⊘ ca-certificates already installed (skipped)
 ⊘ git already installed (skipped)
-▶ Installing zsh...
-✓ zsh installed
+⊘ zsh already installed (skipped)
 ⊘ bash-completion already installed (skipped)
-▶ Installing bat...
-✓ bat installed
-▶ Installing eza...
-✓ eza installed
-▶ Installing ripgrep...
-✓ ripgrep installed
-▶ Installing jq...
-✓ jq installed
-▶ Installing tree...
-✓ tree installed
+⊘ bat already installed (skipped)
+⊘ eza already installed (skipped)
+⊘ ripgrep already installed (skipped)
+⊘ jq already installed (skipped)
+⊘ tree already installed (skipped)
 ⊘ file already installed (skipped)
 ⊘ findutils already installed (skipped)
 ▶ Installing glow...
-✗ glow installation failed
-▶ Installing htop...
-✓ htop installed
-▶ Installing zoxide...
-✓ zoxide installed
+✓ glow installed
+⊘ htop already installed (skipped)
+⊘ zoxide already installed (skipped)
 ⊘ curl already installed (skipped)
 ⊘ wget already installed (skipped)
-▶ Installing zip...
-✓ zip installed
+⊘ zip already installed (skipped)
 ⊘ unzip already installed (skipped)
 ⊘ python3 already installed (skipped)
-▶ Installing python3-pip...
-✓ python3-pip installed
+⊘ python3-pip already installed (skipped)
 ⊘ python3.12 already installed (skipped)
-▶ Installing python3.12-venv...
-✓ python3.12-venv installed
-▶ Installing gnome-keyring...
-✓ gnome-keyring installed
-▶ Installing gnupg2...
-✓ gnupg2 installed
+⊘ python3.12-venv already installed (skipped)
+⊘ gnome-keyring already installed (skipped)
+⊘ gnupg2 already installed (skipped)
 ⊘ libsecret-1-0 already installed (skipped)
-▶ Installing libsecret-1-dev...
-✓ libsecret-1-dev installed
-▶ Installing libsecret-tools...
-✓ libsecret-tools installed
-▶ Installing libfuse2t64...
-✓ libfuse2t64 installed
-▶ Installing fuse...
-✓ fuse installed
+⊘ libsecret-1-dev already installed (skipped)
+⊘ libsecret-tools already installed (skipped)
+⊘ libfuse2t64 already installed (skipped)
+⊘ fuse already installed (skipped)
 ⊘ libattr1 already installed (skipped)
-▶ Installing wslu...
-✓ wslu installed
-▶ Installing powershell...
-✓ powershell installed
-▶ Installing gh...
-✓ gh installed
+⊘ wslu already installed (skipped)
+⊘ powershell already installed (skipped)
+⊘ gh already installed (skipped)
 
-✓ APT packages: 21 installed, 12 skipped
+✓ APT packages: 1 installed, 33 skipped
 
 ═══════════════════════════════════════════════════════
   Binary Tools
 ═══════════════════════════════════════════════════════
 
 ▶ Installing Starship...
+curl: (23) Failure writing output to destination
 ✗ Starship installation failed
 ▶ Installing fnm...
 ✓ fnm installed
 ▶ Installing fzf...
-✓ fzf installed
+⊘ fzf directory already exists (skipped)
 ⊘ uv already installed (skipped)
 ▶ Installing bun...
 ✓ bun installed
@@ -126,26 +105,25 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
   Plugin Managers
 ═══════════════════════════════════════════════════════
 
-▶ Installing antidote...
-✓ antidote installed
+⊘ antidote already installed (skipped)
 ▶ TPM (Tmux Plugin Manager) will be installed via chezmoi .chezmoiexternal.toml
 
 ═══════════════════════════════════════════════════════
   Python Tools
 ═══════════════════════════════════════════════════════
 
-▶ Installing basedpyright # Python type checker (actively maintained Pyright fork)...
-✗ basedpyright # Python type checker (actively maintained Pyright fork) installation failed
-▶ Installing detect-secrets # Pre-commit hook for secret scanning...
-✗ detect-secrets # Pre-commit hook for secret scanning installation failed
-▶ Installing just # Command runner (Makefile alternative, Rust-based)...
-✗ just # Command runner (Makefile alternative, Rust-based) installation failed
-▶ Installing pre-commit # Git hook framework for code quality...
-✗ pre-commit # Git hook framework for code quality installation failed
-▶ Installing virtualenv # Virtual environment creation (used by pre-commit internally)...
-✗ virtualenv # Virtual environment creation (used by pre-commit internally) installation failed
+▶ Installing basedpyright...
+✓ basedpyright installed
+▶ Installing detect-secrets...
+✓ detect-secrets installed
+▶ Installing just...
+✓ just installed
+▶ Installing pre-commit...
+✓ pre-commit installed
+▶ Installing virtualenv...
+✓ virtualenv installed
 
-✓ Python tools: 0 installed, 0 skipped
+✓ Python tools: 5 installed, 0 skipped
 
 ═══════════════════════════════════════════════════════
   Node.js & JavaScript Tools
@@ -159,24 +137,20 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
   Dotfile Backup
 ═══════════════════════════════════════════════════════
 
-▶ Backing up existing dotfiles to /home/adminuser/.dotfiles-backup/20260212_100249...
+▶ Backing up existing dotfiles to /home/adminuser/.dotfiles-backup/20260212_101828...
+▶ Backed up: .zshrc
 ▶ Backed up: .bashrc
 ▶ Backed up: .profile
-✓ Dotfiles backed up to /home/adminuser/.dotfiles-backup/20260212_100249
+▶ Backed up: .gitconfig
+▶ Backed up: .config/zsh
+▶ Backed up: .config/tmux
+✓ Dotfiles backed up to /home/adminuser/.dotfiles-backup/20260212_101828
 
 ═══════════════════════════════════════════════════════
   Age Encryption Key
 ═══════════════════════════════════════════════════════
 
-
-Age encryption key is required to decrypt secrets and SSH keys.
-Your age key is stored in Bitwarden (search: 'age encryption key')
-
-Paste your age secret key (starts with AGE-SECRET-KEY-1...)
-or press Enter to skip:
-AGE-SECRET-KEY-10Y0VRTAYFJ59TXRNEDMQTGWCWGYHRHU95WPKP0S5QF9U3LTH2XNS9YEN6M
-▶ Saving age key to ~/.config/age/keys.txt...
-✓ Age encryption key saved
+⊘ Age key already exists (skipped)
 
 ═══════════════════════════════════════════════════════
   Chezmoi Apply
@@ -189,7 +163,7 @@ AGE-SECRET-KEY-10Y0VRTAYFJ59TXRNEDMQTGWCWGYHRHU95WPKP0S5QF9U3LTH2XNS9YEN6M
   GitHub Authentication
 ═══════════════════════════════════════════════════════
 
-✗ GitHub auth failed
+k✗ GitHub auth failed
 ▶ Authenticate manually: gh auth login
 
 ═══════════════════════════════════════════════════════
@@ -204,64 +178,64 @@ AGE-SECRET-KEY-10Y0VRTAYFJ59TXRNEDMQTGWCWGYHRHU95WPKP0S5QF9U3LTH2XNS9YEN6M
 ═══════════════════════════════════════════════════════
 
 Installed:
-  ✓ chezmoi
-  ✓ dotfiles clone
-  ✓ build-essential
-  ✓ zsh
-  ✓ bat
-  ✓ eza
-  ✓ ripgrep
-  ✓ jq
-  ✓ tree
-  ✓ htop
-  ✓ zoxide
-  ✓ zip
-  ✓ python3-pip
-  ✓ python3.12-venv
-  ✓ gnome-keyring
-  ✓ gnupg2
-  ✓ libsecret-1-dev
-  ✓ libsecret-tools
-  ✓ libfuse2t64
-  ✓ fuse
-  ✓ wslu
-  ✓ powershell
-  ✓ gh
+  ✓ glow
   ✓ fnm
-  ✓ fzf
   ✓ bun
-  ✓ antidote
+  ✓ basedpyright
+  ✓ detect-secrets
+  ✓ just
+  ✓ pre-commit
+  ✓ virtualenv
   ✓ Dotfile backup
-  ✓ Age key
   ✓ chezmoi apply
   ✓ zsh as default shell
 
 Skipped (already installed):
   ⊘ WSL2 configuration
+  ⊘ chezmoi
+  ⊘ dotfiles clone
+  ⊘ build-essential
   ⊘ ca-certificates
   ⊘ git
+  ⊘ zsh
   ⊘ bash-completion
+  ⊘ bat
+  ⊘ eza
+  ⊘ ripgrep
+  ⊘ jq
+  ⊘ tree
   ⊘ file
   ⊘ findutils
+  ⊘ htop
+  ⊘ zoxide
   ⊘ curl
   ⊘ wget
+  ⊘ zip
   ⊘ unzip
   ⊘ python3
+  ⊘ python3-pip
   ⊘ python3.12
+  ⊘ python3.12-venv
+  ⊘ gnome-keyring
+  ⊘ gnupg2
   ⊘ libsecret-1-0
+  ⊘ libsecret-1-dev
+  ⊘ libsecret-tools
+  ⊘ libfuse2t64
+  ⊘ fuse
   ⊘ libattr1
+  ⊘ wslu
+  ⊘ powershell
+  ⊘ gh
+  ⊘ fzf
   ⊘ uv
   ⊘ age
+  ⊘ antidote
   ⊘ Claude Code
+  ⊘ Age key
 
 Failed:
-  ✗ apt package: glow
   ✗ Starship
-  ✗ Python tool: basedpyright # Python type checker (actively maintained Pyright fork)
-  ✗ Python tool: detect-secrets # Pre-commit hook for secret scanning
-  ✗ Python tool: just # Command runner (Makefile alternative, Rust-based)
-  ✗ Python tool: pre-commit # Git hook framework for code quality
-  ✗ Python tool: virtualenv # Virtual environment creation (used by pre-commit internally)
   ✗ Node.js tools (fnm required)
   ✗ Node.js Tools
   ✗ GitHub auth
@@ -286,7 +260,7 @@ Post-Install Checklist:
      From PowerShell, run: wsl.exe --shutdown
      Then restart WSL to enable systemd
 
-Log file: /home/adminuser/.dotfiles-bootstrap-20260212_100120.log
+Log file: /home/adminuser/.dotfiles-bootstrap-20260212_101811.log
 
 
 ═══════════════════════════════════════════════════════
