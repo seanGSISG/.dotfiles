@@ -13,4 +13,5 @@ Thumbs.db
 *.swp
 *~
 
-.dotfiles/.planning/research/temp/
+# Planning docs (kept locally, not in repo)
+.planning/
