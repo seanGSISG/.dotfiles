@@ -435,6 +435,16 @@ install_tpm() {
   if timeout 30 git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir" </dev/null >/dev/null 2>&1; then
     log_success "TPM installed"
     INSTALLED+=("TPM")
+    # Install plugins headlessly (no tmux session needed)
+    if [ -x "$tpm_dir/bin/install_plugins" ]; then
+      log_info "Installing tmux plugins..."
+      if timeout 60 "$tpm_dir/bin/install_plugins" >/dev/null 2>&1; then
+        log_success "Tmux plugins installed"
+        INSTALLED+=("tmux plugins")
+      else
+        log_error "Tmux plugin install failed (run Ctrl-b Shift-I in tmux)"
+      fi
+    fi
   else
     log_error "TPM installation timed out or failed"
     log_info "Install manually: git clone https://github.com/tmux-plugins/tpm $tpm_dir"
@@ -839,22 +849,18 @@ print_summary() {
   # Post-install checklist
   echo "${BOLD}${CYAN}Post-Install Checklist:${RESET}"
   echo ""
-  echo "  ${BOLD}1. Tmux Plugins${RESET}"
-  echo "     Start tmux: ${CYAN}tmux${RESET}"
-  echo "     Install plugins: ${CYAN}Ctrl-b${RESET} then ${CYAN}Shift-I${RESET}"
-  echo ""
-  echo "  ${BOLD}2. Claude Code Authentication${RESET}"
+  echo "  ${BOLD}1. Claude Code Authentication${RESET}"
   echo "     Run: ${CYAN}claude login${RESET}"
   echo ""
-  echo "  ${BOLD}3. SSH Verification${RESET}"
+  echo "  ${BOLD}2. SSH Verification${RESET}"
   echo "     Test GitHub SSH access: ${CYAN}ssh -T git@github.com${RESET}"
   echo "     (Requires your SSH public key to be added to your GitHub account)"
   echo ""
-  echo "  ${BOLD}4. WSL Restart${RESET}"
+  echo "  ${BOLD}3. WSL Restart${RESET}"
   echo "     From PowerShell, run: ${CYAN}wsl.exe --shutdown${RESET}"
   echo "     Then restart WSL to enable systemd"
   echo ""
-  echo "  ${BOLD}5. Verify Setup${RESET}"
+  echo "  ${BOLD}4. Verify Setup${RESET}"
   echo "     Run: ${CYAN}~/.dotfiles/verify.sh${RESET}"
   echo ""
   echo "${BOLD}Log file:${RESET} $LOG_FILE"

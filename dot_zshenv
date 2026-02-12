@@ -1,3 +1,6 @@
 # Set ZDOTDIR so zsh finds config in ~/.config/zsh
 # This file is read before .zshrc on ALL shell invocations
 export ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
+
+# Skip system compinit (we run our own in plugins.zsh)
+skip_global_compinit=1
