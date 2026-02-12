@@ -587,8 +587,8 @@ backup_dotfiles() {
 # Chezmoi Setup
 #===============================================================================
 
-setup_chezmoi() {
-  section_header "Chezmoi Configuration"
+install_chezmoi() {
+  section_header "Chezmoi Installation"
 
   # Check if chezmoi is installed
   if ! command -v chezmoi &>/dev/null; then
@@ -609,41 +609,79 @@ setup_chezmoi() {
   fi
 
   # Check if dotfiles repo already cloned
-  if [ -d "$DOTFILES_DIR/.git" ]; then
-    log_info "Dotfiles repo exists, running chezmoi apply..."
-    if chezmoi init --apply --source "$DOTFILES_DIR" >/dev/null 2>&1; then
-      log_success "chezmoi configurations applied"
-      INSTALLED+=("chezmoi apply")
-    else
-      log_error "chezmoi apply failed"
-      FAILED_STEPS+=("chezmoi apply")
-      return 1
-    fi
-  else
+  if [ ! -d "$DOTFILES_DIR/.git" ]; then
     log_info "Cloning dotfiles repo from GitHub..."
     if git clone "https://github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" >/dev/null 2>&1; then
       log_success "Dotfiles repo cloned"
-      log_info "Running chezmoi init --apply..."
-      if chezmoi init --apply --source "$DOTFILES_DIR" >/dev/null 2>&1; then
-        log_success "chezmoi configurations applied"
-        INSTALLED+=("chezmoi init + apply")
-      else
-        log_error "chezmoi apply failed"
-        FAILED_STEPS+=("chezmoi apply")
-        return 1
-      fi
+      INSTALLED+=("dotfiles clone")
     else
       log_error "Failed to clone dotfiles repo"
       FAILED_STEPS+=("dotfiles clone")
       return 1
     fi
+  else
+    log_skip "Dotfiles repo already exists"
+    SKIPPED+=("dotfiles clone")
+  fi
+}
+
+setup_age_key() {
+  section_header "Age Encryption Key"
+
+  # Check if age key already exists
+  if [ -f "$HOME/.config/age/keys.txt" ]; then
+    log_skip "Age key already exists"
+    SKIPPED+=("Age key")
+    return 0
   fi
 
-  # Check for age key
-  if [ ! -f "$HOME/.config/age/keys.txt" ]; then
+  echo ""
+  echo "${CYAN}Age encryption key is required to decrypt secrets and SSH keys.${RESET}"
+  echo "Your age key is stored in Bitwarden (search: 'age encryption key')"
+  echo ""
+  echo "Paste your age secret key (starts with AGE-SECRET-KEY-1...)"
+  echo "or press Enter to skip:"
+  read -r age_key
+
+  # Skip if user pressed Enter
+  if [ -z "$age_key" ]; then
+    log_skip "Age key setup skipped — encrypted files will not be decrypted"
     echo ""
-    echo "${YELLOW}⚠${RESET}  Age encryption key not found at ~/.config/age/keys.txt"
-    echo "${YELLOW}   Encrypted files were skipped. Add the key and run 'chezmoi apply' again.${RESET}"
+    echo "${YELLOW}⚠${RESET}  Encrypted files (secrets, SSH keys) will be skipped during chezmoi apply."
+    echo "${YELLOW}   You can add the key later to ~/.config/age/keys.txt and run 'chezmoi apply'${RESET}"
+    SKIPPED+=("Age key")
+    return 0
+  fi
+
+  # Validate key format
+  if [[ ! "$age_key" =~ ^AGE-SECRET-KEY- ]]; then
+    log_error "Invalid age key format (must start with AGE-SECRET-KEY-)"
+    FAILED_STEPS+=("Age key validation")
+    return 1
+  fi
+
+  # Create directory and save key
+  log_info "Saving age key to ~/.config/age/keys.txt..."
+  mkdir -p "$HOME/.config/age"
+  echo "$age_key" > "$HOME/.config/age/keys.txt"
+  chmod 600 "$HOME/.config/age/keys.txt"
+
+  log_success "Age encryption key saved"
+  INSTALLED+=("Age key")
+}
+
+apply_chezmoi() {
+  section_header "Chezmoi Apply"
+
+  # Run chezmoi init --apply
+  log_info "Applying chezmoi configurations..."
+  if chezmoi init --apply --source "$DOTFILES_DIR" >/dev/null 2>&1; then
+    log_success "chezmoi configurations applied"
+    INSTALLED+=("chezmoi apply")
+  else
+    log_error "chezmoi apply failed"
+    FAILED_STEPS+=("chezmoi apply")
+    return 1
   fi
 }
 
@@ -725,7 +763,8 @@ print_summary() {
   echo "${BOLD}${CYAN}Post-Install Checklist:${RESET}"
   echo ""
   echo "  ${BOLD}1. Age Encryption Key${RESET}"
-  echo "     Retrieve from Bitwarden and save to: ${CYAN}~/.config/age/keys.txt${RESET}"
+  echo "     If skipped during setup, retrieve from Bitwarden and save to:"
+  echo "     ${CYAN}~/.config/age/keys.txt${RESET}"
   echo "     Then run: ${CYAN}chezmoi apply${RESET}"
   echo ""
   echo "  ${BOLD}2. GitHub Authentication${RESET}"
@@ -785,7 +824,9 @@ main() {
   run_step "Node.js Tools" install_node_tools
   run_step "Claude Code" install_claude_code
   run_step "Dotfile Backup" backup_dotfiles
-  run_step "Chezmoi Configuration" setup_chezmoi
+  run_step "Chezmoi Installation" install_chezmoi
+  run_step "Age Key" setup_age_key
+  run_step "Chezmoi Apply" apply_chezmoi
   run_step "Default Shell" change_default_shell
 
   # Re-enable exit-on-error
