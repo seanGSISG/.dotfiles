@@ -1,4 +1,6 @@
-adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSISG/.dotfiles/main/bootstrap.sh | bash
+
+~
+❯ curl -fsSL https://raw.githubusercontent.com/seanGSISG/.dotfiles/main/bootstrap.sh | bash
 
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
@@ -7,7 +9,7 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
 ╚═══════════════════════════════════════════════════════════════╝
 
 
-▶ Logging to: /home/adminuser/.dotfiles-bootstrap-20260212_101811.log
+▶ Logging to: /home/adminuser/.dotfiles-bootstrap-20260212_115703.log
 
 
 ═══════════════════════════════════════════════════════
@@ -31,9 +33,9 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
 
 ⊘ GitHub CLI repository already configured (skipped)
 ⊘ PowerShell repository already configured or PowerShell already installed (skipped)
-▶ Adding Charm repository (for glow)...
-✓ Charm repository added
+⊘ Charm repository already configured (skipped)
 ▶ Updating package cache...
+[sudo] password for adminuser:
 ✓ Package cache updated
 
 ═══════════════════════════════════════════════════════
@@ -41,7 +43,8 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
 ═══════════════════════════════════════════════════════
 
 ⊘ chezmoi already installed (skipped)
-⊘ Dotfiles repo already exists (skipped)
+▶ Updating dotfiles repo...
+✓ Dotfiles repo updated
 
 ═══════════════════════════════════════════════════════
   Installing System Packages
@@ -59,8 +62,7 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
 ⊘ tree already installed (skipped)
 ⊘ file already installed (skipped)
 ⊘ findutils already installed (skipped)
-▶ Installing glow...
-✓ glow installed
+⊘ glow already installed (skipped)
 ⊘ htop already installed (skipped)
 ⊘ zoxide already installed (skipped)
 ⊘ curl already installed (skipped)
@@ -83,22 +85,17 @@ adminuser@GSI-LPF4GWYG7:~$ curl -fsSL https://raw.githubusercontent.com/seanGSIS
 ⊘ powershell already installed (skipped)
 ⊘ gh already installed (skipped)
 
-✓ APT packages: 1 installed, 33 skipped
+✓ APT packages: 0 installed, 34 skipped
 
 ═══════════════════════════════════════════════════════
   Binary Tools
 ═══════════════════════════════════════════════════════
 
-▶ Installing Starship...
-curl: (23) Failure writing output to destination
-✗ Starship installation failed
-▶ Installing fnm...
-✓ fnm installed
-▶ Installing fzf...
-⊘ fzf directory already exists (skipped)
+⊘ Starship already installed (skipped)
+⊘ fnm already installed (skipped)
+⊘ fzf already installed (skipped)
 ⊘ uv already installed (skipped)
-▶ Installing bun...
-✓ bun installed
+⊘ bun already installed (skipped)
 ⊘ age already installed (skipped)
 
 ═══════════════════════════════════════════════════════
@@ -106,45 +103,39 @@ curl: (23) Failure writing output to destination
 ═══════════════════════════════════════════════════════
 
 ⊘ antidote already installed (skipped)
-▶ TPM (Tmux Plugin Manager) will be installed via chezmoi .chezmoiexternal.toml
+⊘ TPM already installed (skipped)
 
 ═══════════════════════════════════════════════════════
   Python Tools
 ═══════════════════════════════════════════════════════
 
-▶ Installing basedpyright...
-✓ basedpyright installed
-▶ Installing detect-secrets...
-✓ detect-secrets installed
-▶ Installing just...
-✓ just installed
-▶ Installing pre-commit...
-✓ pre-commit installed
-▶ Installing virtualenv...
-✓ virtualenv installed
+⊘ basedpyright already installed (skipped)
+⊘ detect-secrets already installed (skipped)
+⊘ just already installed (skipped)
+⊘ pre-commit already installed (skipped)
+⊘ virtualenv already installed (skipped)
 
-✓ Python tools: 5 installed, 0 skipped
+✓ Python tools: 0 installed, 5 skipped
 
 ═══════════════════════════════════════════════════════
   Node.js & JavaScript Tools
 ═══════════════════════════════════════════════════════
 
-✗ fnm not found - Node.js tools installation skipped
-✗ Node.js Tools failed
+⊘ Node.js 22 (LTS) already installed (skipped)
 ⊘ Claude Code already installed (skipped)
 
 ═══════════════════════════════════════════════════════
   Dotfile Backup
 ═══════════════════════════════════════════════════════
 
-▶ Backing up existing dotfiles to /home/adminuser/.dotfiles-backup/20260212_101828...
+▶ Backing up existing dotfiles to /home/adminuser/.dotfiles-backup/20260212_115709...
 ▶ Backed up: .zshrc
 ▶ Backed up: .bashrc
 ▶ Backed up: .profile
 ▶ Backed up: .gitconfig
 ▶ Backed up: .config/zsh
 ▶ Backed up: .config/tmux
-✓ Dotfiles backed up to /home/adminuser/.dotfiles-backup/20260212_101828
+✓ Dotfiles backed up to /home/adminuser/.dotfiles-backup/20260212_115709
 
 ═══════════════════════════════════════════════════════
   Age Encryption Key
@@ -160,40 +151,23 @@ curl: (23) Failure writing output to destination
 ✓ chezmoi configurations applied
 
 ═══════════════════════════════════════════════════════
-  GitHub Authentication
-═══════════════════════════════════════════════════════
-
-k✗ GitHub auth failed
-▶ Authenticate manually: gh auth login
-
-═══════════════════════════════════════════════════════
   Default Shell
 ═══════════════════════════════════════════════════════
 
-▶ Changing default shell to zsh...
-✓ Default shell changed to zsh (takes effect on next login)
+⊘ Shell already set to zsh (skipped)
 
 ═══════════════════════════════════════════════════════
   Bootstrap Complete!
 ═══════════════════════════════════════════════════════
 
 Installed:
-  ✓ glow
-  ✓ fnm
-  ✓ bun
-  ✓ basedpyright
-  ✓ detect-secrets
-  ✓ just
-  ✓ pre-commit
-  ✓ virtualenv
+  ✓ dotfiles update
   ✓ Dotfile backup
   ✓ chezmoi apply
-  ✓ zsh as default shell
 
 Skipped (already installed):
   ⊘ WSL2 configuration
   ⊘ chezmoi
-  ⊘ dotfiles clone
   ⊘ build-essential
   ⊘ ca-certificates
   ⊘ git
@@ -206,6 +180,7 @@ Skipped (already installed):
   ⊘ tree
   ⊘ file
   ⊘ findutils
+  ⊘ glow
   ⊘ htop
   ⊘ zoxide
   ⊘ curl
@@ -227,45 +202,55 @@ Skipped (already installed):
   ⊘ wslu
   ⊘ powershell
   ⊘ gh
+  ⊘ Starship
+  ⊘ fnm
   ⊘ fzf
   ⊘ uv
+  ⊘ bun
   ⊘ age
   ⊘ antidote
+  ⊘ TPM
+  ⊘ basedpyright
+  ⊘ detect-secrets
+  ⊘ just
+  ⊘ pre-commit
+  ⊘ virtualenv
+  ⊘ Node.js 22
   ⊘ Claude Code
   ⊘ Age key
-
-Failed:
-  ✗ Starship
-  ✗ Node.js tools (fnm required)
-  ✗ Node.js Tools
-  ✗ GitHub auth
+  ⊘ Shell change
 
 Post-Install Checklist:
 
   1. Age Encryption Key
-     If skipped during setup, retrieve from Bitwarden and save to:
+     If skipped during setup, retrieve from Bitwarden and save to:   <--- remove this, the bootstrap now prompts for the password so this will never be needed
      ~/.config/age/keys.txt
      Then run: chezmoi apply
 
-  2. Tmux Plugins
+  2. Tmux Plugins													<--- How do i open tmux?  what is the prefix key combo?
      Open tmux and press: prefix + I (Install plugins)
 
   3. Claude Code Authentication
      Run: claude login
 
   4. SSH Verification
-     Test SSH keys: ssh -T git@github.com
+     Test SSH keys: ssh -T git@github.com  							<-----  what does this do?  why does it fail (see below)
 
   5. WSL Restart
      From PowerShell, run: wsl.exe --shutdown
      Then restart WSL to enable systemd
 
-Log file: /home/adminuser/.dotfiles-bootstrap-20260212_101811.log
+Log file: /home/adminuser/.dotfiles-bootstrap-20260212_115703.log
 
 
-═══════════════════════════════════════════════════════
-  Some steps failed. See above for details.
-═══════════════════════════════════════════════════════
+Starting new zsh shell...
 
-Re-run this script to retry failed steps.
-adminuser@GSI-LPF4GWYG7:~$
+~ took 7s
+❯ ssh -T git@github.com
+git@github.com: Permission denied (publickey).
+
+~
+❯
+
+
+We shoul add in the post-install checklist a copy paste command to run the verify.sh script
