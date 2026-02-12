@@ -4,11 +4,11 @@ WSL2 Ubuntu dev environment managed by chezmoi. One command sets up everything.
 
 ## What Gets Installed
 
-**Shell:** zsh (default) with antidote plugins, Starship prompt, 100k history with dedup
-**Tools:** fnm (Node.js), fzf (fuzzy finder), zoxide (smart cd), uv (Python), bun (JS runtime)
-**Configs:** git (templated), tmux (TPM, XDG paths), Starship (Pure-style theme)
-**Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv, Claude Code
-**System:** GitHub CLI, PowerShell, age encryption, 34 curated apt packages
+- **Shell:** zsh (default) with antidote plugins, Starship prompt, 100k history with dedup
+- **Tools:** fnm (Node.js), fzf (fuzzy finder), zoxide (smart cd), uv (Python), bun (JS runtime)
+- **Configs:** git (templated), tmux (TPM, XDG paths), Starship (Pure-style theme)
+- **Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv, Claude Code
+- **System:** GitHub CLI, PowerShell, age encryption, 34 curated apt packages
 
 ## Quick Start
 
@@ -26,23 +26,23 @@ You'll be prompted for your sudo password and age encryption key (from Bitwarden
 2. Adds APT repos (GitHub CLI, PowerShell, Charm) and installs 34 system packages
 3. Installs chezmoi and clones this repo
 4. Installs binary tools (Starship, fnm, fzf, uv, bun, age)
-5. Installs antidote (zsh plugin manager)
+5. Installs plugin managers (antidote for zsh, TPM for tmux)
 6. Installs Python tools via uv and Node.js 22 LTS via fnm
-7. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
-8. Deploys all configs via `chezmoi apply`
-9. Authenticates GitHub CLI (via age-encrypted PAT)
-10. Changes default shell to zsh
+7. Installs Claude Code via official installer
+8. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
+9. Deploys all configs via `chezmoi apply`
+10. Authenticates GitHub CLI (via `GH_TOKEN` from age-encrypted secrets)
+11. Changes default shell to zsh
 
 ### Post-Install Checklist
 
 After bootstrap completes, it prints this checklist:
 
-1. **Age key** — Retrieve from Bitwarden, save to `~/.config/age/keys.txt`, run `chezmoi apply`
-2. **GitHub auth** — `gh auth login`
-3. **Tmux plugins** — Open tmux, press `prefix + I`
-4. **Claude Code** — `claude login`
-5. **SSH verify** — `ssh -T git@github.com`
-6. **WSL restart** — `wsl.exe --shutdown` from PowerShell (enables systemd)
+1. **Age key** — If skipped during setup, retrieve from Bitwarden, save to `~/.config/age/keys.txt`, then run `chezmoi apply`
+2. **Tmux plugins** — Open tmux, press `prefix + I`
+3. **Claude Code** — `claude login`
+4. **SSH verify** — `ssh -T git@github.com`
+5. **WSL restart** — `wsl.exe --shutdown` from PowerShell (enables systemd)
 
 ## Secrets & Encryption
 
@@ -88,6 +88,7 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 ```
 ~/.dotfiles/                       # chezmoi source (this repo)
 ├── bootstrap.sh                   # Idempotent installer script
+├── verify.sh                      # Post-install environment validation
 ├── dot_zshrc.tmpl                 # .zshrc template
 ├── dot_bashrc.tmpl                # .bashrc template
 ├── dot_profile                    # .profile
@@ -96,6 +97,8 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 │   ├── starship.toml              # Starship prompt config
 │   ├── tmux/tmux.conf             # tmux config (XDG path)
 │   └── zsh/                       # All zsh config modules + aliases
+├── dot_claude/                    # Claude Code configs
+├── dot_ssh/                       # SSH keys (age-encrypted)
 ├── encrypted_dot_secrets.env.age  # Encrypted secrets
 ├── packages/
 │   ├── apt-packages.txt           # System packages manifest
@@ -111,7 +114,7 @@ chezmoi status              # View current status
 chezmoi diff                # Dry-run — see what would change
 chezmoi edit ~/.bashrc      # Edit a managed file
 chezmoi edit ~/.secrets.env # Edit encrypted secrets
-chezmoi apply --verbose     # Apply changes
+chezmoi apply               # Apply changes
 chezmoi add ~/.config/foo   # Add a new file to chezmoi
 chezmoi add --encrypt ~/.keys  # Add encrypted file
 ```
