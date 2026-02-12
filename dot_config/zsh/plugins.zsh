@@ -14,6 +14,14 @@ source ${ZDOTDIR:-$HOME}/.antidote/antidote.zsh
 antidote load ${ZDOTDIR:-$HOME/.config/zsh}/.zsh_plugins.txt
 
 # --- Completion System ---
+# Remove broken symlinks from fpath dirs (e.g. Docker Desktop WSL integration when not running)
+for _dir in $fpath; do
+  for _file in "$_dir"/*(-@N); do
+    command rm -f "$_file" 2>/dev/null
+  done
+done
+unset _dir _file
+
 # Load completion system (call once only)
 autoload -Uz compinit
 
