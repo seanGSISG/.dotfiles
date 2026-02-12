@@ -617,45 +617,8 @@ install_chezmoi() {
   if [ ! -d "$DOTFILES_DIR/.git" ]; then
     log_info "Cloning dotfiles repo from GitHub..."
 
-    local clone_success=false
-
-    # Try 1: gh CLI (if available and authenticated)
-    if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
-      log_info "Using gh CLI for authenticated clone..."
-      if gh repo clone "$GITHUB_REPO" "$DOTFILES_DIR" -- --depth=1 >/dev/null 2>&1; then
-        clone_success=true
-      fi
-    fi
-
-    # Try 2: HTTPS clone (works for public repos)
-    if [ "$clone_success" = false ]; then
-      if git clone "https://github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
-        clone_success=true
-      fi
-    fi
-
-    # Try 3: Ask for GitHub token (private repos without gh)
-    if [ "$clone_success" = false ]; then
-      echo ""
-      echo "${YELLOW}Repository clone failed. This may be a private repo.${RESET}"
-      echo "Options:"
-      echo "  1. Enter a GitHub Personal Access Token (PAT)"
-      echo "  2. Press Enter to skip (you can clone manually later)"
-      echo ""
-      echo "Generate a PAT at: https://github.com/settings/tokens"
-      echo "Paste your token or press Enter to skip:"
-      read -r gh_token </dev/tty || gh_token=""
-
-      if [ -n "$gh_token" ]; then
-        if git clone "https://$gh_token@github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
-          clone_success=true
-          # Remove token from remote URL for safety
-          git -C "$DOTFILES_DIR" remote set-url origin "https://github.com/$GITHUB_REPO.git"
-        fi
-      fi
-    fi
-
-    if [ "$clone_success" = true ]; then
+    # Public repo — no auth needed for clone
+    if git clone "https://github.com/$GITHUB_REPO.git" "$DOTFILES_DIR" </dev/null >/dev/null 2>&1; then
       log_success "Dotfiles repo cloned"
       INSTALLED+=("dotfiles clone")
     else
@@ -727,6 +690,42 @@ apply_chezmoi() {
     log_error "chezmoi apply failed"
     FAILED_STEPS+=("chezmoi apply")
     return 1
+  fi
+}
+
+#===============================================================================
+# GitHub Authentication
+#===============================================================================
+
+setup_github_auth() {
+  section_header "GitHub Authentication"
+
+  if ! command -v gh &>/dev/null; then
+    log_error "gh CLI not installed, skipping GitHub auth"
+    FAILED_STEPS+=("GitHub auth")
+    return 1
+  fi
+
+  # Source secrets (decrypted by chezmoi apply)
+  if [ -f "$HOME/.secrets.env" ]; then
+    # shellcheck disable=SC1091
+    source "$HOME/.secrets.env"
+  fi
+
+  if [ -z "${GH_TOKEN:-}" ]; then
+    log_warn "GH_TOKEN not found in ~/.secrets.env, skipping auto-auth"
+    log_info "Authenticate manually: gh auth login"
+    SKIPPED+=("GitHub auth")
+    return 0
+  fi
+
+  if echo "$GH_TOKEN" | gh auth login --with-token --git-protocol https 2>/dev/null; then
+    log_success "GitHub CLI authenticated"
+    INSTALLED+=("GitHub auth")
+  else
+    log_error "GitHub auth failed"
+    log_info "Authenticate manually: gh auth login"
+    FAILED_STEPS+=("GitHub auth")
   fi
 }
 
@@ -811,19 +810,16 @@ print_summary() {
   echo "     ${CYAN}~/.config/age/keys.txt${RESET}"
   echo "     Then run: ${CYAN}chezmoi apply${RESET}"
   echo ""
-  echo "  ${BOLD}2. GitHub Authentication${RESET}"
-  echo "     Run: ${CYAN}gh auth login${RESET}"
-  echo ""
-  echo "  ${BOLD}3. Tmux Plugins${RESET}"
+  echo "  ${BOLD}2. Tmux Plugins${RESET}"
   echo "     Open tmux and press: ${CYAN}prefix + I${RESET} (Install plugins)"
   echo ""
-  echo "  ${BOLD}4. Claude Code Authentication${RESET}"
+  echo "  ${BOLD}3. Claude Code Authentication${RESET}"
   echo "     Run: ${CYAN}claude login${RESET}"
   echo ""
-  echo "  ${BOLD}5. SSH Verification${RESET}"
+  echo "  ${BOLD}4. SSH Verification${RESET}"
   echo "     Test SSH keys: ${CYAN}ssh -T git@github.com${RESET}"
   echo ""
-  echo "  ${BOLD}6. WSL Restart${RESET}"
+  echo "  ${BOLD}5. WSL Restart${RESET}"
   echo "     From PowerShell, run: ${CYAN}wsl.exe --shutdown${RESET}"
   echo "     Then restart WSL to enable systemd"
   echo ""
@@ -880,6 +876,7 @@ main() {
   run_step "Dotfile Backup" backup_dotfiles
   run_step "Age Key" setup_age_key
   run_step "Chezmoi Apply" apply_chezmoi
+  run_step "GitHub Auth" setup_github_auth
   run_step "Default Shell" change_default_shell
 
   # Re-enable exit-on-error

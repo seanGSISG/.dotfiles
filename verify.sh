@@ -198,6 +198,13 @@ verify_secrets() {
   else
     check_fail "Secrets file not found (~/.secrets.env)"
   fi
+
+  # GitHub CLI authenticated
+  if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
+    check_pass "GitHub CLI authenticated"
+  else
+    check_fail "GitHub CLI not authenticated (gh auth status failed)"
+  fi
 }
 
 verify_wsl_config() {
