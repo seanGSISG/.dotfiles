@@ -31,8 +31,7 @@ You'll be prompted for your sudo password and age encryption key (from Bitwarden
 7. Installs Claude Code via official installer
 8. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
 9. Deploys all configs via `chezmoi apply`
-10. Authenticates GitHub CLI (via `GH_TOKEN` from age-encrypted secrets)
-11. Changes default shell to zsh
+10. Changes default shell to zsh
 
 ### Post-Install Checklist
 

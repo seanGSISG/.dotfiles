@@ -532,7 +532,6 @@ install_node_tools() {
 
   # Ensure fnm is on PATH (installs to ~/.local/share/fnm by default)
   export PATH="$HOME/.local/share/fnm:$HOME/.local/bin:$PATH"
-  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
 
   # Verify fnm is available
   if ! command -v fnm &>/dev/null; then
@@ -557,8 +556,9 @@ install_node_tools() {
     fi
   fi
 
-  # Always ensure default is set (may have been skipped on previous re-runs)
+  # Always ensure default is set, THEN activate so node is on PATH
   fnm default 22 >/dev/null 2>&1 || true
+  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
 }
 
 install_claude_code() {
@@ -671,8 +671,15 @@ install_chezmoi() {
       return 1
     fi
   else
-    log_skip "Dotfiles repo already exists"
-    SKIPPED+=("dotfiles clone")
+    # Pull latest changes so chezmoi apply uses current source
+    log_info "Updating dotfiles repo..."
+    if git -C "$DOTFILES_DIR" pull --ff-only origin main </dev/null >/dev/null 2>&1; then
+      log_success "Dotfiles repo updated"
+      INSTALLED+=("dotfiles update")
+    else
+      log_skip "Dotfiles repo already exists (pull skipped — may be offline or have local changes)"
+      SKIPPED+=("dotfiles clone")
+    fi
   fi
 }
 
@@ -753,55 +760,6 @@ apply_chezmoi() {
     [ -n "$chezmoi_output" ] && log_info "Output: $chezmoi_output"
     FAILED_STEPS+=("chezmoi apply")
     return 1
-  fi
-}
-
-#===============================================================================
-# GitHub Authentication
-#===============================================================================
-
-setup_github_auth() {
-  section_header "GitHub Authentication"
-
-  if ! command -v gh &>/dev/null; then
-    log_error "gh CLI not installed, skipping GitHub auth"
-    FAILED_STEPS+=("GitHub auth")
-    return 1
-  fi
-
-  # Source secrets (decrypted by chezmoi apply)
-  if [ -f "$HOME/.secrets.env" ]; then
-    # shellcheck disable=SC1091
-    source "$HOME/.secrets.env"
-  fi
-
-  if [ -z "${GH_TOKEN:-}" ]; then
-    log_skip "GH_TOKEN not found in ~/.secrets.env"
-    log_info "Authenticate manually: gh auth login"
-    SKIPPED+=("GitHub auth")
-    return 0
-  fi
-
-  # GH_TOKEN env var IS the auth method — gh CLI uses it automatically.
-  # Just verify it works by checking auth status.
-  if gh auth status >/dev/null 2>&1; then
-    log_success "GitHub CLI authenticated via GH_TOKEN"
-    INSTALLED+=("GitHub auth")
-  else
-    # Token might be expired or invalid — try explicit login
-    # Must unset GH_TOKEN first or gh refuses to store credentials
-    local token="$GH_TOKEN"
-    unset GH_TOKEN
-    local auth_output
-    if auth_output=$(printf '%s' "$token" | gh auth login --with-token --git-protocol https 2>&1); then
-      log_success "GitHub CLI authenticated"
-      INSTALLED+=("GitHub auth")
-    else
-      export GH_TOKEN="$token"
-      log_error "GitHub auth failed: $auth_output"
-      log_info "GH_TOKEN is set but may be expired. Authenticate manually: gh auth login"
-      FAILED_STEPS+=("GitHub auth")
-    fi
   fi
 }
 
@@ -953,7 +911,6 @@ main() {
   run_step "Dotfile Backup" backup_dotfiles
   run_step "Age Key" setup_age_key
   run_step "Chezmoi Apply" apply_chezmoi
-  run_step "GitHub Auth" setup_github_auth
   run_step "Default Shell" change_default_shell
 
   # Re-enable exit-on-error
