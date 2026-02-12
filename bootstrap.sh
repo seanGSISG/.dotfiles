@@ -173,6 +173,18 @@ setup_apt_repos() {
     repos_added=1
   fi
 
+  # Charm repository (for glow)
+  if [ -f /etc/apt/sources.list.d/charm.list ]; then
+    log_skip "Charm repository already configured"
+  else
+    log_info "Adding Charm repository (for glow)..."
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list > /dev/null
+    log_success "Charm repository added"
+    repos_added=1
+  fi
+
   # Always update package cache (needed for fresh machines and after repo additions)
   log_info "Updating package cache..."
   sudo apt-get update -qq
@@ -268,7 +280,7 @@ install_starship() {
   fi
 
   log_info "Installing Starship..."
-  if bash -c "$(curl -sS https://starship.rs/install.sh)" -- -y --bin-dir "$HOME/.local/bin" </dev/null >/dev/null 2>&1; then
+  if curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin" </dev/null >/dev/null 2>&1; then
     log_success "Starship installed"
     INSTALLED+=("Starship")
   else
@@ -452,8 +464,8 @@ install_python_tools() {
     [[ "$line" =~ ^[[:space:]]*# ]] && continue
     [[ -z "$line" ]] && continue
 
-    # Extract tool name
-    local tool=$(echo "$line" | xargs)
+    # Extract tool name (strip inline comments)
+    local tool=$(echo "$line" | sed -E 's/[[:space:]]*#.*$//' | xargs)
     [[ -n "$tool" ]] && tools+=("$tool")
   done < "$tools_file"
 
@@ -498,7 +510,7 @@ install_node_tools() {
   fi
 
   # Source fnm into current shell
-  export PATH="$HOME/.local/share/fnm:$PATH"
+  export PATH="$HOME/.local/bin:$PATH"
   eval "$(fnm env --use-on-cd)" 2>/dev/null || true
 
   # Check if Node LTS is already installed
@@ -713,7 +725,7 @@ setup_github_auth() {
   fi
 
   if [ -z "${GH_TOKEN:-}" ]; then
-    log_warn "GH_TOKEN not found in ~/.secrets.env, skipping auto-auth"
+    log_skip "GH_TOKEN not found in ~/.secrets.env"
     log_info "Authenticate manually: gh auth login"
     SKIPPED+=("GitHub auth")
     return 0

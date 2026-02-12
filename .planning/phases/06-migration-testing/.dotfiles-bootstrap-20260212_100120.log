@@ -1,0 +1,293 @@
+[1m[36m
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║           WSL2 Dev Environment Bootstrap                      ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+(B[m
+
+[34m▶(B[m Logging to: /home/adminuser/.dotfiles-bootstrap-20260212_100120.log
+
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Checking Prerequisites(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[32m✓(B[m curl available
+[32m✓(B[m git available
+[32m✓(B[m sudo available
+[32m✓(B[m All prerequisites available
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  WSL2 Configuration(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m WSL2 already configured with systemd [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  APT Repository Setup(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[33m⊘(B[m GitHub CLI repository already configured [33m(skipped)(B[m
+[33m⊘(B[m PowerShell repository already configured or PowerShell already installed [33m(skipped)(B[m
+[34m▶(B[m Updating package cache...
+[32m✓(B[m Package cache updated
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Chezmoi Installation(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Installing chezmoi...
+[32m✓(B[m chezmoi installed
+[34m▶(B[m Cloning dotfiles repo from GitHub...
+[32m✓(B[m Dotfiles repo cloned
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Installing System Packages(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Installing build-essential...
+[32m✓(B[m build-essential installed
+[33m⊘(B[m ca-certificates already installed [33m(skipped)(B[m
+[33m⊘(B[m git already installed [33m(skipped)(B[m
+[34m▶(B[m Installing zsh...
+[32m✓(B[m zsh installed
+[33m⊘(B[m bash-completion already installed [33m(skipped)(B[m
+[34m▶(B[m Installing bat...
+[32m✓(B[m bat installed
+[34m▶(B[m Installing eza...
+[32m✓(B[m eza installed
+[34m▶(B[m Installing ripgrep...
+[32m✓(B[m ripgrep installed
+[34m▶(B[m Installing jq...
+[32m✓(B[m jq installed
+[34m▶(B[m Installing tree...
+[32m✓(B[m tree installed
+[33m⊘(B[m file already installed [33m(skipped)(B[m
+[33m⊘(B[m findutils already installed [33m(skipped)(B[m
+[34m▶(B[m Installing glow...
+[31m✗(B[m glow installation failed
+[34m▶(B[m Installing htop...
+[32m✓(B[m htop installed
+[34m▶(B[m Installing zoxide...
+[32m✓(B[m zoxide installed
+[33m⊘(B[m curl already installed [33m(skipped)(B[m
+[33m⊘(B[m wget already installed [33m(skipped)(B[m
+[34m▶(B[m Installing zip...
+[32m✓(B[m zip installed
+[33m⊘(B[m unzip already installed [33m(skipped)(B[m
+[33m⊘(B[m python3 already installed [33m(skipped)(B[m
+[34m▶(B[m Installing python3-pip...
+[32m✓(B[m python3-pip installed
+[33m⊘(B[m python3.12 already installed [33m(skipped)(B[m
+[34m▶(B[m Installing python3.12-venv...
+[32m✓(B[m python3.12-venv installed
+[34m▶(B[m Installing gnome-keyring...
+[32m✓(B[m gnome-keyring installed
+[34m▶(B[m Installing gnupg2...
+[32m✓(B[m gnupg2 installed
+[33m⊘(B[m libsecret-1-0 already installed [33m(skipped)(B[m
+[34m▶(B[m Installing libsecret-1-dev...
+[32m✓(B[m libsecret-1-dev installed
+[34m▶(B[m Installing libsecret-tools...
+[32m✓(B[m libsecret-tools installed
+[34m▶(B[m Installing libfuse2t64...
+[32m✓(B[m libfuse2t64 installed
+[34m▶(B[m Installing fuse...
+[32m✓(B[m fuse installed
+[33m⊘(B[m libattr1 already installed [33m(skipped)(B[m
+[34m▶(B[m Installing wslu...
+[32m✓(B[m wslu installed
+[34m▶(B[m Installing powershell...
+[32m✓(B[m powershell installed
+[34m▶(B[m Installing gh...
+[32m✓(B[m gh installed
+
+[32m✓(B[m APT packages: 21 installed, 12 skipped
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Binary Tools(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Installing Starship...
+[31m✗(B[m Starship installation failed
+[34m▶(B[m Installing fnm...
+[32m✓(B[m fnm installed
+[34m▶(B[m Installing fzf...
+[32m✓(B[m fzf installed
+[33m⊘(B[m uv already installed [33m(skipped)(B[m
+[34m▶(B[m Installing bun...
+[32m✓(B[m bun installed
+[33m⊘(B[m age already installed [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Plugin Managers(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Installing antidote...
+[32m✓(B[m antidote installed
+[34m▶(B[m TPM (Tmux Plugin Manager) will be installed via chezmoi .chezmoiexternal.toml
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Python Tools(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Installing basedpyright # Python type checker (actively maintained Pyright fork)...
+[31m✗(B[m basedpyright # Python type checker (actively maintained Pyright fork) installation failed
+[34m▶(B[m Installing detect-secrets # Pre-commit hook for secret scanning...
+[31m✗(B[m detect-secrets # Pre-commit hook for secret scanning installation failed
+[34m▶(B[m Installing just # Command runner (Makefile alternative, Rust-based)...
+[31m✗(B[m just # Command runner (Makefile alternative, Rust-based) installation failed
+[34m▶(B[m Installing pre-commit # Git hook framework for code quality...
+[31m✗(B[m pre-commit # Git hook framework for code quality installation failed
+[34m▶(B[m Installing virtualenv # Virtual environment creation (used by pre-commit internally)...
+[31m✗(B[m virtualenv # Virtual environment creation (used by pre-commit internally) installation failed
+
+[32m✓(B[m Python tools: 0 installed, 0 skipped
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Node.js & JavaScript Tools(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[31m✗(B[m fnm not found - Node.js tools installation skipped
+[31m✗(B[m Node.js Tools failed
+[33m⊘(B[m Claude Code already installed [33m(skipped)(B[m
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Dotfile Backup(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Backing up existing dotfiles to /home/adminuser/.dotfiles-backup/20260212_100249...
+[34m▶(B[m Backed up: .bashrc
+[34m▶(B[m Backed up: .profile
+[32m✓(B[m Dotfiles backed up to /home/adminuser/.dotfiles-backup/20260212_100249
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Age Encryption Key(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+
+[36mAge encryption key is required to decrypt secrets and SSH keys.(B[m
+Your age key is stored in Bitwarden (search: 'age encryption key')
+
+Paste your age secret key (starts with AGE-SECRET-KEY-1...)
+or press Enter to skip:
+[34m▶(B[m Saving age key to ~/.config/age/keys.txt...
+[32m✓(B[m Age encryption key saved
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Chezmoi Apply(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Applying chezmoi configurations...
+[32m✓(B[m chezmoi configurations applied
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  GitHub Authentication(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[31m✗(B[m GitHub auth failed
+[34m▶(B[m Authenticate manually: gh auth login
+
+[1m[35m═══════════════════════════════════════════════════════(B[m
+[1m[35m  Default Shell(B[m
+[1m[35m═══════════════════════════════════════════════════════(B[m
+
+[34m▶(B[m Changing default shell to zsh...
+[32m✓(B[m Default shell changed to zsh (takes effect on next login)
+
+[1m[32m═══════════════════════════════════════════════════════(B[m
+[1m[32m  Bootstrap Complete!(B[m
+[1m[32m═══════════════════════════════════════════════════════(B[m
+
+[1m[32mInstalled:(B[m
+  [32m✓(B[m chezmoi
+  [32m✓(B[m dotfiles clone
+  [32m✓(B[m build-essential
+  [32m✓(B[m zsh
+  [32m✓(B[m bat
+  [32m✓(B[m eza
+  [32m✓(B[m ripgrep
+  [32m✓(B[m jq
+  [32m✓(B[m tree
+  [32m✓(B[m htop
+  [32m✓(B[m zoxide
+  [32m✓(B[m zip
+  [32m✓(B[m python3-pip
+  [32m✓(B[m python3.12-venv
+  [32m✓(B[m gnome-keyring
+  [32m✓(B[m gnupg2
+  [32m✓(B[m libsecret-1-dev
+  [32m✓(B[m libsecret-tools
+  [32m✓(B[m libfuse2t64
+  [32m✓(B[m fuse
+  [32m✓(B[m wslu
+  [32m✓(B[m powershell
+  [32m✓(B[m gh
+  [32m✓(B[m fnm
+  [32m✓(B[m fzf
+  [32m✓(B[m bun
+  [32m✓(B[m antidote
+  [32m✓(B[m Dotfile backup
+  [32m✓(B[m Age key
+  [32m✓(B[m chezmoi apply
+  [32m✓(B[m zsh as default shell
+
+[1m[33mSkipped (already installed):(B[m
+  [33m⊘(B[m WSL2 configuration
+  [33m⊘(B[m ca-certificates
+  [33m⊘(B[m git
+  [33m⊘(B[m bash-completion
+  [33m⊘(B[m file
+  [33m⊘(B[m findutils
+  [33m⊘(B[m curl
+  [33m⊘(B[m wget
+  [33m⊘(B[m unzip
+  [33m⊘(B[m python3
+  [33m⊘(B[m python3.12
+  [33m⊘(B[m libsecret-1-0
+  [33m⊘(B[m libattr1
+  [33m⊘(B[m uv
+  [33m⊘(B[m age
+  [33m⊘(B[m Claude Code
+
+[1m[31mFailed:(B[m
+  [31m✗(B[m apt package: glow
+  [31m✗(B[m Starship
+  [31m✗(B[m Python tool: basedpyright # Python type checker (actively maintained Pyright fork)
+  [31m✗(B[m Python tool: detect-secrets # Pre-commit hook for secret scanning
+  [31m✗(B[m Python tool: just # Command runner (Makefile alternative, Rust-based)
+  [31m✗(B[m Python tool: pre-commit # Git hook framework for code quality
+  [31m✗(B[m Python tool: virtualenv # Virtual environment creation (used by pre-commit internally)
+  [31m✗(B[m Node.js tools (fnm required)
+  [31m✗(B[m Node.js Tools
+  [31m✗(B[m GitHub auth
+
+[1m[36mPost-Install Checklist:(B[m
+
+  [1m1. Age Encryption Key(B[m
+     If skipped during setup, retrieve from Bitwarden and save to:
+     [36m~/.config/age/keys.txt(B[m
+     Then run: [36mchezmoi apply(B[m
+
+  [1m2. Tmux Plugins(B[m
+     Open tmux and press: [36mprefix + I(B[m (Install plugins)
+
+  [1m3. Claude Code Authentication(B[m
+     Run: [36mclaude login(B[m
+
+  [1m4. SSH Verification(B[m
+     Test SSH keys: [36mssh -T git@github.com(B[m
+
+  [1m5. WSL Restart(B[m
+     From PowerShell, run: [36mwsl.exe --shutdown(B[m
+     Then restart WSL to enable systemd
+
+[1mLog file:(B[m /home/adminuser/.dotfiles-bootstrap-20260212_100120.log
+
+
+[1m[31m═══════════════════════════════════════════════════════(B[m
+[1m[31m  Some steps failed. See above for details.(B[m
+[1m[31m═══════════════════════════════════════════════════════(B[m
+
+Re-run this script to retry failed steps.
