@@ -940,7 +940,7 @@ main() {
   # Ensure ~/.local/bin exists and set PATH to match shell configs
   # This ensures command -v checks work for already-installed tools on re-runs
   mkdir -p "$HOME/.local/bin"
-  export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/.bun/bin:$HOME/.fzf/bin:$PATH"
+  export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/.bun/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
 
   # Run all sections via run_step
   # Phase 1: System foundation + repo clone
