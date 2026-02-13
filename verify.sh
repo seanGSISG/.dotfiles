@@ -110,6 +110,7 @@ verify_tools() {
     age
     claude
     opencode
+    mmdc
   )
 
   for tool in "${tools[@]}"; do

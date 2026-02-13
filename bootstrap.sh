@@ -589,6 +589,31 @@ install_claude_code() {
   fi
 }
 
+install_mermaid_cli() {
+  if command -v mmdc &>/dev/null; then
+    log_skip "Mermaid CLI already installed"
+    SKIPPED+=("Mermaid CLI")
+    return 0
+  fi
+
+  # Requires bun (or npm) to be available
+  if ! command -v bun &>/dev/null; then
+    log_error "bun not found - Mermaid CLI installation skipped"
+    FAILED_STEPS+=("Mermaid CLI (bun required)")
+    return 1
+  fi
+
+  log_info "Installing Mermaid CLI..."
+  if bun add -g @mermaid-js/mermaid-cli </dev/null >/dev/null 2>&1; then
+    log_success "Mermaid CLI installed"
+    INSTALLED+=("Mermaid CLI")
+  else
+    log_error "Mermaid CLI installation failed"
+    FAILED_STEPS+=("Mermaid CLI")
+    return 1
+  fi
+}
+
 install_opencode() {
   if command -v opencode &>/dev/null; then
     log_skip "OpenCode already installed"
@@ -930,6 +955,7 @@ main() {
   run_step "Python Tools" install_python_tools
   run_step "Node.js Tools" install_node_tools
   run_step "Claude Code" install_claude_code
+  run_step "Mermaid CLI" install_mermaid_cli
   run_step "OpenCode" install_opencode
 
   # Phase 3: Deploy configs

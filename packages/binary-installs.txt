@@ -59,3 +59,8 @@ opencode|https://opencode.ai/install|latest|script
 # OpenCode CLI (AI coding assistant)
 # install: curl -fsSL https://opencode.ai/install | bash
 # alt-install: bun add -g opencode-ai
+
+mermaid-cli|npm:@mermaid-js/mermaid-cli|latest|npm
+# Mermaid diagram CLI renderer (generates SVG/PNG from .mmd files)
+# install: bun add -g @mermaid-js/mermaid-cli (or npm install -g)
+# binary: mmdc
