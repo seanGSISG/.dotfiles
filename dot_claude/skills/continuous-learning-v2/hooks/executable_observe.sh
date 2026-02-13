@@ -56,20 +56,35 @@ if [ -z "$INPUT_JSON" ]; then
   exit 0
 fi
 
-# Parse using python (more reliable than jq for complex JSON)
-PARSED=$(python3 << EOF
-import json
-import sys
+# Archive if file too large
+if [ -f "$OBSERVATIONS_FILE" ]; then
+  file_size_mb=$(du -m "$OBSERVATIONS_FILE" 2>/dev/null | cut -f1)
+  if [ "${file_size_mb:-0}" -ge "$MAX_FILE_SIZE_MB" ]; then
+    archive_dir="${CONFIG_DIR}/observations.archive"
+    mkdir -p "$archive_dir"
+    mv "$OBSERVATIONS_FILE" "$archive_dir/observations-$(date +%Y%m%d-%H%M%S).jsonl"
+  fi
+fi
+
+# Parse, build observation, and write — all in one Python call via stdin
+# (piping avoids embedding JSON in bash strings which breaks on single quotes)
+echo "$INPUT_JSON" | python3 -c '
+import json, sys
+from datetime import datetime, timezone
+
+obs_file = sys.argv[1]
 
 try:
-    data = json.loads('''$INPUT_JSON''')
+    data = json.loads(sys.stdin.read())
 
-    # Extract fields - Claude Code hook format
-    hook_type = data.get('hook_type', 'unknown')  # PreToolUse or PostToolUse
-    tool_name = data.get('tool_name', data.get('tool', 'unknown'))
-    tool_input = data.get('tool_input', data.get('input', {}))
-    tool_output = data.get('tool_output', data.get('output', ''))
-    session_id = data.get('session_id', 'unknown')
+    # Extract fields — Claude Code hook format
+    # hook_event_name is the correct field; fall back to hook_type for compat
+    hook_type = data.get("hook_event_name", data.get("hook_type", "unknown"))
+    tool_name = data.get("tool_name", data.get("tool", "unknown"))
+    tool_input = data.get("tool_input", data.get("input", {}))
+    # tool_response is the correct field; fall back to tool_output for compat
+    tool_output = data.get("tool_response", data.get("tool_output", ""))
+    session_id = data.get("session_id", "unknown")
 
     # Truncate large inputs/outputs
     if isinstance(tool_input, dict):
@@ -83,63 +98,29 @@ try:
         tool_output_str = str(tool_output)[:5000]
 
     # Determine event type
-    event = 'tool_start' if 'Pre' in hook_type else 'tool_complete'
+    event = "tool_start" if "Pre" in hook_type else "tool_complete"
 
-    print(json.dumps({
-        'parsed': True,
-        'event': event,
-        'tool': tool_name,
-        'input': tool_input_str if event == 'tool_start' else None,
-        'output': tool_output_str if event == 'tool_complete' else None,
-        'session': session_id
-    }))
+    observation = {
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "event": event,
+        "tool": tool_name,
+        "session": session_id,
+    }
+
+    if event == "tool_start":
+        observation["input"] = tool_input_str
+    else:
+        observation["output"] = tool_output_str
+
+    with open(obs_file, "a") as f:
+        f.write(json.dumps(observation) + "\n")
+
 except Exception as e:
-    print(json.dumps({'parsed': False, 'error': str(e)}))
-EOF
-)
-
-# Check if parsing succeeded
-PARSED_OK=$(echo "$PARSED" | python3 -c "import json,sys; print(json.load(sys.stdin).get('parsed', False))")
-
-if [ "$PARSED_OK" != "True" ]; then
-  # Fallback: log raw input for debugging
-  timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  echo "{\"timestamp\":\"$timestamp\",\"event\":\"parse_error\",\"raw\":$(echo "$INPUT_JSON" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()[:1000]))')}" >> "$OBSERVATIONS_FILE"
-  exit 0
-fi
-
-# Archive if file too large
-if [ -f "$OBSERVATIONS_FILE" ]; then
-  file_size_mb=$(du -m "$OBSERVATIONS_FILE" 2>/dev/null | cut -f1)
-  if [ "${file_size_mb:-0}" -ge "$MAX_FILE_SIZE_MB" ]; then
-    archive_dir="${CONFIG_DIR}/observations.archive"
-    mkdir -p "$archive_dir"
-    mv "$OBSERVATIONS_FILE" "$archive_dir/observations-$(date +%Y%m%d-%H%M%S).jsonl"
-  fi
-fi
-
-# Build and write observation
-timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-python3 << EOF
-import json
-
-parsed = json.loads('''$PARSED''')
-observation = {
-    'timestamp': '$timestamp',
-    'event': parsed['event'],
-    'tool': parsed['tool'],
-    'session': parsed['session']
-}
-
-if parsed['input']:
-    observation['input'] = parsed['input']
-if parsed['output']:
-    observation['output'] = parsed['output']
-
-with open('$OBSERVATIONS_FILE', 'a') as f:
-    f.write(json.dumps(observation) + '\n')
-EOF
+    # Fallback: log parse error (stdin already consumed, so just log the error)
+    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    with open(obs_file, "a") as f:
+        f.write(json.dumps({"timestamp": ts, "event": "parse_error", "error": str(e)}) + "\n")
+' "$OBSERVATIONS_FILE"
 
 # Signal observer if running
 OBSERVER_PID_FILE="${CONFIG_DIR}/.observer.pid"
