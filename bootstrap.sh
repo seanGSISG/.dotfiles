@@ -589,6 +589,24 @@ install_claude_code() {
   fi
 }
 
+install_opencode() {
+  if command -v opencode &>/dev/null; then
+    log_skip "OpenCode already installed"
+    SKIPPED+=("OpenCode")
+    return 0
+  fi
+
+  log_info "Installing OpenCode via official installer..."
+  if curl -fsSL https://opencode.ai/install | bash </dev/null >/dev/null 2>&1; then
+    log_success "OpenCode installed"
+    INSTALLED+=("OpenCode")
+  else
+    log_error "OpenCode installation failed"
+    FAILED_STEPS+=("OpenCode")
+    return 1
+  fi
+}
+
 #===============================================================================
 # Dotfile Backup
 #===============================================================================
@@ -912,6 +930,7 @@ main() {
   run_step "Python Tools" install_python_tools
   run_step "Node.js Tools" install_node_tools
   run_step "Claude Code" install_claude_code
+  run_step "OpenCode" install_opencode
 
   # Phase 3: Deploy configs
   run_step "Dotfile Backup" backup_dotfiles

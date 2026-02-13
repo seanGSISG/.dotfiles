@@ -54,3 +54,8 @@ claude-code|npm:@anthropic-ai/claude-code|latest|npm
 # Claude Code CLI (AI coding assistant)
 # install: bun install -g @anthropic-ai/claude-code (or npm)
 # auth: manual — run 'claude login' after install
+
+opencode|https://opencode.ai/install|latest|script
+# OpenCode CLI (AI coding assistant)
+# install: curl -fsSL https://opencode.ai/install | bash
+# alt-install: bun add -g opencode-ai

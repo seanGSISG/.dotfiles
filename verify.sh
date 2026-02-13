@@ -109,6 +109,7 @@ verify_tools() {
     git
     age
     claude
+    opencode
   )
 
   for tool in "${tools[@]}"; do
