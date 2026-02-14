@@ -29,14 +29,23 @@ Get-ChildItem "$ConfigDir\aliases\*.ps1" -ErrorAction SilentlyContinue |
     ForEach-Object { . $_.FullName }
 
 # Load secrets from age-encrypted chezmoi-managed file
+# Parses .env file format: KEY=value or export KEY=value
+# Handles values containing = signs (e.g., KEY=value=with=equals sets KEY to "value=with=equals")
+# Strips surrounding quotes from values (single or double quotes)
 if (Test-Path "$HOME\.secrets.env") {
     Get-Content "$HOME\.secrets.env" | ForEach-Object {
         if ($_ -match '^\s*#') { return }       # skip comments
         if ($_ -match '^\s*$') { return }       # skip blank lines
+        
+        # Match: export KEY=value or KEY=value
+        # Captures: $Matches[1] = KEY, $Matches[2] = everything after first =
+        # The (.*) pattern intentionally captures all remaining text, including embedded = signs
         if ($_ -match '^export\s+(\w+)=(.*)$') {
-            Set-Item -Path "Env:$($Matches[1])" -Value ($Matches[2].Trim('"').Trim("'"))
+            $value = $Matches[2].Trim('"').Trim("'")
+            Set-Item -Path "Env:$($Matches[1])" -Value $value
         } elseif ($_ -match '^(\w+)=(.*)$') {
-            Set-Item -Path "Env:$($Matches[1])" -Value ($Matches[2].Trim('"').Trim("'"))
+            $value = $Matches[2].Trim('"').Trim("'")
+            Set-Item -Path "Env:$($Matches[1])" -Value $value
         }
     }
 }
