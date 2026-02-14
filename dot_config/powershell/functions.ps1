@@ -153,6 +153,19 @@ function az-secrets-list {
 # Section 5: Windows Terminal + Claude Functions
 # ============================================
 
+# Helper function to safely encode Claude commands with user input
+function Get-EncodedClaudeCommand {
+    param([string]$UserInput)
+    
+    # Prevent command injection via Base64 encoding
+    # The entire command (including user input) is encoded, so any special characters
+    # or malicious syntax are treated as literal data, not executable code
+    # Single quotes ensure the input is passed as a single argument to claude
+    $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $UserInput
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
+    return [Convert]::ToBase64String($bytes)
+}
+
 function cct {
     # Claude Code in new Windows Terminal tab
     if ($args.Count -gt 0) {
@@ -167,7 +180,8 @@ function ccr {
     # Claude Code in right split pane (horizontal split)
     $prompt = $args -join ' '
     if ($prompt) {
-        wt split-pane -H --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$prompt'"
+        $encodedCommand = Get-EncodedClaudeCommand -UserInput $prompt
+        wt split-pane -H --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt split-pane -H --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
     }
@@ -177,7 +191,8 @@ function ccb {
     # Claude Code in bottom split pane (vertical split)
     $prompt = $args -join ' '
     if ($prompt) {
-        wt split-pane -V --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$prompt'"
+        $encodedCommand = Get-EncodedClaudeCommand -UserInput $prompt
+        wt split-pane -V --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt split-pane -V --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
     }
