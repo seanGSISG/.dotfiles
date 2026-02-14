@@ -2,7 +2,14 @@
 # General system and productivity shortcuts
 
 # System utilities
-function ports { Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Format-Table -AutoSize }  # listening ports
+function ports {                                    # listening ports
+    try {
+        Get-NetTCPConnection -State Listen -ErrorAction Stop | Format-Table -AutoSize
+    } catch {
+        Write-Warning "Failed to retrieve listening TCP connections. The 'Get-NetTCPConnection' cmdlet may be unavailable, or you may lack the required permissions."
+        Write-Verbose ("Underlying error: " + $_.Exception.Message)
+    }
+}
 function path { $env:Path -split ';' }              # display PATH entries
 function myip { (Invoke-WebRequest -Uri "https://ifconfig.me" -UseBasicParsing).Content.Trim() }  # public IP
 function localip {                                   # local IP
