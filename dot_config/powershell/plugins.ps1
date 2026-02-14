@@ -54,11 +54,11 @@ if (Get-Module -ListAvailable PSReadLine) {
         Member             = "`e[37m"     # White - members
         InlinePrediction   = "`e[90;3m"   # Dim italic - predictions
     }
-}
 
-# --- Tab Completion Settings ---
-# Case-insensitive completion (like zsh matcher-list)
-Set-PSReadLineOption -BellStyle None
+    # --- General Settings ---
+    # Disable bell sound (like zsh NOBEEP option)
+    Set-PSReadLineOption -BellStyle None
+}
 
 # --- CLI Tool Completions ---
 # Generated completions for tools that support them

@@ -3,7 +3,7 @@
 
 # Python
 function py { & python @args }                      # python shorthand
-function pip { & pip3 @args }                       # pip3 shorthand
+function pip { & python -m pip `@args` }              # pip shorthand (portable)
 function venv { & python -m venv .venv }            # create virtualenv
 function va { & .\.venv\Scripts\Activate.ps1 }      # activate virtualenv
 function vd { & deactivate }                        # deactivate virtualenv

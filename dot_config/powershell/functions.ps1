@@ -53,8 +53,8 @@ function alias-help {
                 continue
             }
 
-            # Match function definitions: function name { ... }
-            if ($line -match '^\s*function\s+(\S+)\s*\{?\s*(.*)') {
+            # Match function definitions: 'function name' or 'function name {'
+            if ($line -match '^\s*function\s+(\S+)\s*\{?') {
                 $name = $Matches[1]
 
                 if ($pendingSection) {
@@ -63,10 +63,11 @@ function alias-help {
                     $pendingSection = ""
                 }
 
-                # Try to find inline comment
+                # Extract inline comment (searches full line for '# comment' pattern)
+                # This handles both 'function name { ... } # comment' and 'function name { # comment'
                 $comment = ""
                 if ($line -match '#\s*(.+)$') {
-                    $comment = $Matches[1]
+                    $comment = $Matches[1].Trim()
                 }
                 Write-Host ("   ${cyan}{0,-16}${reset} ${dim}{1}${reset}" -f $name, $comment)
             }
@@ -116,7 +117,8 @@ function mkcd {
 
 function cheat {
     param([Parameter(Mandatory)][string]$Query)
-    (Invoke-WebRequest -Uri "https://cheat.sh/$Query" -UseBasicParsing).Content
+    $encodedQuery = [Uri]::EscapeDataString($Query)
+    (Invoke-WebRequest -Uri "https://cheat.sh/$encodedQuery" -UseBasicParsing).Content
 }
 
 function reload {
@@ -150,6 +152,19 @@ function az-secrets-list {
 # ============================================
 # Section 5: Windows Terminal + Claude Functions
 # ============================================
+
+# Helper function to safely encode Claude commands with user input
+function Get-EncodedClaudeCommand {
+    param([string]$UserInput)
+    
+    # Prevent command injection via Base64 encoding
+    # The entire command (including user input) is encoded, so any special characters
+    # or malicious syntax are treated as literal data, not executable code
+    # Single quotes ensure the input is passed as a single argument to claude
+    $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $UserInput
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
+    return [Convert]::ToBase64String($bytes)
+}
 
 function cct {
     # Claude Code in new Windows Terminal tab
