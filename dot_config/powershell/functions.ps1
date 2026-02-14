@@ -53,8 +53,8 @@ function alias-help {
                 continue
             }
 
-            # Match function definitions: function name { ... }
-            if ($line -match '^\s*function\s+(\S+)\s*\{?\s*(.*)') {
+            # Match function definitions: 'function name' or 'function name {'
+            if ($line -match '^\s*function\s+(\S+)\s*\{?') {
                 $name = $Matches[1]
 
                 if ($pendingSection) {
@@ -63,10 +63,11 @@ function alias-help {
                     $pendingSection = ""
                 }
 
-                # Try to find inline comment
+                # Extract inline comment (searches full line for '# comment' pattern)
+                # This handles both 'function name { ... } # comment' and 'function name { # comment'
                 $comment = ""
                 if ($line -match '#\s*(.+)$') {
-                    $comment = $Matches[1]
+                    $comment = $Matches[1].Trim()
                 }
                 Write-Host ("   ${cyan}{0,-16}${reset} ${dim}{1}${reset}" -f $name, $comment)
             }
@@ -116,7 +117,8 @@ function mkcd {
 
 function cheat {
     param([Parameter(Mandatory)][string]$Query)
-    (Invoke-WebRequest -Uri "https://cheat.sh/$Query" -UseBasicParsing).Content
+    $encodedQuery = [Uri]::EscapeDataString($Query)
+    (Invoke-WebRequest -Uri "https://cheat.sh/$encodedQuery" -UseBasicParsing).Content
 }
 
 function reload {
@@ -144,7 +146,7 @@ function az-secret {
 function az-secrets-list {
     param([Parameter(Position = 0)][string]$Vault)
     if (-not $Vault) { $Vault = if ($env:AZ_KEYVAULT) { $env:AZ_KEYVAULT } else { "kv-idm-webapp-prod" } }
-    az keyvault secret list --vault-name $Vault -o table
+    az keyvault secret list --vault-name "$Vault" -o table
 }
 
 # ============================================
@@ -166,10 +168,9 @@ function Get-EncodedClaudeCommand {
 
 function cct {
     # Claude Code in new Windows Terminal tab
-    $prompt = $args -join ' '
-    if ($prompt) {
-        $encodedCommand = Get-EncodedClaudeCommand -UserInput $prompt
-        wt new-tab --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
+    if ($args.Count -gt 0) {
+        $escapedPrompt = ($args -join ' ') -replace "'", "''"
+        wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$escapedPrompt'"
     } else {
         wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
     }

@@ -1,6 +1,6 @@
 # winget-packages.txt — Windows 11 packages via winget
 # Format: one winget package ID per line, # comments explain purpose
-# Install with: winget install --id <PackageId> --exact --accept-source-agreements
+# Install with: winget install --id <PackageId> --exact --accept-source-agreements --accept-package-agreements
 #
 # Mirrors the WSL2 apt-packages.txt + binary-installs.txt for Windows native use
 # Some tools (uv, bun, fnm) install via their own scripts but are also in winget
@@ -8,6 +8,7 @@
 # === Shell & Terminal ===
 Microsoft.PowerShell              # PowerShell 7 (modern cross-platform shell)
 Microsoft.WindowsTerminal         # Windows Terminal (GPU-accelerated, tabs, panes, profiles)
+# Note: CaskaydiaCove Nerd Font is auto-installed via run_once_install-nerdfonts.ps1.tmpl
 
 # === Version Control ===
 Git.Git                           # Git for Windows (includes Git Bash, git-credential-manager)

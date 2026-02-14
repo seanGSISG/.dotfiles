@@ -1,6 +1,8 @@
 # dotfiles
 
-WSL2 Ubuntu dev environment managed by chezmoi. One command sets up everything.
+WSL2 Ubuntu and Windows 11 dev environment managed by chezmoi. One command sets up everything.
+
+> **Windows Note:** This repo includes PowerShell 7 configs and auto-installs CaskaydiaCove Nerd Font for Windows Terminal. See `packages/winget-packages.txt` for the full Windows toolchain.
 
 ## What Gets Installed
 
@@ -86,8 +88,9 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 
 ```
 ~/.dotfiles/                       # chezmoi source (this repo)
-├── bootstrap.sh                   # Idempotent installer script
+├── bootstrap.sh                   # Idempotent installer script (WSL2/Linux)
 ├── verify.sh                      # Post-install environment validation
+├── run_once_install-nerdfonts.ps1.tmpl  # Auto-install CaskaydiaCove Nerd Font (Windows)
 ├── dot_zshrc.tmpl                 # .zshrc template
 ├── dot_bashrc.tmpl                # .bashrc template
 ├── dot_profile                    # .profile
@@ -95,12 +98,16 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 ├── dot_config/
 │   ├── starship.toml              # Starship prompt config
 │   ├── tmux/tmux.conf             # tmux config (XDG path)
-│   └── zsh/                       # All zsh config modules + aliases
+│   ├── zsh/                       # All zsh config modules + aliases
+│   └── powershell/                # PowerShell 7 config (Windows)
+├── Documents/PowerShell/          # PowerShell profile (Windows)
+├── AppData/                       # Windows Terminal settings (Windows)
 ├── dot_claude/                    # Claude Code configs
 ├── dot_ssh/                       # SSH keys (age-encrypted)
 ├── encrypted_dot_secrets.env.age  # Encrypted secrets
 ├── packages/
-│   ├── apt-packages.txt           # System packages manifest
+│   ├── apt-packages.txt           # System packages manifest (Linux)
+│   ├── winget-packages.txt        # System packages manifest (Windows)
 │   ├── uv-tools.txt               # Python tools manifest
 │   └── binary-installs.txt        # Binary tools reference
 └── .planning/                     # Project planning docs

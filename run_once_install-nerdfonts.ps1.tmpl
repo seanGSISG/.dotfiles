@@ -1,0 +1,92 @@
+{{- if eq .chezmoi.os "windows" }}
+# PowerShell script to install CaskaydiaCove Nerd Font
+# Managed by chezmoi - runs once on Windows systems
+# Source: ~/.dotfiles/run_once_install-nerdfonts.ps1.tmpl
+
+$ErrorActionPreference = "Stop"
+
+Write-Host "Checking for CaskaydiaCove Nerd Font..." -ForegroundColor Cyan
+
+# Check if font is already installed by checking Windows Registry
+# More reliable than checking file names which may vary
+$FontsRegistry = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+$FontInstalled = $false
+
+try {
+    $FontEntries = Get-ItemProperty -Path $FontsRegistry -ErrorAction SilentlyContinue
+    if ($FontEntries) {
+        foreach ($Property in $FontEntries.PSObject.Properties) {
+            if ($Property.Name -like "*CaskaydiaCove*" -or $Property.Name -like "*Cascadia*Mono*NF*") {
+                $FontInstalled = $true
+                break
+            }
+        }
+    }
+} catch {
+    # If we can't check the registry, assume not installed and try to install
+    $FontInstalled = $false
+}
+
+if ($FontInstalled) {
+    Write-Host "✓ CaskaydiaCove Nerd Font is already installed" -ForegroundColor Green
+    exit 0
+}
+
+Write-Host "Installing CaskaydiaCove Nerd Font..." -ForegroundColor Yellow
+
+# Create temporary directory
+$TempDir = Join-Path $env:TEMP "nerd-fonts-install"
+if (Test-Path $TempDir) {
+    Remove-Item $TempDir -Recurse -Force
+}
+New-Item -ItemType Directory -Path $TempDir | Out-Null
+
+try {
+    # Download the install script from Nerd Fonts repository
+    # Using v3.3.0 release tag for stability and security (pinned version)
+    $InstallScriptUrl = "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.3.0/install.ps1"
+    $InstallScriptPath = Join-Path $TempDir "install.ps1"
+    
+    Write-Host "Downloading Nerd Fonts installer (v3.3.0)..." -ForegroundColor Cyan
+    Invoke-WebRequest -Uri $InstallScriptUrl -OutFile $InstallScriptPath -UseBasicParsing
+    
+    # Run the install script for CascadiaCode (which installs CaskaydiaCove)
+    # -WindowsCompatibleOnly flag installs fonts with Windows-compatible filenames
+    Write-Host "Running Nerd Fonts installer for CascadiaCode..." -ForegroundColor Cyan
+    
+    # Change to temp directory to run the script
+    Push-Location $TempDir
+    
+    # Execute the install script with CascadiaCode font
+    # Capture output for better error reporting
+    # Note: The official script uses "CascadiaCode" as the font name parameter
+    $Output = & $InstallScriptPath -Name CascadiaCode -WindowsCompatibleOnly 2>&1 | Out-String
+    
+    Pop-Location
+    
+    # Check if installation was successful
+    # PowerShell scripts may not always set LASTEXITCODE reliably, so check both
+    if ($LASTEXITCODE -ne $null -and $LASTEXITCODE -ne 0) {
+        throw "Installation failed with exit code $LASTEXITCODE. Output: $Output"
+    }
+    
+    # If exit code wasn't set or was 0, verify success through output
+    if ($Output -notmatch "error|fail|exception" -and ($Output -match "installed successfully|complete" -or $Output.Length -gt 0)) {
+        Write-Host "✓ CaskaydiaCove Nerd Font installed successfully" -ForegroundColor Green
+        Write-Host "  Restart Windows Terminal to see the font in the font list" -ForegroundColor Yellow
+    } else {
+        throw "Installation did not complete successfully. Output: $Output"
+    }
+    
+} catch {
+    Write-Host "✗ Failed to install CaskaydiaCove Nerd Font" -ForegroundColor Red
+    Write-Host "  Error: $_" -ForegroundColor Red
+    Write-Host "  You can manually install from: https://github.com/ryanoasis/nerd-fonts/releases" -ForegroundColor Yellow
+    exit 1
+} finally {
+    # Clean up
+    if (Test-Path $TempDir) {
+        Remove-Item $TempDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
+{{- end -}}
