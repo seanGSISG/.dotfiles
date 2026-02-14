@@ -12,3 +12,24 @@ verify.sh
 # Claude Code learning system runtime data (never managed by chezmoi)
 .claude/insights/
 .claude/insights/**
+
+# --- OS-Conditional Ignores ---
+# chezmoi evaluates these as Go templates
+
+{{ if eq .chezmoi.os "windows" }}
+# Skip Linux/WSL-specific files on Windows
+.zshenv
+.config/zsh
+.config/zsh/**
+.config/tmux
+.config/tmux/**
+.bashrc
+{{ end }}
+
+{{ if ne .chezmoi.os "windows" }}
+# Skip Windows-specific files on Linux/macOS
+Documents/PowerShell
+Documents/PowerShell/**
+.config/powershell
+.config/powershell/**
+{{ end }}

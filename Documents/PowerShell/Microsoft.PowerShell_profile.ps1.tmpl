@@ -1,0 +1,47 @@
+# PowerShell 7 Profile - Modular configuration
+# Managed by chezmoi - edit source at ~/.dotfiles/Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl
+#
+# Load order (mirrors zsh setup):
+#   1. exports.ps1   - PATH, env vars, PSReadLine history
+#   2. plugins.ps1   - PSReadLine config, module management
+#   3. tools.ps1     - fnm, fzf, zoxide
+#   4. functions.ps1 - custom functions
+#   5. aliases/      - categorized alias files
+#   6. secrets       - decrypted secrets
+#   7. Starship      - prompt (must be last)
+
+$ConfigDir = "$HOME\.config\powershell"
+
+if (-not (Test-Path $ConfigDir)) {
+    Write-Warning "PowerShell config directory not found: $ConfigDir"
+    Write-Warning "Run 'chezmoi apply' to deploy configuration files."
+    return
+}
+
+# Source modular config files
+. "$ConfigDir\exports.ps1"
+. "$ConfigDir\plugins.ps1"
+. "$ConfigDir\tools.ps1"
+. "$ConfigDir\functions.ps1"
+
+# Source all alias files
+Get-ChildItem "$ConfigDir\aliases\*.ps1" -ErrorAction SilentlyContinue |
+    ForEach-Object { . $_.FullName }
+
+# Load secrets from age-encrypted chezmoi-managed file
+if (Test-Path "$HOME\.secrets.env") {
+    Get-Content "$HOME\.secrets.env" | ForEach-Object {
+        if ($_ -match '^\s*#') { return }       # skip comments
+        if ($_ -match '^\s*$') { return }       # skip blank lines
+        if ($_ -match '^export\s+(\w+)=(.*)$') {
+            Set-Item -Path "Env:$($Matches[1])" -Value ($Matches[2].Trim('"').Trim("'"))
+        } elseif ($_ -match '^(\w+)=(.*)$') {
+            Set-Item -Path "Env:$($Matches[1])" -Value ($Matches[2].Trim('"').Trim("'"))
+        }
+    }
+}
+
+# Starship prompt (must be last - it modifies prompt function)
+if (Get-Command starship -ErrorAction SilentlyContinue) {
+    Invoke-Expression (&starship init powershell)
+}
