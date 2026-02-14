@@ -64,8 +64,14 @@ try {
     
     Pop-Location
     
-    # Check if installation was successful by looking for success indicators in output
-    if ($LASTEXITCODE -eq 0 -or $Output -match "installed|success|complete") {
+    # Check if installation was successful
+    # PowerShell scripts may not always set LASTEXITCODE reliably, so check both
+    if ($LASTEXITCODE -ne $null -and $LASTEXITCODE -ne 0) {
+        throw "Installation failed with exit code $LASTEXITCODE. Output: $Output"
+    }
+    
+    # If exit code wasn't set or was 0, verify success through output
+    if ($Output -notmatch "error|fail|exception" -and ($Output -match "installed successfully|complete" -or $Output.Length -gt 0)) {
         Write-Host "✓ CaskaydiaCove Nerd Font installed successfully" -ForegroundColor Green
         Write-Host "  Restart Windows Terminal to see the font in the font list" -ForegroundColor Yellow
     } else {
@@ -83,4 +89,4 @@ try {
         Remove-Item $TempDir -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
-{{- end }}
+{{- end -}}
