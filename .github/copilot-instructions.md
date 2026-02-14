@@ -141,7 +141,8 @@ Use chezmoi templates for OS-specific behavior:
 
 ## Naming Conventions
 
-- Shell files: Use lowercase with hyphens (e.g., `aliases-git.zsh`)
+- Shell files: Use lowercase with hyphens (e.g., `exports.zsh`, `tools.zsh`)
+- Alias files: Follow pattern `aliases-<category>.zsh` in `dot_config/zsh/aliases/` directory
 - Functions: Use lowercase with underscores (e.g., `reload_shell`)
 - Variables: Use UPPERCASE for environment variables, lowercase for local vars
 - Alias categories: git, docker, dev, navigation, system, utilities
@@ -162,7 +163,7 @@ Use chezmoi templates for OS-specific behavior:
 ### Plugin Management
 - Zsh: antidote (plugin manager)
 - Tmux: TPM (Tmux Plugin Manager)
-- Plugin manifests: `dot_config/zsh/private_dot_zsh_plugins.txt` for antidote
+- Plugin manifests: `dot_config/zsh/private_dot_zsh_plugins.txt` (deploys to `~/.config/zsh/.zsh_plugins.txt`)
 
 ## Common Patterns
 
