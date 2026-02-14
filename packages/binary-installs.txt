@@ -48,6 +48,25 @@ age|https://github.com/FiloSottile/age/releases|v1.2.1+|binary
 # install: download binary from GitHub releases to ~/.local/bin/
 # post-install: none (key setup handled in Phase 1)
 
+# === Git & Docker TUI Tools ===
+
+delta|https://github.com/dandavison/delta/releases|latest|binary
+# Syntax-highlighting pager for git diffs, blame, and grep
+# install: download binary from GitHub releases to ~/.local/bin/
+# post-install: configured in .gitconfig [core] pager = delta
+
+lazygit|https://github.com/jesseduffield/lazygit/releases|latest|binary
+# Terminal UI for git — interactive rebase, staging, conflict resolution
+# install: download binary from GitHub releases to ~/.local/bin/
+
+lazydocker|https://github.com/jesseduffield/lazydocker/releases|latest|binary
+# Terminal UI for Docker — manage containers, images, volumes, logs
+# install: download binary from GitHub releases to ~/.local/bin/
+
+yq|https://github.com/mikefarah/yq/releases|latest|binary
+# YAML/JSON/XML processor (like jq for YAML)
+# install: download binary from GitHub releases to ~/.local/bin/
+
 # === Developer Tools ===
 
 claude-code|npm:@anthropic-ai/claude-code|latest|npm

@@ -8,6 +8,22 @@
 [core]
 	editor = {{ .editor | default "code --wait" | quote }}
 	autocrlf = input
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	dark = true
+	line-numbers = true
+	syntax-theme = Dracula
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	colorMoved = default
 
 [init]
 	defaultBranch = main
@@ -18,6 +34,15 @@
 [push]
 	autoSetupRemote = true
 
+{{ if eq .chezmoi.os "windows" -}}
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+{{ else -}}
 [credential "https://github.com"]
 	helper =
 	helper = !/usr/bin/gh auth git-credential
@@ -25,3 +50,4 @@
 [credential "https://gist.github.com"]
 	helper =
 	helper = !/usr/bin/gh auth git-credential
+{{ end -}}

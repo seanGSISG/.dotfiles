@@ -13,6 +13,23 @@ export EDITOR="${EDITOR:-code}"
 export LANG="${LANG:-en_US.UTF-8}"
 export ENABLE_LSP_TOOLS=1
 export BUN_INSTALL="$HOME/.bun"
+export BAT_THEME="Dracula"
+
+# --- fd alias (Debian/Ubuntu ships fd as fdfind) ---
+if command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then
+  alias fd='fdfind'
+fi
+
+# --- fzf Configuration ---
+# Use fd for file finding (faster, respects .gitignore)
+if command -v fd &>/dev/null || command -v fdfind &>/dev/null; then
+  _fd_cmd="${commands[fd]:-fdfind}"
+  export FZF_DEFAULT_COMMAND="$_fd_cmd --type f --hidden --follow --exclude .git"
+  export FZF_CTRL_T_COMMAND="$_fd_cmd --type f --hidden --follow --exclude .git"
+  export FZF_ALT_C_COMMAND="$_fd_cmd --type d --hidden --follow --exclude .git"
+  unset _fd_cmd
+fi
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --info=inline"
 
 # --- History Configuration ---
 export HISTFILE="$HOME/.zsh_history"

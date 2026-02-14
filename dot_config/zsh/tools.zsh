@@ -17,3 +17,8 @@ fi
 if command -v zoxide &>/dev/null; then
   eval "$(zoxide init zsh)"
 fi
+
+# --- direnv (Auto-load .envrc per directory) ---
+if command -v direnv &>/dev/null; then
+  eval "$(direnv hook zsh)"
+fi

@@ -1,0 +1,63 @@
+# winget-packages.txt — Windows 11 packages via winget
+# Format: one winget package ID per line, # comments explain purpose
+# Install with: winget install --id <PackageId> --exact --accept-source-agreements --accept-package-agreements
+#
+# Mirrors the WSL2 apt-packages.txt + binary-installs.txt for Windows native use
+# Some tools (uv, bun, fnm) install via their own scripts but are also in winget
+
+# === Shell & Terminal ===
+Microsoft.PowerShell              # PowerShell 7 (modern cross-platform shell)
+Microsoft.WindowsTerminal         # Windows Terminal (GPU-accelerated, tabs, panes, profiles)
+
+# === Version Control ===
+Git.Git                           # Git for Windows (includes Git Bash, git-credential-manager)
+
+# === Developer Tools ===
+GitHub.cli                        # GitHub CLI for repo management, PRs, issues (gh command)
+twpayne.chezmoi                   # Dotfiles manager with templating and encryption
+Microsoft.VisualStudioCode        # VS Code editor
+
+# === File & Text Utilities ===
+sharkdp.bat                       # cat replacement with syntax highlighting and git integration
+sharkdp.fd                        # Fast find replacement (fd command)
+eza-community.eza                 # ls replacement with color, icons, git integration
+BurntSushi.ripgrep.MSVC           # Fast recursive grep (rg command)
+dandavison.delta                  # Syntax-highlighting pager for git diffs
+jqlang.jq                         # JSON parsing and manipulation for CLI workflows
+MikeFarah.yq                     # YAML/JSON/XML processor (like jq for YAML)
+charmbracelet.glow                # Markdown renderer for terminal viewing
+
+# === Search & Navigation ===
+ajeetdsouza.zoxide                # Smart cd replacement with fuzzy matching (z command)
+junegunn.fzf                      # Command-line fuzzy finder
+direnv.direnv                     # Auto-load/unload env vars per directory (.envrc files)
+
+# === TUI Tools ===
+JesseDuffield.lazygit             # Terminal UI for git (interactive rebase, staging, etc.)
+JesseDuffield.Lazydocker          # Terminal UI for Docker (containers, images, logs)
+
+# === Python Development ===
+Python.Python.3.12                # Python 3.12 interpreter
+astral-sh.uv                     # Python package manager and tool installer (replaces pip, pipx)
+
+# === JavaScript Runtimes ===
+Schniz.fnm                        # Fast Node Manager (40x faster than nvm, Rust-based)
+Oven-sh.Bun                       # JavaScript runtime, bundler, test runner, package manager
+
+# === Prompt ===
+Starship.Starship                 # Cross-shell prompt with git, node, python, duration modules
+
+# === Security ===
+FiloSottile.age                   # Modern file encryption (used by chezmoi for secret management)
+
+# === Cloud & Infrastructure ===
+Microsoft.AzureCLI                # Azure CLI for cloud resource management
+Docker.DockerDesktop              # Docker Desktop for container development
+
+# === NPM Global Packages (install separately after Node) ===
+# npm install -g @anthropic-ai/claude-code    # Claude Code CLI
+# npm install -g @mermaid-js/mermaid-cli      # Mermaid diagram renderer
+
+# === PowerShell Modules (install separately in pwsh) ===
+# Install-Module PSReadLine -Force            # Already included in PS 7.4+
+# Install-Module PSFzf -Scope CurrentUser     # fzf integration for PowerShell

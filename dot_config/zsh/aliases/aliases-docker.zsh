@@ -17,3 +17,6 @@ dex() { docker exec -it "$1" "${2:-sh}"; }
 dsh() { docker exec -it "$1" sh; }
 dbash() { docker exec -it "$1" bash; }
 dlog() { docker logs -f "$1"; }
+
+# TUI
+alias lzd='lazydocker'
