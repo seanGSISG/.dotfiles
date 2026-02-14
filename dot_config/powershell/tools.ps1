@@ -11,7 +11,7 @@ if (Get-Command fnm -ErrorAction SilentlyContinue) {
 if (Get-Command fzf -ErrorAction SilentlyContinue) {
     # PSFzf module provides Ctrl+R (history) and Ctrl+T (file finder) integration
     if (Get-Module -ListAvailable PSFzf) {
-        Import-Module PSFzf
+        Import-Module PSFzf -ErrorAction SilentlyContinue
         Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
     }
 }
