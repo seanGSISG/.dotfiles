@@ -144,7 +144,7 @@ function az-secret {
 function az-secrets-list {
     param([Parameter(Position = 0)][string]$Vault)
     if (-not $Vault) { $Vault = if ($env:AZ_KEYVAULT) { $env:AZ_KEYVAULT } else { "kv-idm-webapp-prod" } }
-    az keyvault secret list --vault-name $Vault -o table
+    az keyvault secret list --vault-name "$Vault" -o table
 }
 
 # ============================================
