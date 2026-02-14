@@ -155,8 +155,9 @@ function cct {
     # Claude Code in new Windows Terminal tab
     $prompt = $args -join ' '
     if ($prompt) {
-        # Use Base64 encoding to safely pass the prompt and prevent command injection
-        # Use -f format operator to prevent variable expansion in the prompt
+        # Prevent command injection via Base64 encoding:
+        # 1. Use -f format operator to prevent $() expansion during string construction
+        # 2. Base64 encode the entire command so it's safely passed and decoded by PowerShell
         $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
         $encodedCommand = [Convert]::ToBase64String($bytes)
@@ -170,8 +171,9 @@ function ccr {
     # Claude Code in right split pane (horizontal split)
     $prompt = $args -join ' '
     if ($prompt) {
-        # Use Base64 encoding to safely pass the prompt and prevent command injection
-        # Use -f format operator to prevent variable expansion in the prompt
+        # Prevent command injection via Base64 encoding:
+        # 1. Use -f format operator to prevent $() expansion during string construction
+        # 2. Base64 encode the entire command so it's safely passed and decoded by PowerShell
         $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
         $encodedCommand = [Convert]::ToBase64String($bytes)
@@ -185,8 +187,9 @@ function ccb {
     # Claude Code in bottom split pane (vertical split)
     $prompt = $args -join ' '
     if ($prompt) {
-        # Use Base64 encoding to safely pass the prompt and prevent command injection
-        # Use -f format operator to prevent variable expansion in the prompt
+        # Prevent command injection via Base64 encoding:
+        # 1. Use -f format operator to prevent $() expansion during string construction
+        # 2. Base64 encode the entire command so it's safely passed and decoded by PowerShell
         $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
         $encodedCommand = [Convert]::ToBase64String($bytes)
