@@ -56,7 +56,7 @@ if (Get-Module -ListAvailable PSReadLine) {
     }
 
     # --- Tab Completion Settings ---
-    # Disable bell sound (like zsh BEEP option)
+    # Disable bell sound (like zsh NOBEEP option)
     Set-PSReadLineOption -BellStyle None
 }
 
