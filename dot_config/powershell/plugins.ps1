@@ -55,7 +55,7 @@ if (Get-Module -ListAvailable PSReadLine) {
         InlinePrediction   = "`e[90;3m"   # Dim italic - predictions
     }
 
-    # --- Tab Completion Settings ---
+    # --- General Settings ---
     # Disable bell sound (like zsh NOBEEP option)
     Set-PSReadLineOption -BellStyle None
 }
