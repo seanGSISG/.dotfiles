@@ -28,8 +28,3 @@ j() {
 
 _j() { compadd ccenter labs projects tmp tools; }
 compdef _j j
-
-# Project launchers
-prefect() {
-  cd ~/projects/prefect-antig && uv sync && source .venv/bin/activate && ccd
-}
