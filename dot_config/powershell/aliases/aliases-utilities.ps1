@@ -11,13 +11,13 @@ function ports {                                    # listening ports
     }
 }
 function path { $env:Path -split ';' }              # display PATH entries
-function myip { (Invoke-WebRequest -Uri "https://ifconfig.me" -UseBasicParsing).Content.Trim() }  # public IP
+function myip { (Invoke-WebRequest -Uri "https://ifconfig.me" -TimeoutSec 5).Content.Trim() }     # public IP
 function localip {                                   # local IP
     (Get-NetIPAddress -AddressFamily IPv4 |
         Where-Object { $_.InterfaceAlias -notmatch 'Loopback' -and $_.IPAddress -ne '127.0.0.1' }
     ).IPAddress | Select-Object -First 1
 }
-function weather { (Invoke-WebRequest -Uri "https://wttr.in/?format=3" -UseBasicParsing).Content.Trim() }
+function weather { (Invoke-WebRequest -Uri "https://wttr.in/?format=3" -TimeoutSec 5).Content.Trim() }
 function cls { Clear-Host }                          # clear screen
 function h { Get-History }                           # history
 function hg {                                        # history grep
