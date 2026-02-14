@@ -231,7 +231,14 @@ function Install-WingetPackages {
     
     foreach ($packageId in $packages) {
         $packageId = $packageId.Trim()
-        
+
+        # Strip inline comments (e.g., "Microsoft.PowerShell  # description" -> "Microsoft.PowerShell")
+        if ($packageId -match '^([^#]+)') {
+            $packageId = $Matches[1].Trim()
+        }
+
+        if (-not $packageId) { continue }
+
         # Check if already installed
         $existing = winget list --id $packageId --exact 2>$null
         if ($LASTEXITCODE -eq 0 -and $existing -match $packageId) {
@@ -397,10 +404,16 @@ function Invoke-ChezmoiApply {
     
     # Initialize chezmoi with the dotfiles directory
     chezmoi init --source=$DOTFILES_DIR
-    
+    if ($LASTEXITCODE -ne 0) {
+        throw "chezmoi init failed (exit code: $LASTEXITCODE)"
+    }
+
     # Apply the dotfiles
     chezmoi apply --verbose
-    
+    if ($LASTEXITCODE -ne 0) {
+        throw "chezmoi apply failed (exit code: $LASTEXITCODE)"
+    }
+
     Log-Success "Dotfiles deployed via chezmoi"
     $script:InstalledItems += "dotfile deployment"
 }
