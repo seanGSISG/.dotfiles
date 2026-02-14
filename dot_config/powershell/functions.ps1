@@ -153,12 +153,13 @@ function az-secrets-list {
 
 # Helper function to safely encode Claude commands with user input
 function Get-EncodedClaudeCommand {
-    param([string]$Prompt)
+    param([string]$UserInput)
     
     # Prevent command injection via Base64 encoding
     # The entire command (including user input) is encoded, so any special characters
     # or malicious syntax are treated as literal data, not executable code
-    $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $Prompt
+    # Single quotes ensure the input is passed as a single argument to claude
+    $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $UserInput
     $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
     return [Convert]::ToBase64String($bytes)
 }
@@ -167,7 +168,7 @@ function cct {
     # Claude Code in new Windows Terminal tab
     $prompt = $args -join ' '
     if ($prompt) {
-        $encodedCommand = Get-EncodedClaudeCommand -Prompt $prompt
+        $encodedCommand = Get-EncodedClaudeCommand -UserInput $prompt
         wt new-tab --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
@@ -178,7 +179,7 @@ function ccr {
     # Claude Code in right split pane (horizontal split)
     $prompt = $args -join ' '
     if ($prompt) {
-        $encodedCommand = Get-EncodedClaudeCommand -Prompt $prompt
+        $encodedCommand = Get-EncodedClaudeCommand -UserInput $prompt
         wt split-pane -H --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt split-pane -H --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
@@ -189,7 +190,7 @@ function ccb {
     # Claude Code in bottom split pane (vertical split)
     $prompt = $args -join ' '
     if ($prompt) {
-        $encodedCommand = Get-EncodedClaudeCommand -Prompt $prompt
+        $encodedCommand = Get-EncodedClaudeCommand -UserInput $prompt
         wt split-pane -V --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt split-pane -V --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
