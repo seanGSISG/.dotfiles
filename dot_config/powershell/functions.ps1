@@ -53,8 +53,8 @@ function alias-help {
                 continue
             }
 
-            # Match function definitions: function name { ... }
-            if ($line -match '^\s*function\s+(\S+)\s*\{?\s*(.*)') {
+            # Match function definitions: 'function name' or 'function name {'
+            if ($line -match '^\s*function\s+(\S+)\s*\{?') {
                 $name = $Matches[1]
 
                 if ($pendingSection) {
@@ -63,10 +63,11 @@ function alias-help {
                     $pendingSection = ""
                 }
 
-                # Try to find inline comment
+                # Extract inline comment (searches full line for '# comment' pattern)
+                # This handles both 'function name { ... } # comment' and 'function name { # comment'
                 $comment = ""
                 if ($line -match '#\s*(.+)$') {
-                    $comment = $Matches[1]
+                    $comment = $Matches[1].Trim()
                 }
                 Write-Host ("   ${cyan}{0,-16}${reset} ${dim}{1}${reset}" -f $name, $comment)
             }
