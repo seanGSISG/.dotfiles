@@ -63,8 +63,8 @@ Set-PSReadLineOption -BellStyle None
 # --- CLI Tool Completions ---
 # Generated completions for tools that support them
 if (Get-Command gh -ErrorAction SilentlyContinue) {
-    Invoke-Expression -Command $(gh completion -s powershell | Out-String)
+    Invoke-Expression (gh completion -s powershell)
 }
 if (Get-Command chezmoi -ErrorAction SilentlyContinue) {
-    Invoke-Expression -Command $(chezmoi completion powershell | Out-String)
+    Invoke-Expression (chezmoi completion powershell)
 }
