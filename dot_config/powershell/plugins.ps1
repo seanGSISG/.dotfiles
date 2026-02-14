@@ -22,7 +22,7 @@ if (Get-Module -ListAvailable PSReadLine) {
     Set-PSReadLineOption -AddToHistoryHandler {
         param([string]$line)
         # Don't record lines starting with space (like HIST_IGNORE_SPACE)
-        return $line -notmatch '^\s'
+        return $line -notmatch '^ '
     }
 
     # --- Key Bindings ---
