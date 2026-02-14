@@ -8,6 +8,7 @@
 # === Shell & Terminal ===
 Microsoft.PowerShell              # PowerShell 7 (modern cross-platform shell)
 Microsoft.WindowsTerminal         # Windows Terminal (GPU-accelerated, tabs, panes, profiles)
+# Note: CaskaydiaCove Nerd Font is auto-installed via run_once_install-nerdfonts.ps1.tmpl
 
 # === Version Control ===
 Git.Git                           # Git for Windows (includes Git Bash, git-credential-manager)
