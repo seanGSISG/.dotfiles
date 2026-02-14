@@ -116,7 +116,8 @@ function mkcd {
 
 function cheat {
     param([Parameter(Mandatory)][string]$Query)
-    (Invoke-WebRequest -Uri "https://cheat.sh/$Query" -UseBasicParsing).Content
+    $encodedQuery = [Uri]::EscapeDataString($Query)
+    (Invoke-WebRequest -Uri "https://cheat.sh/$encodedQuery" -UseBasicParsing).Content
 }
 
 function reload {
