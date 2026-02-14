@@ -156,7 +156,8 @@ function cct {
     $prompt = $args -join ' '
     if ($prompt) {
         # Use Base64 encoding to safely pass the prompt and prevent command injection
-        $fullCommand = "claude --dangerously-skip-permissions '$prompt'"
+        # Use -f format operator to prevent variable expansion in the prompt
+        $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
         $encodedCommand = [Convert]::ToBase64String($bytes)
         wt new-tab --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
@@ -170,7 +171,8 @@ function ccr {
     $prompt = $args -join ' '
     if ($prompt) {
         # Use Base64 encoding to safely pass the prompt and prevent command injection
-        $fullCommand = "claude --dangerously-skip-permissions '$prompt'"
+        # Use -f format operator to prevent variable expansion in the prompt
+        $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
         $encodedCommand = [Convert]::ToBase64String($bytes)
         wt split-pane -H --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
@@ -184,7 +186,8 @@ function ccb {
     $prompt = $args -join ' '
     if ($prompt) {
         # Use Base64 encoding to safely pass the prompt and prevent command injection
-        $fullCommand = "claude --dangerously-skip-permissions '$prompt'"
+        # Use -f format operator to prevent variable expansion in the prompt
+        $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
         $encodedCommand = [Convert]::ToBase64String($bytes)
         wt split-pane -V --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
