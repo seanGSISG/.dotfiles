@@ -155,7 +155,9 @@ function cct {
     # Claude Code in new Windows Terminal tab
     $prompt = $args -join ' '
     if ($prompt) {
-        wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$prompt'"
+        # Escape single quotes in prompt to prevent command injection
+        $escapedPrompt = $prompt -replace "'", "''"
+        wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$escapedPrompt'"
     } else {
         wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
     }
@@ -165,7 +167,9 @@ function ccr {
     # Claude Code in right split pane (horizontal split)
     $prompt = $args -join ' '
     if ($prompt) {
-        wt split-pane -H --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$prompt'"
+        # Escape single quotes in prompt to prevent command injection
+        $escapedPrompt = $prompt -replace "'", "''"
+        wt split-pane -H --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$escapedPrompt'"
     } else {
         wt split-pane -H --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
     }
@@ -175,7 +179,9 @@ function ccb {
     # Claude Code in bottom split pane (vertical split)
     $prompt = $args -join ' '
     if ($prompt) {
-        wt split-pane -V --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$prompt'"
+        # Escape single quotes in prompt to prevent command injection
+        $escapedPrompt = $prompt -replace "'", "''"
+        wt split-pane -V --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$escapedPrompt'"
     } else {
         wt split-pane -V --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
     }
