@@ -1,4 +1,4 @@
-{{- if eq .chezmoi.os "windows" -}}
+{{- if eq .chezmoi.os "windows" }}
 # PowerShell script to install CaskaydiaCove Nerd Font
 # Managed by chezmoi - runs once on Windows systems
 # Source: ~/.dotfiles/run_once_install-nerdfonts.ps1.tmpl
@@ -7,32 +7,32 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "Checking for CaskaydiaCove Nerd Font..." -ForegroundColor Cyan
 
-# Check if font is already installed
-$FontsFolder = [System.Environment]::GetFolderPath('Fonts')
-$FontName = "CaskaydiaCove Nerd Font Mono"
-$FontFiles = @(
-    "CaskaydiaCoveNerdFontMono-Regular.ttf",
-    "CaskaydiaCoveNerdFontMono-Bold.ttf",
-    "CaskaydiaCoveNerdFontMono-Italic.ttf",
-    "CaskaydiaCoveNerdFontMono-BoldItalic.ttf"
-)
-
-# Check if any of the font files exist
+# Check if font is already installed by checking Windows Registry
+# More reliable than checking file names which may vary
+$FontsRegistry = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
 $FontInstalled = $false
-foreach ($FontFile in $FontFiles) {
-    $FontPath = Join-Path $FontsFolder $FontFile
-    if (Test-Path $FontPath) {
-        $FontInstalled = $true
-        break
+
+try {
+    $FontEntries = Get-ItemProperty -Path $FontsRegistry -ErrorAction SilentlyContinue
+    if ($FontEntries) {
+        foreach ($Property in $FontEntries.PSObject.Properties) {
+            if ($Property.Name -like "*CaskaydiaCove*" -or $Property.Name -like "*Cascadia*Mono*NF*") {
+                $FontInstalled = $true
+                break
+            }
+        }
     }
+} catch {
+    # If we can't check the registry, assume not installed and try to install
+    $FontInstalled = $false
 }
 
 if ($FontInstalled) {
-    Write-Host "✓ $FontName is already installed" -ForegroundColor Green
+    Write-Host "✓ CaskaydiaCove Nerd Font is already installed" -ForegroundColor Green
     exit 0
 }
 
-Write-Host "Installing $FontName..." -ForegroundColor Yellow
+Write-Host "Installing CaskaydiaCove Nerd Font..." -ForegroundColor Yellow
 
 # Create temporary directory
 $TempDir = Join-Path $env:TEMP "nerd-fonts-install"
@@ -43,10 +43,11 @@ New-Item -ItemType Directory -Path $TempDir | Out-Null
 
 try {
     # Download the install script from Nerd Fonts repository
-    $InstallScriptUrl = "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.ps1"
+    # Using v3.3.0 release tag for stability and security (pinned version)
+    $InstallScriptUrl = "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.3.0/install.ps1"
     $InstallScriptPath = Join-Path $TempDir "install.ps1"
     
-    Write-Host "Downloading Nerd Fonts installer..." -ForegroundColor Cyan
+    Write-Host "Downloading Nerd Fonts installer (v3.3.0)..." -ForegroundColor Cyan
     Invoke-WebRequest -Uri $InstallScriptUrl -OutFile $InstallScriptPath -UseBasicParsing
     
     # Run the install script for CascadiaCode (which installs CaskaydiaCove)
@@ -57,16 +58,22 @@ try {
     Push-Location $TempDir
     
     # Execute the install script with CascadiaCode font
+    # Capture output for better error reporting
     # Note: The official script uses "CascadiaCode" as the font name parameter
-    & $InstallScriptPath -Name CascadiaCode -WindowsCompatibleOnly
+    $Output = & $InstallScriptPath -Name CascadiaCode -WindowsCompatibleOnly 2>&1 | Out-String
     
     Pop-Location
     
-    Write-Host "✓ $FontName installed successfully" -ForegroundColor Green
-    Write-Host "  Restart Windows Terminal to see the font in the font list" -ForegroundColor Yellow
+    # Check if installation was successful by looking for success indicators in output
+    if ($LASTEXITCODE -eq 0 -or $Output -match "installed|success|complete") {
+        Write-Host "✓ CaskaydiaCove Nerd Font installed successfully" -ForegroundColor Green
+        Write-Host "  Restart Windows Terminal to see the font in the font list" -ForegroundColor Yellow
+    } else {
+        throw "Installation did not complete successfully. Output: $Output"
+    }
     
 } catch {
-    Write-Host "✗ Failed to install $FontName" -ForegroundColor Red
+    Write-Host "✗ Failed to install CaskaydiaCove Nerd Font" -ForegroundColor Red
     Write-Host "  Error: $_" -ForegroundColor Red
     Write-Host "  You can manually install from: https://github.com/ryanoasis/nerd-fonts/releases" -ForegroundColor Yellow
     exit 1
@@ -76,4 +83,4 @@ try {
         Remove-Item $TempDir -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
-{{- end -}}
+{{- end }}
