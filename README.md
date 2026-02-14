@@ -14,15 +14,24 @@ WSL2 Ubuntu and Windows 11 dev environment managed by chezmoi. One command sets 
 
 ## Quick Start
 
+### WSL2 / Linux
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/seanGSISG/.dotfiles/main/bootstrap.sh | bash
 ```
 
+### Windows 11
+
+```powershell
+irm https://raw.githubusercontent.com/seanGSISG/.dotfiles/main/bootstrap.ps1 | iex
+```
+
 That's it. The script clones the repo, installs everything, and deploys configs. It's idempotent — safe to re-run. It will skip anything already installed.
 
-You'll be prompted for your sudo password and age encryption key (from Bitwarden).
+**WSL2/Linux:** You'll be prompted for your sudo password and age encryption key (from Bitwarden).  
+**Windows:** You'll be prompted for your age encryption key (from Bitwarden). Winget may prompt for package agreements.
 
-### What It Does
+### What It Does (WSL2/Linux)
 
 1. Configures WSL2 (`/etc/wsl.conf` with systemd)
 2. Adds APT repos (GitHub CLI, PowerShell, Charm) and installs 34 system packages
@@ -35,15 +44,26 @@ You'll be prompted for your sudo password and age encryption key (from Bitwarden
 9. Deploys all configs via `chezmoi apply`
 10. Changes default shell to zsh
 
+### What It Does (Windows)
+
+1. Installs chezmoi via winget
+2. Clones this repo to `~\.dotfiles`
+3. Installs packages from `packages\winget-packages.txt` (PowerShell 7, Windows Terminal, Git, GitHub CLI, dev tools, etc.)
+4. Auto-installs CaskaydiaCove Nerd Font for Windows Terminal (via chezmoi run_once script)
+5. Backs up existing dotfiles to `~\.dotfiles-backup\<timestamp>\`
+6. Deploys PowerShell configs, Windows Terminal settings, and cross-platform configs via `chezmoi apply`
+
 ### Post-Install Checklist
 
-After bootstrap completes, it prints this checklist:
+After bootstrap completes, it prints a checklist. Key items:
 
-1. **Age key** — If skipped during setup, retrieve from Bitwarden, save to `~/.config/age/keys.txt`, then run `chezmoi apply`
-2. **Tmux plugins** — Open tmux, press `prefix + I`
-3. **Claude Code** — `claude login`
-4. **SSH verify** — `ssh -T git@github.com`
-5. **WSL restart** — `wsl.exe --shutdown` from PowerShell (enables systemd)
+1. **Restart terminal** — Load new configurations
+2. **Age key** — If skipped during setup, retrieve from Bitwarden, save to `~/.config/age/keys.txt` (Linux/WSL) or `~\.config\age\keys.txt` (Windows), then run `chezmoi apply`
+3. **Tmux plugins** (WSL/Linux only) — Open tmux, press `prefix + I`
+4. **Claude Code** — `claude login`
+5. **SSH verify** — `ssh -T git@github.com`
+6. **WSL restart** (WSL only) — `wsl.exe --shutdown` from PowerShell (enables systemd)
+7. **PowerShell Modules** (Windows) — `Install-Module PSFzf -Scope CurrentUser`
 
 ## Secrets & Encryption
 
@@ -89,6 +109,7 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 ```
 ~/.dotfiles/                       # chezmoi source (this repo)
 ├── bootstrap.sh                   # Idempotent installer script (WSL2/Linux)
+├── bootstrap.ps1                  # Idempotent installer script (Windows 11)
 ├── verify.sh                      # Post-install environment validation
 ├── run_once_install-nerdfonts.ps1.tmpl  # Auto-install CaskaydiaCove Nerd Font (Windows)
 ├── dot_zshrc.tmpl                 # .zshrc template
