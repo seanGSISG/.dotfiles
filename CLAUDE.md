@@ -15,7 +15,7 @@ chezmoi add --encrypt <file>   # Track with age encryption
 
 # Scripts
 ./bootstrap.sh                 # Full environment setup (idempotent)
-./verify.sh                    # Post-install validation (8 sections, 40+ checks)
+./verify.sh                    # Post-install validation (7 sections, 30+ checks)
 ```
 
 ## Chezmoi Naming Conventions
@@ -51,7 +51,6 @@ packages/
   apt-packages.txt           # APT manifest (34 packages, documented)
   uv-tools.txt               # Python tools via uv (basedpyright, pre-commit, etc.)
   binary-installs.txt        # Reference for manually-installed binaries
-dot_claude/                  # Claude Code hooks, settings, learning system
 private_dot_ssh/             # SSH keys (age-encrypted)
 encrypted_dot_secrets.env.age  # Secrets (age-encrypted → ~/.secrets.env)
 ```

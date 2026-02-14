@@ -239,20 +239,17 @@ function Install-WingetPackages {
 
         if (-not $packageId) { continue }
 
-        # Check if already installed
-        $existing = winget list --id $packageId --exact 2>$null
-        if ($LASTEXITCODE -eq 0 -and $existing -match $packageId) {
-            Log-Skip "$packageId already installed"
-            $skippedCount++
-            continue
-        }
-        
         Log-Info "Installing $packageId..."
         winget install --id $packageId --exact --accept-source-agreements --accept-package-agreements --silent
-        
+
         if ($LASTEXITCODE -eq 0) {
             Log-Success "$packageId installed"
             $installedCount++
+        } elseif ($LASTEXITCODE -eq -1978335189 -or $LASTEXITCODE -eq -1978335146) {
+            # -1978335189: No applicable update (already up to date)
+            # -1978335146: Package already installed
+            Log-Skip "$packageId already installed"
+            $skippedCount++
         } else {
             Log-Error "$packageId installation failed (exit code: $LASTEXITCODE)"
             $script:FailedSteps += "winget install $packageId"
@@ -469,14 +466,10 @@ function Show-Summary {
     Write-Host "— If skipped, retrieve from Bitwarden, save to ~/.config/age/keys.txt" -ForegroundColor Gray
     Write-Host ""
     Write-Host "3. " -NoNewline -ForegroundColor Cyan
-    Write-Host "Claude Code " -NoNewline -ForegroundColor White
-    Write-Host "— Run: claude login" -ForegroundColor Gray
-    Write-Host ""
-    Write-Host "4. " -NoNewline -ForegroundColor Cyan
     Write-Host "SSH verify " -NoNewline -ForegroundColor White
     Write-Host "— Run: ssh -T git@github.com" -ForegroundColor Gray
     Write-Host ""
-    Write-Host "5. " -NoNewline -ForegroundColor Cyan
+    Write-Host "4. " -NoNewline -ForegroundColor Cyan
     Write-Host "PowerShell Modules " -NoNewline -ForegroundColor White
     Write-Host "— Install PSFzf: Install-Module PSFzf -Scope CurrentUser" -ForegroundColor Gray
     Write-Host ""

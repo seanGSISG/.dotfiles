@@ -108,7 +108,6 @@ verify_tools() {
     tmux
     git
     age
-    claude
     opencode
     mmdc
   )
@@ -252,31 +251,6 @@ verify_workspace_folders() {
   done
 }
 
-verify_claude_code() {
-  section_header "8. Claude Code"
-
-  # claude command available
-  if command -v claude &>/dev/null; then
-    check_pass "claude command available"
-  else
-    check_fail "claude command not found"
-  fi
-
-  # ~/.claude/ directory exists
-  if [ -d ~/.claude ]; then
-    check_pass "~/.claude/ directory exists"
-  else
-    check_fail "~/.claude/ directory not found"
-  fi
-
-  # hooks.json exists
-  if [ -f ~/.claude/hooks.json ]; then
-    check_pass "hooks.json exists"
-  else
-    check_fail "hooks.json not found"
-  fi
-}
-
 #===============================================================================
 # Summary
 #===============================================================================
@@ -324,7 +298,6 @@ main() {
   verify_secrets
   verify_wsl_config
   verify_workspace_folders
-  verify_claude_code
 
   # Print summary
   print_summary

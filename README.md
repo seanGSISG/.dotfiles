@@ -9,7 +9,7 @@ WSL2 Ubuntu and Windows 11 dev environment managed by chezmoi. One command sets 
 - **Shell:** zsh (default) with antidote plugins, Starship prompt, 100k history with dedup
 - **Tools:** fnm (Node.js), fzf (fuzzy finder), zoxide (smart cd), uv (Python), bun (JS runtime)
 - **Configs:** git (templated), tmux (TPM, XDG paths), Starship (Pure-style theme)
-- **Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv, Claude Code
+- **Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv
 - **System:** GitHub CLI, PowerShell, age encryption, 34 curated apt packages
 
 ## Quick Start
@@ -39,10 +39,9 @@ That's it. The script clones the repo, installs everything, and deploys configs.
 4. Installs binary tools (Starship, fnm, fzf, uv, bun, age)
 5. Installs plugin managers (antidote for zsh, TPM for tmux)
 6. Installs Python tools via uv and Node.js 22 LTS via fnm
-7. Installs Claude Code via official installer
-8. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
-9. Deploys all configs via `chezmoi apply`
-10. Changes default shell to zsh
+7. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
+8. Deploys all configs via `chezmoi apply`
+9. Changes default shell to zsh
 
 ### What It Does (Windows)
 
@@ -60,10 +59,9 @@ After bootstrap completes, it prints a checklist. Key items:
 1. **Restart terminal** — Load new configurations
 2. **Age key** — If skipped during setup, retrieve from Bitwarden, save to `~/.config/age/keys.txt` (Linux/WSL) or `~\.config\age\keys.txt` (Windows), then run `chezmoi apply`
 3. **Tmux plugins** (WSL/Linux only) — Open tmux, press `prefix + I`
-4. **Claude Code** — `claude login`
-5. **SSH verify** — `ssh -T git@github.com`
-6. **WSL restart** (WSL only) — `wsl.exe --shutdown` from PowerShell (enables systemd)
-7. **PowerShell Modules** (Windows) — `Install-Module PSFzf -Scope CurrentUser`
+4. **SSH verify** — `ssh -T git@github.com`
+5. **WSL restart** (WSL only) — `wsl.exe --shutdown` from PowerShell (enables systemd)
+6. **PowerShell Modules** (Windows) — `Install-Module PSFzf -Scope CurrentUser`
 
 ## Secrets & Encryption
 
@@ -123,7 +121,6 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 │   └── powershell/                # PowerShell 7 config (Windows)
 ├── Documents/PowerShell/          # PowerShell profile (Windows)
 ├── AppData/                       # Windows Terminal settings (Windows)
-├── dot_claude/                    # Claude Code configs
 ├── dot_ssh/                       # SSH keys (age-encrypted)
 ├── encrypted_dot_secrets.env.age  # Encrypted secrets
 ├── packages/

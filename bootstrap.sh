@@ -571,24 +571,6 @@ install_node_tools() {
   eval "$(fnm env --use-on-cd)" 2>/dev/null || true
 }
 
-install_claude_code() {
-  if command -v claude &>/dev/null; then
-    log_skip "Claude Code already installed"
-    SKIPPED+=("Claude Code")
-    return 0
-  fi
-
-  log_info "Installing Claude Code via official installer..."
-  if bash -c "$(curl -fsSL https://claude.ai/install.sh)" </dev/null >/dev/null 2>&1; then
-    log_success "Claude Code installed"
-    INSTALLED+=("Claude Code")
-  else
-    log_error "Claude Code installation failed"
-    FAILED_STEPS+=("Claude Code")
-    return 1
-  fi
-}
-
 install_mermaid_cli() {
   if command -v mmdc &>/dev/null; then
     log_skip "Mermaid CLI already installed"
@@ -892,18 +874,15 @@ print_summary() {
   # Post-install checklist
   echo "${BOLD}${CYAN}Post-Install Checklist:${RESET}"
   echo ""
-  echo "  ${BOLD}1. Claude Code Authentication${RESET}"
-  echo "     Run: ${CYAN}claude login${RESET}"
-  echo ""
-  echo "  ${BOLD}2. SSH Verification${RESET}"
+  echo "  ${BOLD}1. SSH Verification${RESET}"
   echo "     Test GitHub SSH access: ${CYAN}ssh -T git@github.com${RESET}"
   echo "     (Requires your SSH public key to be added to your GitHub account)"
   echo ""
-  echo "  ${BOLD}3. WSL Restart${RESET}"
+  echo "  ${BOLD}2. WSL Restart${RESET}"
   echo "     From PowerShell, run: ${CYAN}wsl.exe --shutdown${RESET}"
   echo "     Then restart WSL to enable systemd"
   echo ""
-  echo "  ${BOLD}4. Verify Setup${RESET}"
+  echo "  ${BOLD}3. Verify Setup${RESET}"
   echo "     Run: ${CYAN}~/.dotfiles/verify.sh${RESET}"
   echo ""
   echo "${BOLD}Log file:${RESET} $LOG_FILE"
@@ -954,7 +933,6 @@ main() {
   run_step "Plugin Managers" install_plugin_managers
   run_step "Python Tools" install_python_tools
   run_step "Node.js Tools" install_node_tools
-  run_step "Claude Code" install_claude_code
   run_step "Mermaid CLI" install_mermaid_cli
   run_step "OpenCode" install_opencode
 

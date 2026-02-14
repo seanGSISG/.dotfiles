@@ -16,17 +16,6 @@ Full workspace structure on this machine:
 
 Claude Code may operate within all workspace folders listed above. Each workspace has its own CLAUDE.md boundary file defining specific rules.
 
-## Learning System
-
-Continuous learning v2 is active on this machine:
-
-- **Observations:** Captured to {{ .chezmoi.homeDir }}/.claude/insights/observations.jsonl
-- **Instincts:** Stored in {{ .chezmoi.homeDir }}/.claude/insights/instincts/personal/
-- **Commands:** Use /instinct-status to view learned patterns
-- **Evolution:** Use /evolve to cluster instincts into skills
-
-The learning system captures tool use patterns through PreToolUse and PostToolUse hooks, storing observations as JSONL events. Over time, patterns emerge as instincts with confidence scores (0.3-0.9).
-
 ## Safety Rules
 
 - Never touch secrets, credentials, tokens, or private keys
@@ -40,7 +29,6 @@ This command center serves as the primary location for:
 
 - Launching Claude Code sessions
 - Coordinating work across multiple workspaces
-- Reviewing learned instincts and patterns
 - Managing cross-project tasks
 
 ---

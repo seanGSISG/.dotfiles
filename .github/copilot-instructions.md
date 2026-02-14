@@ -18,7 +18,6 @@ Files in this repository use chezmoi's naming scheme:
 - `dot_config/tmux/` - Tmux configuration (XDG compliant)
 - `dot_config/starship.toml` - Starship prompt configuration
 - `packages/` - Package manifests (apt-packages.txt, uv-tools.txt, winget-packages.txt)
-- `dot_claude/` - Claude Code configurations
 - `private_dot_ssh/` - SSH keys (age-encrypted)
 - `encrypted_dot_secrets.env.age` - Encrypted secrets file
 
@@ -27,7 +26,7 @@ Files in this repository use chezmoi's naming scheme:
 ### Bootstrap & Setup
 ```bash
 ./bootstrap.sh              # Full environment setup (idempotent, safe to re-run)
-./verify.sh                 # Post-install validation (8 sections, 40+ checks)
+./verify.sh                 # Post-install validation (7 sections, 40+ checks)
 ```
 
 ### Chezmoi Workflow

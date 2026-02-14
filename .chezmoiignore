@@ -9,10 +9,6 @@ packages/
 bootstrap.sh
 verify.sh
 
-# Claude Code learning system runtime data (never managed by chezmoi)
-.claude/insights/
-.claude/insights/**
-
 # --- OS-Conditional Ignores ---
 # chezmoi evaluates these as Go templates
 
