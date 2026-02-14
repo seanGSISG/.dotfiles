@@ -24,6 +24,8 @@ verify.sh
 .config/tmux
 .config/tmux/**
 .bashrc
+packages/apt-packages.txt
+packages/binary-installs.txt
 {{ end }}
 
 {{ if ne .chezmoi.os "windows" }}
@@ -34,4 +36,5 @@ Documents/PowerShell/**
 .config/powershell/**
 AppData
 AppData/**
+packages/winget-packages.txt
 {{ end }}
