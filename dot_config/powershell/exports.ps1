@@ -41,3 +41,8 @@ $PSReadLineHistoryDir = Split-Path $PSReadLineHistoryPath -Parent
 if (-not (Test-Path $PSReadLineHistoryDir)) {
     New-Item -ItemType Directory -Path $PSReadLineHistoryDir -Force | Out-Null
 }
+
+# Ensure PSReadLine actually uses the configured history path
+if (Get-Command Set-PSReadLineOption -ErrorAction SilentlyContinue) {
+    Set-PSReadLineOption -HistorySavePath $PSReadLineHistoryPath
+}
