@@ -162,7 +162,7 @@ Use chezmoi templates for OS-specific behavior:
 ### Plugin Management
 - Zsh: antidote (plugin manager)
 - Tmux: TPM (Tmux Plugin Manager)
-- Plugin manifests: `private_dot_zsh_plugins.txt` for antidote
+- Plugin manifests: `dot_config/zsh/private_dot_zsh_plugins.txt` for antidote
 
 ## Common Patterns
 
