@@ -151,16 +151,23 @@ function az-secrets-list {
 # Section 5: Windows Terminal + Claude Functions
 # ============================================
 
+# Helper function to safely encode Claude commands with user input
+function Get-EncodedClaudeCommand {
+    param([string]$Prompt)
+    
+    # Prevent command injection via Base64 encoding
+    # The entire command (including user input) is encoded, so any special characters
+    # or malicious syntax are treated as literal data, not executable code
+    $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $Prompt
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
+    return [Convert]::ToBase64String($bytes)
+}
+
 function cct {
     # Claude Code in new Windows Terminal tab
     $prompt = $args -join ' '
     if ($prompt) {
-        # Prevent command injection via Base64 encoding:
-        # 1. Use -f format operator to prevent $() expansion during string construction
-        # 2. Base64 encode the entire command so it's safely passed and decoded by PowerShell
-        $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
-        $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
-        $encodedCommand = [Convert]::ToBase64String($bytes)
+        $encodedCommand = Get-EncodedClaudeCommand -Prompt $prompt
         wt new-tab --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
@@ -171,12 +178,7 @@ function ccr {
     # Claude Code in right split pane (horizontal split)
     $prompt = $args -join ' '
     if ($prompt) {
-        # Prevent command injection via Base64 encoding:
-        # 1. Use -f format operator to prevent $() expansion during string construction
-        # 2. Base64 encode the entire command so it's safely passed and decoded by PowerShell
-        $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
-        $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
-        $encodedCommand = [Convert]::ToBase64String($bytes)
+        $encodedCommand = Get-EncodedClaudeCommand -Prompt $prompt
         wt split-pane -H --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt split-pane -H --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
@@ -187,12 +189,7 @@ function ccb {
     # Claude Code in bottom split pane (vertical split)
     $prompt = $args -join ' '
     if ($prompt) {
-        # Prevent command injection via Base64 encoding:
-        # 1. Use -f format operator to prevent $() expansion during string construction
-        # 2. Base64 encode the entire command so it's safely passed and decoded by PowerShell
-        $fullCommand = "claude --dangerously-skip-permissions '{0}'" -f $prompt
-        $bytes = [System.Text.Encoding]::Unicode.GetBytes($fullCommand)
-        $encodedCommand = [Convert]::ToBase64String($bytes)
+        $encodedCommand = Get-EncodedClaudeCommand -Prompt $prompt
         wt split-pane -V --title "Claude" -- pwsh -NoLogo -EncodedCommand $encodedCommand
     } else {
         wt split-pane -V --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
