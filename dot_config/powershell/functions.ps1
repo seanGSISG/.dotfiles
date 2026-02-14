@@ -154,9 +154,9 @@ function az-secrets-list {
 
 function cct {
     # Claude Code in new Windows Terminal tab
-    $prompt = $args -join ' '
-    if ($prompt) {
-        wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$prompt'"
+    if ($args.Count -gt 0) {
+        $escapedPrompt = ($args -join ' ') -replace "'", "''"
+        wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions '$escapedPrompt'"
     } else {
         wt new-tab --title "Claude" -- pwsh -NoLogo -Command "claude --dangerously-skip-permissions"
     }
