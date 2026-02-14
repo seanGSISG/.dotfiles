@@ -22,6 +22,7 @@ bash-completion       # Tab completion for bash fallback and system scripts
 bat                   # cat replacement with syntax highlighting and git integration
 eza                   # ls replacement with color, icons, git integration
 ripgrep               # Fast recursive grep (rg command) with smart case and gitignore support
+fd-find               # Fast find replacement (binary: fdfind on Debian/Ubuntu, alias fd in shell)
 jq                    # JSON parsing and manipulation for CLI workflows
 tree                  # Directory structure visualization
 file                  # File type detection utility
@@ -31,6 +32,9 @@ htop                  # Interactive process viewer, better than top
 
 # === Search & Navigation ===
 zoxide                # Smart cd replacement with fuzzy matching (z command)
+
+# === Environment Management ===
+direnv                # Auto-load/unload env vars per directory (.envrc files)
 
 # === Archive & Network ===
 curl                  # URL transfer tool for API testing and downloads

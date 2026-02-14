@@ -59,3 +59,12 @@ if (Get-Module -ListAvailable PSReadLine) {
 # --- Tab Completion Settings ---
 # Case-insensitive completion (like zsh matcher-list)
 Set-PSReadLineOption -BellStyle None
+
+# --- CLI Tool Completions ---
+# Generated completions for tools that support them
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+    Invoke-Expression -Command $(gh completion -s powershell | Out-String)
+}
+if (Get-Command chezmoi -ErrorAction SilentlyContinue) {
+    Invoke-Expression -Command $(chezmoi completion powershell | Out-String)
+}

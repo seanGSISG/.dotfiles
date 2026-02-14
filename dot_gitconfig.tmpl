@@ -8,6 +8,22 @@
 [core]
 	editor = {{ .editor | default "code --wait" | quote }}
 	autocrlf = input
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	dark = true
+	line-numbers = true
+	syntax-theme = Dracula
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	colorMoved = default
 
 [init]
 	defaultBranch = main

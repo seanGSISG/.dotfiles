@@ -29,3 +29,6 @@ function dlog {
     param([Parameter(Mandatory, Position = 0)][string]$Container)
     & docker logs -f $Container
 }
+
+# TUI
+function lzd { & lazydocker @args }                 # lazydocker TUI

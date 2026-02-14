@@ -19,14 +19,22 @@ Microsoft.VisualStudioCode        # VS Code editor
 
 # === File & Text Utilities ===
 sharkdp.bat                       # cat replacement with syntax highlighting and git integration
+sharkdp.fd                        # Fast find replacement (fd command)
 eza-community.eza                 # ls replacement with color, icons, git integration
 BurntSushi.ripgrep.MSVC           # Fast recursive grep (rg command)
+dandavison.delta                  # Syntax-highlighting pager for git diffs
 jqlang.jq                         # JSON parsing and manipulation for CLI workflows
+MikeFarah.yq                     # YAML/JSON/XML processor (like jq for YAML)
 charmbracelet.glow                # Markdown renderer for terminal viewing
 
 # === Search & Navigation ===
 ajeetdsouza.zoxide                # Smart cd replacement with fuzzy matching (z command)
 junegunn.fzf                      # Command-line fuzzy finder
+direnv.direnv                     # Auto-load/unload env vars per directory (.envrc files)
+
+# === TUI Tools ===
+JesseDuffield.lazygit             # Terminal UI for git (interactive rebase, staging, etc.)
+JesseDuffield.Lazydocker          # Terminal UI for Docker (containers, images, logs)
 
 # === Python Development ===
 Python.Python.3.12                # Python 3.12 interpreter

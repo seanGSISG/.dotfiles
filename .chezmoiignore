@@ -32,4 +32,6 @@ Documents/PowerShell
 Documents/PowerShell/**
 .config/powershell
 .config/powershell/**
+AppData
+AppData/**
 {{ end }}

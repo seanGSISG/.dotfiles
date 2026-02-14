@@ -20,3 +20,8 @@ if (Get-Command fzf -ErrorAction SilentlyContinue) {
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     Invoke-Expression (& { (zoxide init powershell | Out-String) })
 }
+
+# --- direnv (Auto-load .envrc per directory) ---
+if (Get-Command direnv -ErrorAction SilentlyContinue) {
+    Invoke-Expression (& { (direnv hook pwsh | Out-String) })
+}

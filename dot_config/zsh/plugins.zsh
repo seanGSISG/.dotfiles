@@ -40,3 +40,8 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"       # Colored completi
 # Bind history-substring-search to arrow keys
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+
+# --- CLI Tool Completions ---
+# Generated completions for tools that support them
+if command -v gh &>/dev/null; then eval "$(gh completion -s zsh)"; fi
+if command -v chezmoi &>/dev/null; then eval "$(chezmoi completion zsh)"; fi

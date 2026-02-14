@@ -8,6 +8,16 @@ $env:LANG = if ($env:LANG) { $env:LANG } else { "en_US.UTF-8" }
 $env:ENABLE_LSP_TOOLS = "1"
 $env:BUN_INSTALL = "$HOME\.bun"
 $env:STARSHIP_CONFIG = "$HOME\.config\starship.toml"
+$env:BAT_THEME = "Dracula"
+
+# --- fzf Configuration ---
+# Use fd for file finding (faster, respects .gitignore)
+if (Get-Command fd -ErrorAction SilentlyContinue) {
+    $env:FZF_DEFAULT_COMMAND = 'fd --type f --hidden --follow --exclude .git'
+    $env:FZF_CTRL_T_COMMAND = 'fd --type f --hidden --follow --exclude .git'
+    $env:FZF_ALT_C_COMMAND = 'fd --type d --hidden --follow --exclude .git'
+}
+$env:FZF_DEFAULT_OPTS = '--height 40% --layout=reverse --border --info=inline'
 
 # --- PATH Construction ---
 # Single authoritative location - no duplication
