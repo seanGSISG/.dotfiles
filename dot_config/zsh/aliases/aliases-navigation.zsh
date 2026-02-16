@@ -31,5 +31,5 @@ compdef _j j
 
 # Project launchers
 prefect() {
-  cd ~/projects/prefect-antig && uv sync && source .venv/bin/activate && ccd
+  cd ~/projects/prefect-antig && uv sync && source .venv/bin/activate && claude --dangerously-skip-permissions
 }
