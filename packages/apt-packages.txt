@@ -70,3 +70,7 @@ powershell            # PowerShell Core for Windows/WSL2 interop and automation 
 gh                    # GitHub CLI for repo management, PRs, issues
 # repo: https://cli.github.com/packages
 # auth: manual — run 'gh auth login' after installation
+
+azure-cli             # Azure CLI for cloud resource management
+# repo: https://packages.microsoft.com/repos/azure-cli/
+# auth: manual — run 'az login' after installation

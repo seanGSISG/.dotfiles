@@ -185,6 +185,18 @@ setup_apt_repos() {
     repos_added=1
   fi
 
+  # Azure CLI repository
+  if [ -f /etc/apt/sources.list.d/azure-cli.list ]; then
+    log_skip "Azure CLI repository already configured"
+  else
+    log_info "Adding Azure CLI repository..."
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list > /dev/null
+    log_success "Azure CLI repository added"
+    repos_added=1
+  fi
+
   # Always update package cache (needed for fresh machines and after repo additions)
   log_info "Updating package cache..."
   sudo apt-get update -qq

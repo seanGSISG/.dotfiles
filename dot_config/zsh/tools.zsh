@@ -22,3 +22,8 @@ fi
 if command -v direnv &>/dev/null; then
   eval "$(direnv hook zsh)"
 fi
+
+# --- Azure CLI (az completion) ---
+if command -v az &>/dev/null; then
+  source /etc/bash_completion.d/azure-cli 2>/dev/null
+fi

@@ -108,6 +108,7 @@ verify_tools() {
     tmux
     git
     age
+    az
     opencode
     mmdc
   )
