@@ -38,6 +38,13 @@ Host aisvr
     User adminuser
     IdentityFile ~/.ssh/id_ed25519_aisvr
 
+# === Homelab - Spark (localhost) ===
+Host spark-claude
+    HostName 127.0.0.1
+    User adminuser
+    RequestTTY force
+    RemoteCommand cd ~/command-center && exec claude --dangerously-skip-permissions
+
 # === Homelab - WSL ===
 Host wsl
     HostName 10.10.10.50
