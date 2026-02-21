@@ -1,0 +1,42 @@
+#!/bin/bash
+# Install CLI tools that the shell config depends on
+# run_once_before_ ensures this runs before other scripts on first chezmoi apply
+# Idempotent: each tool is skipped if already installed
+
+set -e
+
+{{ if eq .chezmoi.os "linux" -}}
+
+echo "Installing CLI tools..."
+
+# --- Tools available via apt ---
+NEED_APT=()
+
+command -v zoxide &>/dev/null  || NEED_APT+=(zoxide)
+command -v eza &>/dev/null     || NEED_APT+=(eza)
+# bat ships as 'batcat' on Debian/Ubuntu
+command -v bat &>/dev/null || command -v batcat &>/dev/null || NEED_APT+=(bat)
+
+if [ ${#NEED_APT[@]} -gt 0 ]; then
+  echo "Installing via apt: ${NEED_APT[*]}"
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq "${NEED_APT[@]}"
+fi
+
+# --- Starship (install script, no apt package for ARM64) ---
+if ! command -v starship &>/dev/null; then
+  echo "Installing starship..."
+  curl -sS https://starship.rs/install.sh -o /tmp/starship-install.sh
+  sudo sh /tmp/starship-install.sh --yes
+  rm -f /tmp/starship-install.sh
+fi
+
+# --- Atuin (installs to ~/.atuin/bin/) ---
+if ! command -v atuin &>/dev/null && [ ! -f "$HOME/.atuin/bin/atuin" ]; then
+  echo "Installing atuin..."
+  curl -sSf https://setup.atuin.sh | bash
+fi
+
+echo "CLI tools installed."
+
+{{ end -}}

@@ -16,7 +16,7 @@ fi
 
 # --- PATH Construction ---
 # Single authoritative location - no duplication
-export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.atuin/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
 [[ -d /usr/local/go/bin ]] && export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 
 # --- Environment Variables ---
