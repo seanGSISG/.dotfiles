@@ -1,5 +1,56 @@
+# === Global Defaults ===
+Host *
+    AddKeysToAgent yes
+    IdentitiesOnly yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    # Connection multiplexing (shared connections = instant subsequent SSHs)
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600
+
+# === GitHub ===
 Host github.com
     HostName github.com
     User git
     IdentityFile ~/.ssh/idm-prod-key
-    IdentitiesOnly yes
+
+# === Homelab - Proxmox ===
+Host ms-01
+    HostName 10.10.10.5
+    User root
+    IdentityFile ~/.ssh/id_ed25519_ms-01
+
+# === Homelab - Proxmox VMs ===
+Host docker-host-01
+    HostName 10.10.10.10
+    User adminuser
+    IdentityFile ~/.ssh/id_ed25519_docker-host-01
+
+Host tor-browser
+    HostName 10.10.10.20
+    User adminuser
+    IdentityFile ~/.ssh/id_ed25519_ms-01
+
+# === Homelab - Bare Metal ===
+Host aisvr
+    HostName 10.10.10.122
+    User adminuser
+    IdentityFile ~/.ssh/id_ed25519_aisvr
+
+# === Homelab - WSL ===
+Host wsl
+    HostName 10.10.10.50
+    User adminuser
+    IdentityFile ~/.ssh/id_ed25519_wsl
+
+# === External ===
+Host nerd
+    HostName 104.223.27.177
+    User adminuser
+    IdentityFile ~/.ssh/id_ed25519_racknerd
+
+Host nerd-root
+    HostName 104.223.27.177
+    User root
+    IdentityFile ~/.ssh/id_ed25519_racknerd

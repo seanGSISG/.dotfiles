@@ -1,0 +1,5 @@
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPiNTaGlbbpTwTr3vxTXNjp/iJrOabjz9MDodI/gmfpV wsl
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKkkXVof2/LTqkeG8JnzWExjNsQs4+MHfXXf9wzALpo1 adminuser@docker-host-01 -> gb10-spark
+ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDFvh3v+224bx4QTC3/nLWpFWaWWoom0vRb3Pl9o1OIw1OQD2+gv2mFyEBb7/03yhKoTGHC9tt9SBgeoBiAS5aU=
+ #ssh.id - @lsdmt
+sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBKzbRQLNjdFKmRTH98LWhv/1lc9l3navhhjgDn0R6ww4om0x/y74/QXG6G03HbDfkPXAYNYm9rRdiipsEB4kzX4AAAAHVGVybWl1cw== #ssh.id - @lsdmt
