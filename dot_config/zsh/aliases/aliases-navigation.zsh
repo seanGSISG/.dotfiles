@@ -9,6 +9,7 @@ alias -- -='cd -'
 # ── Jump target registry ──────────────────────────────────────
 # Shared between j() and jc(). Add new targets here.
 typeset -A _jump_targets=(
+  cc        "$HOME/command-center"
   ccenter   "$HOME/command-center"
   projects  "$HOME/projects"
   labs      "$HOME/labs"
