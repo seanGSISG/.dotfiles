@@ -40,7 +40,7 @@ Host aisvr
 
 # === Homelab - Spark (localhost) ===
 Host spark-claude
-    HostName 127.0.0.1
+    HostName 10.10.10.15
     User adminuser
     RequestTTY force
     RemoteCommand cd ~/command-center && exec claude --dangerously-skip-permissions
