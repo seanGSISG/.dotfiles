@@ -1,0 +1,280 @@
+#!/usr/bin/env python3
+"""
+cf-sync: Sync Cloudflare tunnel config from a local YAML file.
+
+Reads ~/.config/cloudflare/tunnel.yml and pushes:
+  1. Tunnel ingress rules (via Cloudflare API)
+  2. DNS CNAME records (creates missing, skips existing)
+
+Usage:
+  cf-sync              # sync everything
+  cf-sync --dry-run    # show what would change without applying
+  cf-sync --status     # show current state
+"""
+
+import json
+import subprocess
+import sys
+import os
+from pathlib import Path
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError
+
+CONFIG_PATH = Path.home() / ".config" / "cloudflare" / "tunnel.yml"
+TOKEN_PATH = Path.home() / ".config" / "cloudflare" / "token"
+API_BASE = "https://api.cloudflare.com/client/v4"
+
+
+def load_token():
+    try:
+        return TOKEN_PATH.read_text().strip()
+    except FileNotFoundError:
+        print(f"Error: API token not found at {TOKEN_PATH}", file=sys.stderr)
+        sys.exit(1)
+
+
+def parse_config(path):
+    """Parse the simple YAML config without requiring PyYAML."""
+    config = {"services": {}}
+    in_services = False
+
+    for line in path.read_text().splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        # Remove inline comments (but not inside URLs)
+        if "  #" in stripped:
+            stripped = stripped[: stripped.index("  #")].strip()
+
+        if stripped == "services:":
+            in_services = True
+            continue
+
+        if not in_services:
+            if ":" in stripped:
+                key, val = stripped.split(":", 1)
+                config[key.strip()] = val.strip()
+        else:
+            if stripped[0].isalpha() and ":" in stripped:
+                key, val = stripped.split(":", 1)
+                config["services"][key.strip()] = val.strip()
+
+    # Reassemble URLs split by the first colon parse
+    fixed_services = {}
+    for k, v in config["services"].items():
+        if v.startswith("//"):
+            # The "http" part ended up as the key prefix, reconstruct
+            fixed_services[k] = "http:" + v
+        elif v.startswith("http"):
+            fixed_services[k] = v
+        else:
+            fixed_services[k] = v
+    config["services"] = fixed_services
+
+    return config
+
+
+def api_request(method, path, token, data=None):
+    """Make a Cloudflare API request."""
+    url = f"{API_BASE}{path}"
+    body = json.dumps(data).encode() if data else None
+    req = Request(url, data=body, method=method)
+    req.add_header("Authorization", f"Bearer {token}")
+    req.add_header("Content-Type", "application/json")
+
+    try:
+        with urlopen(req) as resp:
+            return json.loads(resp.read())
+    except HTTPError as e:
+        error_body = e.read().decode()
+        try:
+            error_json = json.loads(error_body)
+            errors = error_json.get("errors", [])
+            if errors:
+                print(f"API error: {errors[0].get('message', error_body)}", file=sys.stderr)
+            else:
+                print(f"API error: {error_body}", file=sys.stderr)
+        except json.JSONDecodeError:
+            print(f"API error ({e.code}): {error_body}", file=sys.stderr)
+        sys.exit(1)
+
+
+def get_current_ingress(account_id, tunnel_id, token):
+    """Get current tunnel ingress configuration."""
+    resp = api_request("GET", f"/accounts/{account_id}/cfd_tunnel/{tunnel_id}/configurations", token)
+    ingress = resp["result"]["config"].get("ingress", [])
+    return ingress
+
+
+def get_dns_records(zone_id, token):
+    """Get all CNAME DNS records for the zone."""
+    resp = api_request("GET", f"/zones/{zone_id}/dns_records?type=CNAME&per_page=100", token)
+    return {r["name"]: r for r in resp["result"]}
+
+
+def build_ingress(services, zone):
+    """Build the ingress list from services config."""
+    ingress = []
+    for subdomain, target in services.items():
+        hostname = f"{subdomain}.{zone}"
+        ingress.append({"hostname": hostname, "service": target, "originRequest": {}})
+    # Catch-all rule must be last
+    ingress.append({"service": "http_status:404"})
+    return ingress
+
+
+def sync_tunnel_config(account_id, tunnel_id, ingress, token, dry_run=False):
+    """Push ingress rules to the tunnel."""
+    config = {"config": {"ingress": ingress, "warp-routing": {"enabled": False}}}
+
+    if dry_run:
+        print("\n[Tunnel Ingress] Would push:")
+        for rule in ingress[:-1]:
+            print(f"  {rule['hostname']} -> {rule['service']}")
+        print(f"  (catch-all) -> http_status:404")
+        return True
+
+    resp = api_request(
+        "PUT", f"/accounts/{account_id}/cfd_tunnel/{tunnel_id}/configurations", token, config
+    )
+
+    if resp.get("success"):
+        print("[Tunnel Ingress] Updated successfully")
+        return True
+    else:
+        print(f"[Tunnel Ingress] Failed: {resp.get('errors', 'unknown')}", file=sys.stderr)
+        return False
+
+
+def sync_dns_records(zone_id, tunnel_id, services, zone, token, dry_run=False):
+    """Create missing DNS CNAME records."""
+    existing = get_dns_records(zone_id, token)
+    tunnel_target = f"{tunnel_id}.cfargotunnel.com"
+    changes = []
+
+    for subdomain in services:
+        fqdn = f"{subdomain}.{zone}"
+        if fqdn in existing:
+            record = existing[fqdn]
+            if record["content"] == tunnel_target and record["proxied"]:
+                continue
+            # Record exists but points somewhere wrong - update it
+            changes.append(("update", fqdn, record["id"]))
+        else:
+            changes.append(("create", fqdn, None))
+
+    if not changes:
+        print("[DNS Records] All records up to date")
+        return True
+
+    for action, fqdn, record_id in changes:
+        record_data = {
+            "type": "CNAME",
+            "name": fqdn,
+            "content": tunnel_target,
+            "proxied": True,
+            "ttl": 1,  # Auto
+        }
+
+        if dry_run:
+            print(f"[DNS Records] Would {action}: {fqdn} -> {tunnel_target}")
+            continue
+
+        if action == "create":
+            resp = api_request("POST", f"/zones/{zone_id}/dns_records", token, record_data)
+            if resp.get("success"):
+                print(f"[DNS Records] Created: {fqdn}")
+            else:
+                print(f"[DNS Records] Failed to create {fqdn}: {resp.get('errors')}", file=sys.stderr)
+        elif action == "update":
+            resp = api_request("PUT", f"/zones/{zone_id}/dns_records/{record_id}", token, record_data)
+            if resp.get("success"):
+                print(f"[DNS Records] Updated: {fqdn}")
+            else:
+                print(f"[DNS Records] Failed to update {fqdn}: {resp.get('errors')}", file=sys.stderr)
+
+    return True
+
+
+def show_status(config, token):
+    """Show current state of tunnel and DNS."""
+    account_id = config["account_id"]
+    tunnel_id = config["tunnel_id"]
+    zone_id = config["zone_id"]
+    zone = config["zone"]
+
+    print("=== Tunnel Ingress (live) ===")
+    ingress = get_current_ingress(account_id, tunnel_id, token)
+    for rule in ingress:
+        hostname = rule.get("hostname", "(catch-all)")
+        service = rule.get("service", "?")
+        print(f"  {hostname:30s} -> {service}")
+
+    print("\n=== DNS CNAME Records ===")
+    records = get_dns_records(zone_id, token)
+    tunnel_target = f"{tunnel_id}.cfargotunnel.com"
+    for name, record in sorted(records.items()):
+        marker = " [tunnel]" if record["content"] == tunnel_target else ""
+        proxied = "proxied" if record["proxied"] else "dns-only"
+        print(f"  {name:30s} -> {record['content'][:50]}  ({proxied}){marker}")
+
+    print(f"\n=== Local Config ({CONFIG_PATH}) ===")
+    for subdomain, target in config["services"].items():
+        fqdn = f"{subdomain}.{zone}"
+        in_dns = fqdn in records
+        in_ingress = any(r.get("hostname") == fqdn for r in ingress)
+        status = []
+        if not in_dns:
+            status.append("MISSING DNS")
+        if not in_ingress:
+            status.append("MISSING INGRESS")
+        if not status:
+            status.append("OK")
+        print(f"  {fqdn:30s} -> {target:35s} [{', '.join(status)}]")
+
+
+def main():
+    dry_run = "--dry-run" in sys.argv
+    status_only = "--status" in sys.argv
+
+    if not CONFIG_PATH.exists():
+        print(f"Error: Config not found at {CONFIG_PATH}", file=sys.stderr)
+        sys.exit(1)
+
+    token = load_token()
+    config = parse_config(CONFIG_PATH)
+
+    required = ["tunnel_id", "zone", "zone_id", "account_id"]
+    for key in required:
+        if key not in config:
+            print(f"Error: Missing '{key}' in config", file=sys.stderr)
+            sys.exit(1)
+
+    if not config["services"]:
+        print("Error: No services defined in config", file=sys.stderr)
+        sys.exit(1)
+
+    if status_only:
+        show_status(config, token)
+        return
+
+    print(f"Syncing {len(config['services'])} services to tunnel {config['tunnel_id'][:8]}...")
+    if dry_run:
+        print("(DRY RUN - no changes will be made)\n")
+
+    # Build and push ingress rules
+    ingress = build_ingress(config["services"], config["zone"])
+    sync_tunnel_config(config["account_id"], config["tunnel_id"], ingress, token, dry_run)
+
+    # Sync DNS records
+    sync_dns_records(
+        config["zone_id"], config["tunnel_id"], config["services"], config["zone"], token, dry_run
+    )
+
+    if not dry_run:
+        print("\nDone. Changes take effect within ~30 seconds.")
+
+
+if __name__ == "__main__":
+    main()

@@ -63,8 +63,7 @@ HISTFILESIZE=20000
 HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 
-{{ if eq .chezmoi.os "linux" -}}
-{{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{ if .is_wsl -}}
 # --- WSL2: GNOME Keyring + dbus ---
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
   eval "$(dbus-launch --sh-syntax)"
@@ -75,7 +74,13 @@ __wezterm_osc7() {
   printf "\033]7;file://%s%s\033\\" "$HOSTNAME" "$PWD"
 }
 PROMPT_COMMAND="__wezterm_osc7${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
-{{   end -}}
+{{ end -}}
+
+{{ if .is_dgx_spark -}}
+# --- DGX Spark: CUDA paths ---
+export CUDA_HOME="/usr/local/cuda"
+export PATH="/usr/local/cuda/bin:$HOME/.cargo/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH:-}"
 {{ end -}}
 
 # --- Starship prompt (if available, overrides PS1) ---

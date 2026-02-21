@@ -1,0 +1,28 @@
+{{ if .is_dgx_spark -}}
+# DGX Spark environment
+# Loaded only on DGX systems (guarded by chezmoi template)
+
+# --- CUDA paths ---
+export CUDA_HOME="/usr/local/cuda"
+export PATH="/usr/local/cuda/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH:-}"
+
+# --- Blackwell SM120 / vLLM optimizations ---
+export TORCH_CUDA_ARCH_LIST="12.1a"
+export TRITON_PTXAS_PATH="/usr/local/cuda/bin/ptxas"
+export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
+export VLLM_USE_FLASHINFER_MXFP4_MOE=1
+export VLLM_FLASHINFER_MOE_BACKEND="latency"
+
+# --- HuggingFace ---
+export HF_HOME="/home/adminuser/models/hf"
+
+# --- Editor (SSH environment, no VS Code) ---
+export EDITOR="nvim"
+
+# --- DGX navigation shortcuts ---
+alias dev='cd ~/dev'
+alias cchome='cd ~/dev/claude-home'
+alias models='cd ~/models'
+alias gh-dir='cd ~/dev/github'
+{{ end -}}

@@ -14,6 +14,9 @@ j() {
     projects) cd ~/projects ;;
     tmp)      cd ~/tmp ;;
     tools)    cd ~/tools ;;
+    dev)      cd ~/dev 2>/dev/null || echo "~/dev not found" ;;
+    models)   cd ~/models 2>/dev/null || echo "~/models not found" ;;
+    github)   cd ~/dev/github 2>/dev/null || echo "~/dev/github not found" ;;
     *)
       echo "Usage: j <target>"
       echo "  ccenter   ~/command-center"
@@ -21,12 +24,15 @@ j() {
       echo "  projects  ~/projects"
       echo "  tmp       ~/tmp"
       echo "  tools     ~/tools"
+      echo "  dev       ~/dev"
+      echo "  models    ~/models"
+      echo "  github    ~/dev/github"
       return 1
       ;;
   esac
 }
 
-_j() { compadd ccenter labs projects tmp tools; }
+_j() { compadd ccenter labs projects tmp tools dev models github; }
 compdef _j j
 
 # Project launchers

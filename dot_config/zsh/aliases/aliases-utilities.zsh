@@ -20,12 +20,30 @@ alias mv='mv -iv'
 alias rm='rm -iv'
 alias mkdir='mkdir -pv'
 
-# List improvements
-alias ll='ls -lah'
-alias la='ls -A'
-alias l='ls -CF'
+# Modern CLI replacements (conditional)
+if command -v lsd &>/dev/null; then
+  alias ls='lsd --icon=always'
+  alias ll='lsd -l --icon=always'
+  alias la='lsd -la --icon=always'
+  alias tree='lsd --tree --icon=always'
+elif command -v eza &>/dev/null; then
+  alias ls='eza --icons'
+  alias ll='eza -l --icons'
+  alias la='eza -la --icons'
+  alias tree='eza --tree --icons'
+else
+  alias ll='ls -lah'
+  alias la='ls -A'
+  alias l='ls -CF'
+fi
+
 alias t='tail -f'
+
+command -v bat &>/dev/null && alias cat='bat'
+command -v batcat &>/dev/null && ! command -v bat &>/dev/null && alias cat='batcat'
+command -v dust &>/dev/null && alias du='dust'
+command -v btop &>/dev/null && alias top='btop'
+command -v nvim &>/dev/null && alias vim='nvim'
 
 # Disk usage
 alias df='df -h'
-alias du='du -sh'

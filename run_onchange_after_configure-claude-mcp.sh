@@ -31,4 +31,12 @@ claude mcp add-json --scope user exa_websearch \
 claude mcp add-json --scope user Lokka \
   "{\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"@merill/lokka\"],\"env\":{\"CLIENT_ID\":\"$LOKKA_CLIENT_ID\",\"CLIENT_SECRET\":\"$LOKKA_CLIENT_SECRET\",\"TENANT_ID\":\"$LOKKA_TENANT_ID\"}}"
 
+# DGX Spark: Additional MCP servers
+if [ -f /etc/dgx-release ]; then
+  if [ -n "${HF_TOKEN:-}" ]; then
+    claude mcp add-json --scope user hf-mcp-server \
+      "{\"type\":\"http\",\"url\":\"https://huggingface.co/mcp\",\"headers\":{\"Authorization\":\"Bearer $HF_TOKEN\"}}"
+  fi
+fi
+
 echo "Claude Code MCP servers configured."

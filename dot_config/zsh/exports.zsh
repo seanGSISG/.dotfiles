@@ -4,9 +4,20 @@
 # --- ZDOTDIR ---
 export ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
 
+# --- SSH stty guard (prevents weird remote terminal settings) ---
+if [[ -n "$SSH_CONNECTION" ]]; then
+  stty() { case "$1" in *:*:*) return 0 ;; *) command stty "$@" ;; esac; }
+fi
+
+# --- Terminal type fallback (Ghostty, Kitty, etc.) ---
+if [[ -n "$TERM" ]] && ! infocmp "$TERM" &>/dev/null 2>&1; then
+  export TERM="xterm-256color"
+fi
+
 # --- PATH Construction ---
 # Single authoritative location - no duplication
-export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:$HOME/.bun/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
+[[ -d /usr/local/go/bin ]] && export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 
 # --- Environment Variables ---
 export EDITOR="${EDITOR:-code}"
@@ -14,6 +25,7 @@ export LANG="${LANG:-en_US.UTF-8}"
 export ENABLE_LSP_TOOLS=1
 export BUN_INSTALL="$HOME/.bun"
 export BAT_THEME="Dracula"
+export UV_LINK_MODE=copy
 
 # --- fd alias (Debian/Ubuntu ships fd as fdfind) ---
 if command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then

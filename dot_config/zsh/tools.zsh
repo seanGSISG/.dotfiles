@@ -23,6 +23,15 @@ if command -v direnv &>/dev/null; then
   eval "$(direnv hook zsh)"
 fi
 
+# --- Cargo/Rust ---
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+
+# --- Atuin (Better shell history) ---
+if command -v atuin &>/dev/null; then
+  eval "$(atuin init zsh)"
+  bindkey '^r' atuin-search  # Force Ctrl-R to Atuin
+fi
+
 # --- Azure CLI (az completion) ---
 if command -v az &>/dev/null; then
   source /etc/bash_completion.d/azure-cli 2>/dev/null

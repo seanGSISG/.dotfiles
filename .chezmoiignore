@@ -34,3 +34,12 @@ AppData
 AppData/**
 packages/winget-packages.txt
 {{ end }}
+
+{{ if not .is_dgx_spark }}
+# Skip DGX-specific files on non-DGX systems
+.config/zsh/dgx.zsh
+.config/zsh/aliases/aliases-dgx.zsh
+.dgxspark
+.dgxspark/**
+bin/cf-sync
+{{ end }}

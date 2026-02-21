@@ -3,13 +3,16 @@
 # ZDOTDIR is set in ~/.zshenv (dot_zshenv)
 #
 # Load order:
-#   1. exports.zsh   - PATH, env vars, history
-#   2. plugins.zsh   - antidote, completion system
-#   3. tools.zsh     - fnm, fzf, zoxide
-#   4. functions.zsh - custom functions, alias help
-#   5. aliases/      - categorized alias files
-#   6. wsl.zsh       - WSL2-specific (conditional)
-#   7. Starship      - prompt (must be last)
+#   1. exports.zsh     - PATH, env vars, history
+#   2. plugins.zsh     - antidote, completion system
+#   3. tools.zsh       - fnm, fzf, zoxide, direnv, atuin, cargo
+#   4. functions.zsh   - custom functions, alias help
+#   5. aliases/        - categorized alias files
+#   6. dgx.zsh         - DGX Spark-specific (conditional)
+#   7. wsl.zsh         - WSL2-specific (conditional)
+#   8. ~/.secrets.env  - Decrypted secrets
+#   9. keybindings.zsh - Terminal keybindings
+#  10. Starship        - prompt (must be last)
 
 # Source modular config files
 source "$ZDOTDIR/exports.zsh"
@@ -22,15 +25,21 @@ for f in "$ZDOTDIR/aliases"/*.zsh; do
   [[ -r "$f" ]] && source "$f"
 done
 
+# DGX Spark-specific integrations (conditional via chezmoi template)
+{{ if .is_dgx_spark -}}
+[[ -f "$ZDOTDIR/dgx.zsh" ]] && source "$ZDOTDIR/dgx.zsh"
+{{ end -}}
+
 # WSL2-specific integrations (conditional via chezmoi template)
-{{ if eq .chezmoi.os "linux" -}}
-{{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{ if .is_wsl -}}
 [[ -f "$ZDOTDIR/wsl.zsh" ]] && source "$ZDOTDIR/wsl.zsh"
-{{   end -}}
 {{ end -}}
 
 # Load secrets from age-encrypted chezmoi-managed file
 [[ -f "$HOME/.secrets.env" ]] && source "$HOME/.secrets.env"
+
+# Terminal keybindings
+[[ -f "$ZDOTDIR/keybindings.zsh" ]] && source "$ZDOTDIR/keybindings.zsh"
 
 # Starship prompt (must be last - it modifies precmd hooks)
 if command -v starship &>/dev/null; then

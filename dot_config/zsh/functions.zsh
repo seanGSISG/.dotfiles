@@ -156,3 +156,47 @@ ccb() {
 
 ccv() { tmux split-window -h "claude --dangerously-skip-permissions $*"; }
 cch() { tmux split-window -v "claude --dangerously-skip-permissions $*"; }
+
+# ============================================
+# Section 7: Archive Extraction
+# ============================================
+
+extract() {
+  if [[ -f "$1" ]]; then
+    case "$1" in
+      *.tar.bz2) tar xjf "$1" ;;
+      *.tar.gz)  tar xzf "$1" ;;
+      *.tar.xz)  tar xJf "$1" ;;
+      *.tar.zst) tar --zstd -xf "$1" ;;
+      *.bz2)     bunzip2 "$1" ;;
+      *.rar)     unrar x "$1" ;;
+      *.gz)      gunzip "$1" ;;
+      *.tar)     tar xf "$1" ;;
+      *.tbz2)    tar xjf "$1" ;;
+      *.tgz)     tar xzf "$1" ;;
+      *.zip)     unzip "$1" ;;
+      *.Z)       uncompress "$1" ;;
+      *.7z)      7z x "$1" ;;
+      *)         echo "'$1' cannot be extracted" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+# ============================================
+# Section 8: Auto-ls After cd
+# ============================================
+
+autoload -U add-zsh-hook
+_auto_ls_after_cd() {
+  [[ -o interactive ]] || return
+  if command -v lsd &>/dev/null; then
+    lsd --icon=always
+  elif command -v eza &>/dev/null; then
+    eza --icons
+  else
+    ls
+  fi
+}
+add-zsh-hook chpwd _auto_ls_after_cd

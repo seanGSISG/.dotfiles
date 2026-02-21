@@ -6,6 +6,7 @@ scan_timeout = 100
 
 # Format string - controls what appears and order
 format = """
+$hostname\
 $directory\
 $git_branch\
 $git_status\
@@ -14,6 +15,14 @@ $nodejs\
 $cmd_duration\
 $line_break\
 $character"""
+
+# ===================================
+# Hostname (shown when SSH'd)
+# ===================================
+[hostname]
+ssh_only = true
+format = '[$hostname]($style) in '
+style = 'bold green'
 
 # ===================================
 # Character (Prompt Symbol)

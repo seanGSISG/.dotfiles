@@ -10,5 +10,14 @@ zsh-users/zsh-autosuggestions
 # History substring search (arrow key navigation)
 zsh-users/zsh-history-substring-search
 
+# Double-ESC to prepend sudo
+ohmyzsh/ohmyzsh path:plugins/sudo
+
+# Colored man pages
+ohmyzsh/ohmyzsh path:plugins/colored-man-pages
+
+# Command-not-found suggestions
+ohmyzsh/ohmyzsh path:plugins/command-not-found
+
 # Real-time syntax highlighting (load last)
 zsh-users/zsh-syntax-highlighting

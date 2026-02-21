@@ -14,3 +14,9 @@ username = '{{ .chezmoi.username }}'
 git_name = "seanGSISG"
 git_email = "sswanson@gsisg.com"
 editor = "code --wait"
+{{- $isDgxSpark := false -}}
+{{- if stat "/etc/dgx-release" -}}
+{{-   $isDgxSpark = true -}}
+{{- end }}
+is_dgx_spark = {{ $isDgxSpark }}
+is_wsl = {{ and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
