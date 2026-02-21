@@ -1,6 +1,8 @@
 # .dotfiles
 
-WSL2 Ubuntu dev environment managed by **chezmoi** with age encryption. Source dir: `~/.dotfiles`.
+Cross-platform dev environment managed by **chezmoi** with age encryption. Supports WSL2 Ubuntu, Windows 11, and DGX Spark (GB10 Blackwell ARM64).
+
+Source dir: `~/.dotfiles` (symlinked to `~/dev/github/.dotfiles` on DGX Spark).
 
 ## Commands
 
@@ -12,61 +14,94 @@ chezmoi diff                   # Preview changes before applying
 chezmoi apply --verbose        # Deploy changes
 chezmoi add <file>             # Track a new file
 chezmoi add --encrypt <file>   # Track with age encryption
+chezmoi data                   # Show template variables (is_dgx_spark, is_wsl, etc.)
+chezmoi execute-template < file.tmpl  # Test template rendering
 
 # Scripts
-./bootstrap.sh                 # Full environment setup (idempotent)
+./bootstrap.sh                 # Full environment setup (idempotent, WSL2/Linux)
+./bootstrap.ps1                # Full environment setup (Windows)
 ./verify.sh                    # Post-install validation (7 sections, 30+ checks)
 ```
 
-## Chezmoi Naming Conventions
+## Multi-Machine Conditional Deployment
 
-Files in this repo use chezmoi's naming scheme. Know these prefixes:
+Template variables in `.chezmoi.toml.tmpl` control per-machine behavior:
+
+| Variable | Detection | Files affected |
+|---|---|---|
+| `is_dgx_spark` | `/etc/dgx-release` exists (via `stat`) | `dgx.zsh`, `aliases-dgx.zsh`, `.dgxspark/`, `bin/cf-sync` |
+| `is_wsl` | `kernel.osrelease` contains "microsoft" | `wsl.zsh` |
+
+**Coarse filter:** `.chezmoiignore` excludes entire files on non-matching machines.
+**Fine filter:** `.tmpl` files use `{{ if .is_dgx_spark }}` / `{{ if .is_wsl }}` for inline conditionals.
+
+## Chezmoi Naming Conventions
 
 | Prefix/suffix | Meaning | Example |
 |---|---|---|
 | `dot_` | Deployed with `.` prefix | `dot_zshrc` → `~/.zshrc` |
-| `private_` | Mode 0600 | `private_dot_ssh/` → `~/.ssh/` |
-| `.tmpl` | Chezmoi template (Go text/template) | `dot_gitconfig.tmpl` |
+| `private_` | Mode 0700 (dirs) / 0600 (files) | `private_dot_dgxspark/` → `~/.dgxspark/` |
+| `executable_` | Sets executable bit | `executable_cf-sync` → `cf-sync` (+x) |
+| `.tmpl` | Chezmoi template (Go text/template) | `dgx.zsh.tmpl` |
 | `encrypted_*.age` | Age-encrypted file | `encrypted_dot_secrets.env.age` |
-| `run_onchange_after_` | Chezmoi script hook | Runs after apply when source changes |
+| `run_once_` | Runs once on first apply | `run_once_create-workspace-dirs.sh` |
+| `run_once_before_` | Runs once, before other scripts | `run_once_before_install-tools.sh.tmpl` |
+| `run_onchange_after_` | Runs after apply when source changes | `run_onchange_after_configure-claude-mcp.sh` |
 
 ## File Structure
 
 ```
-dot_config/zsh/              # Zsh config modules (ZDOTDIR = ~/.config/zsh)
-  dot_zshrc.tmpl             # Main .zshrc (pure sourcer, defines load order)
-  exports.zsh                # PATH, env vars, history (100k lines, dedup)
-  plugins.zsh                # Antidote plugin manager + completion system
-  tools.zsh                  # fnm, fzf, zoxide integrations
-  functions.zsh              # Custom functions (halp, mkcd, reload, cheat, az-*)
-  wsl.zsh.tmpl               # WSL2: GNOME Keyring, dbus, WezTerm OSC 7
-  private_dot_zsh_plugins.txt  # Antidote plugin manifest
-  aliases/                   # One file per category (git, docker, dev, nav, system, utils)
-dot_config/tmux/tmux.conf    # Tmux (TPM plugins, Dracula theme, XDG path)
-dot_config/starship.toml     # Starship prompt (Pure-style theme)
-dot_gitconfig.tmpl           # Git config (uses chezmoi data variables)
-dot_zshenv                   # Sets ZDOTDIR, skips system compinit
-dot_bashrc.tmpl              # Minimal bash fallback (shares alias files with zsh)
+dot_config/zsh/                # Zsh config modules (ZDOTDIR = ~/.config/zsh)
+  dot_zshrc.tmpl               # Main .zshrc (pure sourcer, defines load order)
+  exports.zsh                  # PATH, env vars, history, SSH stty guard, TERM fallback
+  plugins.zsh                  # Antidote plugin manager + completion system
+  tools.zsh                    # fnm, fzf, zoxide, direnv, atuin, cargo
+  functions.zsh                # halp, mkcd, reload, cheat, az-*, extract(), auto-ls
+  keybindings.zsh              # Ctrl/Alt+Arrow, Home/End, word deletion
+  dgx.zsh.tmpl                 # DGX Spark: CUDA, vLLM, HF env vars (conditional)
+  wsl.zsh.tmpl                 # WSL2: GNOME Keyring, dbus, WezTerm OSC 7 (conditional)
+  private_dot_zsh_plugins.txt  # Antidote plugin manifest (sudo, colored-man-pages, etc.)
+  aliases/                     # One file per category
+    aliases-navigation.zsh     # j() workspace jumps (ccenter, labs, dev, models, github)
+    aliases-git.zsh
+    aliases-docker.zsh
+    aliases-dev.zsh
+    aliases-dgx.zsh            # DGX: model serving, GPU, stack management (conditional)
+    aliases-utilities.zsh      # Modern CLI replacements (lsd/eza/bat/dust/btop/nvim)
+    aliases-system.zsh
+dot_config/tmux/tmux.conf      # Tmux (TPM plugins, Dracula theme, XDG path)
+dot_config/starship.toml       # Starship prompt (Pure-style, SSH hostname module)
+dot_gitconfig.tmpl             # Git config (uses chezmoi data variables)
+dot_zshenv                     # Sets ZDOTDIR, skips system compinit
+dot_bashrc.tmpl                # Bash fallback (DGX/WSL conditional blocks)
+bin/executable_cf-sync         # Cloudflare tunnel sync script (DGX only)
+private_dot_dgxspark/          # DGX Spark utilities (DGX only)
+  scripts/lib/executable_dgx.sh  # Detection, preflight, system info
 packages/
-  apt-packages.txt           # APT manifest (34 packages, documented)
-  uv-tools.txt               # Python tools via uv (basedpyright, pre-commit, etc.)
-  binary-installs.txt        # Reference for manually-installed binaries
-private_dot_ssh/             # SSH keys (age-encrypted)
+  apt-packages.txt             # APT manifest (34 packages, documented)
+  uv-tools.txt                 # Python tools via uv
+  binary-installs.txt          # Reference for manually-installed binaries
+private_dot_ssh/               # SSH keys (age-encrypted)
 encrypted_dot_secrets.env.age  # Secrets (age-encrypted → ~/.secrets.env)
+run_once_before_install-tools.sh.tmpl  # Auto-install CLI tools (starship, zoxide, etc.)
+run_once_create-workspace-dirs.sh      # Create ~/projects, ~/labs, ~/tools, ~/tmp
+run_onchange_after_configure-claude-mcp.sh  # Configure Claude MCP servers
 ```
 
 ## Zsh Load Order
 
 The `.zshrc` sources files in this exact order — order matters:
 
-1. `exports.zsh` — PATH, env vars, history config
+1. `exports.zsh` — PATH, env vars, history config, SSH stty guard, TERM fallback
 2. `plugins.zsh` — Antidote + compinit (24h cache)
-3. `tools.zsh` — fnm, fzf, zoxide
-4. `functions.zsh` — Shell functions and alias-help system
-5. `aliases/*.zsh` — All alias files (loop)
-6. `wsl.zsh` — WSL2-specific (conditional via chezmoi template)
-7. `~/.secrets.env` — Decrypted secrets
-8. Starship init — Prompt (must be last, modifies precmd)
+3. `tools.zsh` — fnm, fzf, zoxide, direnv, atuin, cargo
+4. `functions.zsh` — Shell functions, alias-help, extract(), auto-ls chpwd hook
+5. `aliases/*.zsh` — All alias files (loop, includes DGX aliases on Spark)
+6. `dgx.zsh` — DGX Spark env (conditional: `{{ if .is_dgx_spark }}`)
+7. `wsl.zsh` — WSL2 integrations (conditional: `{{ if .is_wsl }}`)
+8. `~/.secrets.env` — Decrypted secrets
+9. `keybindings.zsh` — Terminal keybindings (emacs mode, word movement)
+10. Starship init — Prompt (must be last, modifies precmd)
 
 ## Conventions
 
@@ -74,13 +109,15 @@ The `.zshrc` sources files in this exact order — order matters:
 - **Shell scripts:** Use `set -euo pipefail` where appropriate. Color-coded output (check bootstrap.sh patterns).
 - **New aliases:** Add to the appropriate category file in `dot_config/zsh/aliases/`. Each alias should have an inline comment.
 - **New tools:** Add integration to `tools.zsh` with graceful degradation (`command -v` check). Add package to the relevant manifest in `packages/`.
-- **Templates:** Use chezmoi template syntax (`{{ .chezmoi.os }}`, `{{ .variable }}`) for machine-specific behavior. Test with `chezmoi execute-template`.
+- **Templates:** Use chezmoi template syntax (`{{ .is_dgx_spark }}`, `{{ .is_wsl }}`, `{{ .chezmoi.os }}`) for machine-specific behavior. Test with `chezmoi execute-template`.
+- **DGX-only files:** Use `.chezmoiignore` for coarse exclusion. Use `.tmpl` with `{{ if .is_dgx_spark }}` for inline conditionals.
+- **Modern CLI aliases:** Use `command -v` guards so aliases degrade gracefully on machines without the tools.
 
 ## Important Warnings
 
 - **Never edit deployed files** (`~/.zshrc`, `~/.gitconfig`, etc.) — changes get overwritten by `chezmoi apply`. Always edit the source in `~/.dotfiles/` via `chezmoi edit`.
 - **Never commit plaintext secrets.** Use `chezmoi add --encrypt` for sensitive files. Pre-commit hooks (detect-secrets) scan for leaks.
-- **`.chezmoiignore` matters** — Files listed there (README.md, packages/, bootstrap.sh, verify.sh, .planning/) are NOT deployed by chezmoi. They exist only in the repo.
-- **ZDOTDIR architecture** — `~/.zshenv` sets `ZDOTDIR=~/.config/zsh` so all zsh config lives under XDG. The root `~/.zshrc` is a stub.
+- **`.chezmoiignore` matters** — Files listed there (README.md, packages/, bootstrap.sh, etc.) are NOT deployed by chezmoi. DGX/WSL conditional blocks exclude platform-specific files.
+- **ZDOTDIR architecture** — `~/.zshenv` sets `ZDOTDIR=~/.config/zsh` so all zsh config lives under XDG.
 - **Age encryption key** — Lives at `~/.config/age/keys.txt`, sourced from Bitwarden. Never committed to git.
 - **`skip_global_compinit=1`** — Set in `.zshenv` to prevent system compinit. Custom compinit runs in `plugins.zsh` with caching.
