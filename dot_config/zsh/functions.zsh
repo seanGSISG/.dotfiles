@@ -68,6 +68,7 @@ alias-help() {
   dashes=$(printf '%*s' "$(( total_width - 17 ))" '' | tr ' ' '─')
   printf " ${bold}${yellow}QUICK REFERENCE${reset} ${dim}%s${reset}\n\n" "$dashes"
   printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "j <name>" "Jump to workspace (ccenter, labs, ...)"
+  printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "jc <name>" "Jump + launch claude session"
   printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "z <query>" "Jump to directory (zoxide)"
   printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "Ctrl+R" "Fuzzy search history (fzf)"
   printf "   ${cyan}%-16s${reset} ${dim}%s${reset}\n" "Ctrl+T" "Fuzzy find files (fzf)"

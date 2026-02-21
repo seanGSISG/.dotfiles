@@ -2,7 +2,7 @@
 
 Cross-platform dev environment managed by **chezmoi** with age encryption. Supports WSL2 Ubuntu, Windows 11, and DGX Spark (GB10 Blackwell ARM64).
 
-Source dir: `~/.dotfiles` (symlinked to `~/dev/github/.dotfiles` on DGX Spark).
+Source dir: `~/.dotfiles` (symlinked to `~/projects/.dotfiles` on DGX Spark).
 
 ## Commands
 
@@ -62,7 +62,7 @@ dot_config/zsh/                # Zsh config modules (ZDOTDIR = ~/.config/zsh)
   wsl.zsh.tmpl                 # WSL2: GNOME Keyring, dbus, WezTerm OSC 7 (conditional)
   private_dot_zsh_plugins.txt  # Antidote plugin manifest (sudo, colored-man-pages, etc.)
   aliases/                     # One file per category
-    aliases-navigation.zsh     # j() workspace jumps (ccenter, labs, dev, models, github)
+    aliases-navigation.zsh     # j()/jc() workspace jumps (ccenter, projects, labs, models, dotfiles, config)
     aliases-git.zsh
     aliases-docker.zsh
     aliases-dev.zsh
