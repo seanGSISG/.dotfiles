@@ -1,16 +1,19 @@
 # dotfiles
 
-WSL2 Ubuntu and Windows 11 dev environment managed by chezmoi. One command sets up everything.
+Cross-platform dev environment managed by chezmoi. Supports **WSL2 Ubuntu**, **Windows 11**, and **DGX Spark** (GB10 Blackwell ARM64). One command sets up everything.
 
-> **Windows Note:** This repo includes PowerShell 7 configs and auto-installs CaskaydiaCove Nerd Font for Windows Terminal. See `packages/winget-packages.txt` for the full Windows toolchain.
+> **Windows Note:** Includes PowerShell 7 configs and auto-installs CaskaydiaCove Nerd Font. See `packages/winget-packages.txt`.
+> **DGX Spark Note:** Includes CUDA/vLLM environment, model serving aliases, and GPU tooling. DGX-specific files deploy only on DGX systems (detected via `/etc/dgx-release`).
 
 ## What Gets Installed
 
 - **Shell:** zsh (default) with antidote plugins, Starship prompt, 100k history with dedup
-- **Tools:** fnm (Node.js), fzf (fuzzy finder), zoxide (smart cd), uv (Python), bun (JS runtime)
-- **Configs:** git (templated), tmux (TPM, XDG paths), Starship (Pure-style theme)
+- **Tools:** fzf, zoxide, atuin (shell history), uv (Python), fnm (Node.js), bun (JS runtime)
+- **Modern CLI:** lsd/eza (ls), bat (cat), dust (du), btop (top), nvim (vim) — conditional aliases
+- **Configs:** git (templated), tmux (TPM, XDG paths), Starship (Pure-style, SSH hostname)
 - **Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv
 - **System:** GitHub CLI, PowerShell, age encryption, 34 curated apt packages
+- **DGX Spark:** CUDA paths, vLLM/Blackwell env vars, model serving aliases, cf-sync, GPU monitoring
 
 ## Quick Start
 
@@ -77,26 +80,46 @@ chezmoi apply --verbose
 
 On a new machine, retrieve the age key from Bitwarden and save to `~/.config/age/keys.txt` before running `chezmoi apply` to decrypt secrets.
 
+## Multi-Machine Support
+
+Chezmoi template variables control what deploys where:
+
+| Variable | Detection | Effect |
+|---|---|---|
+| `is_dgx_spark` | `/etc/dgx-release` exists | Deploys CUDA env, model aliases, dgx.sh, cf-sync |
+| `is_wsl` | `kernel.osrelease` contains "microsoft" | Deploys GNOME Keyring, dbus, WezTerm OSC 7 |
+
+DGX-specific files are excluded via `.chezmoiignore` on non-DGX systems. WSL-specific files are excluded on non-WSL systems. General improvements (keybindings, modern CLI aliases, extract, atuin) deploy everywhere.
+
+### First Apply on a New Machine
+
+The `run_once_before_install-tools.sh` script auto-installs CLI tools (starship, zoxide, eza, bat, atuin) on first `chezmoi apply`. The `run_once_create-workspace-dirs.sh` script creates standard workspace directories (`~/projects`, `~/labs`, `~/tools`, `~/tmp`).
+
 ## Shell Configuration
 
 Zsh is the primary shell with a modular config structure:
 
 ```
 ~/.config/zsh/
-├── exports.zsh          # PATH, env vars, history settings
+├── exports.zsh          # PATH, env vars, history, SSH stty guard
 ├── plugins.zsh          # antidote + completion system
-├── tools.zsh            # fnm, fzf, zoxide integrations
-├── wsl.zsh              # GNOME Keyring, dbus, WezTerm OSC 7
-├── functions.zsh        # alias-help system, reload, mkcd
+├── tools.zsh            # fnm, fzf, zoxide, direnv, atuin, cargo
+├── functions.zsh        # alias-help, mkcd, extract(), auto-ls
+├── keybindings.zsh      # Ctrl/Alt+Arrow, Home/End, word deletion
+├── dgx.zsh              # DGX Spark: CUDA, vLLM, HF env (conditional)
+├── wsl.zsh              # WSL2: GNOME Keyring, dbus, WezTerm (conditional)
 ├── .zsh_plugins.txt     # antidote plugin list
 └── aliases/
-    ├── aliases-navigation.zsh
+    ├── aliases-navigation.zsh   # j() workspace jumps, cd shortcuts
     ├── aliases-git.zsh
     ├── aliases-docker.zsh
     ├── aliases-dev.zsh
-    ├── aliases-utilities.zsh
+    ├── aliases-dgx.zsh         # DGX: model serving, GPU monitoring (conditional)
+    ├── aliases-utilities.zsh    # lsd/eza/bat/dust/btop conditional replacements
     └── aliases-system.zsh
 ```
+
+Load order: exports → plugins → tools → functions → aliases → dgx (conditional) → wsl (conditional) → secrets → keybindings → Starship.
 
 `.zshrc` is a pure sourcer — it only sources these files. Run `halp` or `?` for categorized alias help.
 
@@ -109,16 +132,17 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 ├── bootstrap.sh                   # Idempotent installer script (WSL2/Linux)
 ├── bootstrap.ps1                  # Idempotent installer script (Windows 11)
 ├── verify.sh                      # Post-install environment validation
-├── run_once_install-nerdfonts.ps1.tmpl  # Auto-install CaskaydiaCove Nerd Font (Windows)
-├── dot_zshrc.tmpl                 # .zshrc template
-├── dot_bashrc.tmpl                # .bashrc template
-├── dot_profile                    # .profile
-├── dot_gitconfig.tmpl             # .gitconfig template
+├── run_once_before_install-tools.sh.tmpl  # Auto-install CLI tools (Linux)
+├── run_once_create-workspace-dirs.sh     # Create ~/projects, ~/labs, etc.
+├── run_once_install-nerdfonts.ps1.tmpl   # Auto-install Nerd Font (Windows)
+├── dot_bashrc.tmpl                # .bashrc template (DGX/WSL conditional)
 ├── dot_config/
-│   ├── starship.toml              # Starship prompt config
+│   ├── starship.toml              # Starship prompt (SSH hostname support)
 │   ├── tmux/tmux.conf             # tmux config (XDG path)
-│   ├── zsh/                       # All zsh config modules + aliases
+│   ├── zsh/                       # Modular zsh config + aliases
 │   └── powershell/                # PowerShell 7 config (Windows)
+├── bin/executable_cf-sync         # Cloudflare tunnel sync (DGX only)
+├── private_dot_dgxspark/          # DGX Spark utilities (DGX only)
 ├── Documents/PowerShell/          # PowerShell profile (Windows)
 ├── AppData/                       # Windows Terminal settings (Windows)
 ├── dot_ssh/                       # SSH keys (age-encrypted)
