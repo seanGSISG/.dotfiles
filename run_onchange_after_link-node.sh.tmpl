@@ -1,0 +1,32 @@
+#!/bin/bash
+# Symlink fnm-managed node/npm/npx into /usr/local/bin so non-interactive
+# processes (Claude Code subagents, cron, systemd) can find them.
+# run_onchange_after_ re-runs whenever this script's content changes.
+
+set -euo pipefail
+
+{{ if eq .chezmoi.os "linux" -}}
+
+FNM_NODE="$HOME/.local/share/fnm/aliases/default/bin"
+
+if [ ! -d "$FNM_NODE" ]; then
+  echo "fnm default alias not set — skipping node symlinks"
+  exit 0
+fi
+
+for bin in node npm npx; do
+  src="$FNM_NODE/$bin"
+  dest="/usr/local/bin/$bin"
+  if [ -f "$src" ]; then
+    if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+      echo "$bin: symlink already correct"
+    else
+      echo "$bin: linking $dest → $src"
+      sudo ln -sf "$src" "$dest"
+    fi
+  fi
+done
+
+echo "Node symlinks verified."
+
+{{ end -}}

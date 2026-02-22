@@ -31,6 +31,12 @@ if ! command -v starship &>/dev/null; then
   rm -f /tmp/starship-install.sh
 fi
 
+# --- fnm (Fast Node Manager, installs to ~/.local/share/fnm/) ---
+if ! command -v fnm &>/dev/null && [ ! -f "$HOME/.local/share/fnm/fnm" ]; then
+  echo "Installing fnm..."
+  curl -fsSL https://fnm.vercel.app/install | bash
+fi
+
 # --- Atuin (installs to ~/.atuin/bin/) ---
 if ! command -v atuin &>/dev/null && [ ! -f "$HOME/.atuin/bin/atuin" ]; then
   echo "Installing atuin..."
