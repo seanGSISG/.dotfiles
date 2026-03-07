@@ -5,6 +5,11 @@
 set -euo pipefail
 
 #===============================================================================
+# PATH (match exports.zsh so we can find tools in custom locations)
+#===============================================================================
+export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.atuin/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
+
+#===============================================================================
 # Colors and Formatting
 #===============================================================================
 

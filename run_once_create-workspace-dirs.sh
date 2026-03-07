@@ -7,6 +7,7 @@ dirs=(
   "$HOME/labs"
   "$HOME/tools"
   "$HOME/tmp"
+  "$HOME/command-center"
 )
 
 for d in "${dirs[@]}"; do

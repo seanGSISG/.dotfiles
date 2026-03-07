@@ -616,7 +616,7 @@ install_opencode() {
   fi
 
   log_info "Installing OpenCode via official installer..."
-  if curl -fsSL https://opencode.ai/install | bash </dev/null >/dev/null 2>&1; then
+  if curl -fsSL https://opencode.ai/install -o /tmp/opencode-install.sh && bash /tmp/opencode-install.sh </dev/null 2>&1 && rm -f /tmp/opencode-install.sh; then
     log_success "OpenCode installed"
     INSTALLED+=("OpenCode")
   else
