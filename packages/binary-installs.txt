@@ -67,6 +67,16 @@ yq|https://github.com/mikefarah/yq/releases|latest|binary
 # YAML/JSON/XML processor (like jq for YAML)
 # install: download binary from GitHub releases to ~/.local/bin/
 
+# === Go Toolchain ===
+
+go|https://go.dev/dl/|latest|binary
+# Go programming language — installed to /usr/local/go (requires sudo)
+# post-install: PATH configured in exports.zsh (conditional on /usr/local/go/bin existing)
+
+golangci-lint|https://github.com/golangci/golangci-lint|latest|script
+# Go linter aggregator — installed to ~/go/bin via official install script
+# post-install: PATH configured in exports.zsh via $GOPATH/bin
+
 # === Developer Tools ===
 
 claude-code|npm:@anthropic-ai/claude-code|latest|npm

@@ -103,5 +103,5 @@ compdef _j_complete jc
 
 # ── Project launchers ─────────────────────────────────────────
 prefect() {
-  cd ~/projects/prefect-antig && uv sync && source .venv/bin/activate && claude --dangerously-skip-permissions
+  cd ~/projects/prefect-antig && uv sync --extra dev && source .venv/bin/activate && claude --dangerously-skip-permissions
 }

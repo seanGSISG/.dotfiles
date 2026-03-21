@@ -43,6 +43,26 @@ if ! command -v atuin &>/dev/null && [ ! -f "$HOME/.atuin/bin/atuin" ]; then
   curl -sSf https://setup.atuin.sh | bash
 fi
 
+# --- Go (installs to /usr/local/go) ---
+if ! command -v go &>/dev/null; then
+  echo "Installing Go..."
+  GO_VERSION=$(curl -sL 'https://go.dev/VERSION?m=text' | head -1)
+  if [ -n "$GO_VERSION" ]; then
+    curl -fsSL "https://go.dev/dl/${GO_VERSION}.linux-amd64.tar.gz" -o /tmp/go.tar.gz
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf /tmp/go.tar.gz
+    rm -f /tmp/go.tar.gz
+    export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
+  fi
+fi
+
+# --- golangci-lint (installs to ~/go/bin) ---
+if ! command -v golangci-lint &>/dev/null && command -v go &>/dev/null; then
+  echo "Installing golangci-lint..."
+  mkdir -p "$HOME/go/bin"
+  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b "$HOME/go/bin"
+fi
+
 echo "CLI tools installed."
 
 {{ end -}}

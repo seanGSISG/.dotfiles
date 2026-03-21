@@ -282,6 +282,12 @@ install_binary_tools() {
 
   # age (encryption tool)
   install_age
+
+  # Go toolchain
+  install_go
+
+  # golangci-lint (Go linter)
+  install_golangci_lint
 }
 
 install_starship() {
@@ -382,6 +388,69 @@ install_bun() {
   else
     log_error "bun installation failed"
     FAILED_STEPS+=("bun")
+    return 1
+  fi
+}
+
+install_go() {
+  if command -v go &>/dev/null; then
+    log_skip "Go already installed ($(go version | awk '{print $3}'))"
+    SKIPPED+=("Go")
+    return 0
+  fi
+
+  log_info "Installing Go..."
+
+  # Fetch latest version
+  local go_version
+  go_version=$(curl -sL 'https://go.dev/VERSION?m=text' | head -1)
+
+  if [ -z "$go_version" ]; then
+    log_error "Failed to determine latest Go version"
+    FAILED_STEPS+=("Go")
+    return 1
+  fi
+
+  local go_url="https://go.dev/dl/${go_version}.linux-amd64.tar.gz"
+
+  if curl -fsSL "$go_url" -o /tmp/go.tar.gz && \
+     sudo rm -rf /usr/local/go && \
+     sudo tar -C /usr/local -xzf /tmp/go.tar.gz; then
+    rm -f /tmp/go.tar.gz
+    export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
+    log_success "Go installed ($go_version)"
+    INSTALLED+=("Go $go_version")
+  else
+    rm -f /tmp/go.tar.gz
+    log_error "Go installation failed"
+    FAILED_STEPS+=("Go")
+    return 1
+  fi
+}
+
+install_golangci_lint() {
+  if command -v golangci-lint &>/dev/null; then
+    log_skip "golangci-lint already installed"
+    SKIPPED+=("golangci-lint")
+    return 0
+  fi
+
+  # Requires Go to be installed (for GOPATH/bin)
+  if ! command -v go &>/dev/null; then
+    log_error "Go not found - golangci-lint installation skipped"
+    FAILED_STEPS+=("golangci-lint (Go required)")
+    return 1
+  fi
+
+  log_info "Installing golangci-lint..."
+  mkdir -p "$HOME/go/bin"
+
+  if curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b "$HOME/go/bin" >/dev/null 2>&1; then
+    log_success "golangci-lint installed"
+    INSTALLED+=("golangci-lint")
+  else
+    log_error "golangci-lint installation failed"
+    FAILED_STEPS+=("golangci-lint")
     return 1
   fi
 }
