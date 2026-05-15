@@ -8,13 +8,10 @@ case $- in
     *) return;;
 esac
 
-# --- Colored banner: hint to use zsh ---
-if [ -t 1 ]; then
-  echo -e "\033[1;33m+------------------------------------------+\033[0m"
-  echo -e "\033[1;33m|  Bash fallback - limited environment     |\033[0m"
-  echo -e "\033[1;33m|  Run 'zsh' for full dev setup            |\033[0m"
-  echo -e "\033[1;33m+------------------------------------------+\033[0m"
-  echo ""
+# --- Auto-switch to zsh if available ---
+if [ -z "$ZSH_SWITCHOVER" ] && command -v zsh &>/dev/null; then
+  export ZSH_SWITCHOVER=1
+  exec zsh -l
 fi
 
 # --- PATH ---
@@ -46,13 +43,15 @@ if command -v zoxide &>/dev/null; then
   eval "$(zoxide init bash)"
 fi
 
-# --- Source shared alias files ---
+# --- Source shared alias files (stub zsh-only builtins for bash compat) ---
+compdef() { :; }
+autoload() { :; }
+add-zsh-hook() { :; }
 for f in "$HOME/.config/zsh/aliases"/*.zsh; do
   [ -r "$f" ] && source "$f"
 done
-
-# --- Source shared functions ---
 [ -f "$HOME/.config/zsh/functions.zsh" ] && source "$HOME/.config/zsh/functions.zsh"
+unset -f compdef autoload add-zsh-hook
 
 # --- Bash-specific prompt ---
 PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
