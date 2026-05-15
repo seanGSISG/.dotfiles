@@ -32,3 +32,6 @@ alias nrb='npm run build'
 alias nrt='npm run test'
 alias br='bun run'
 alias bi='bun install'
+
+# Claude Code
+alias ccdc='claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official'

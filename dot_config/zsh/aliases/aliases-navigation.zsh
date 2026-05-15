@@ -18,6 +18,7 @@ typeset -A _jump_targets=(
   tools     "$HOME/tools"
   dotfiles  "$HOME/projects/.dotfiles"
   config    "$HOME/.config"
+  vault     "$HOME/Vaults/MyVault"
 )
 
 # ── j() — jump to workspace ──────────────────────────────────
