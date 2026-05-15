@@ -26,6 +26,7 @@ export ENABLE_LSP_TOOLS=1
 export BUN_INSTALL="$HOME/.bun"
 export BAT_THEME="Dracula"
 export UV_LINK_MODE=copy
+export HONCHO_PEER_NAME="$USER"
 
 # --- fd alias (Debian/Ubuntu ships fd as fdfind) ---
 if command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then
