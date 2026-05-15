@@ -17,6 +17,12 @@ command -v eza &>/dev/null     || NEED_APT+=(eza)
 # bat ships as 'batcat' on Debian/Ubuntu
 command -v bat &>/dev/null || command -v batcat &>/dev/null || NEED_APT+=(bat)
 
+# Remove apt fzf if installed (too old, need 0.48+ for --zsh/--bash flags)
+if dpkg -l fzf &>/dev/null 2>&1; then
+  echo "Removing apt fzf (too old)..."
+  sudo apt-get remove -y -qq fzf
+fi
+
 if [ ${#NEED_APT[@]} -gt 0 ]; then
   echo "Installing via apt: ${NEED_APT[*]}"
   sudo apt-get update -qq
@@ -35,6 +41,15 @@ fi
 if ! command -v fnm &>/dev/null && [ ! -f "$HOME/.local/share/fnm/fnm" ]; then
   echo "Installing fnm..."
   curl -fsSL https://fnm.vercel.app/install | bash
+fi
+
+# --- fzf (GitHub binary, apt version is too old) ---
+FZF_VERSION="0.70.0"
+if ! fzf --version 2>/dev/null | grep -q "$FZF_VERSION"; then
+  echo "Installing fzf $FZF_VERSION..."
+  ARCH=$(dpkg --print-architecture)
+  curl -sL "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${ARCH}.tar.gz" | tar xz -C /tmp
+  sudo mv /tmp/fzf /usr/local/bin/fzf
 fi
 
 # --- Atuin (installs to ~/.atuin/bin/) ---
