@@ -65,12 +65,17 @@ if [ ! -x "$HOME/.local/node/bin/node" ]; then
 fi
 
 # --- fzf (GitHub binary, apt version is too old) ---
+# Installs to ~/.local/bin, not /usr/local/bin: exports.zsh puts ~/.local/bin
+# ahead of both ~/.fzf/bin (the old git-clone install) and /usr/local/bin, so a
+# /usr/local copy is silently shadowed and the version check never converges.
+# Staying user-local also drops the only sudo call in this section.
 FZF_VERSION="0.70.0"
 if ! fzf --version 2>/dev/null | grep -q "$FZF_VERSION"; then
   echo "Installing fzf $FZF_VERSION..."
   ARCH=$(dpkg --print-architecture)
   curl -sL "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${ARCH}.tar.gz" | tar xz -C /tmp
-  sudo mv /tmp/fzf /usr/local/bin/fzf
+  mkdir -p "$HOME/.local/bin"
+  mv /tmp/fzf "$HOME/.local/bin/fzf"
 fi
 
 # --- Atuin (installs to ~/.atuin/bin/) ---
