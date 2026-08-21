@@ -19,6 +19,8 @@ fi
 export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.atuin/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
 [[ -d /usr/local/go/bin ]] && export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 [[ -d "$HOME/.kimi-code/bin" ]] && export PATH="$HOME/.kimi-code/bin:$PATH"
+[[ -d "$HOME/.claude/bin" ]] && export PATH="$HOME/.claude/bin:$PATH"   # CCG multi-model wrapper
+[[ -d "$HOME/.grok/bin" ]] && export PATH="$HOME/.grok/bin:$PATH"
 
 # --- Environment Variables ---
 export EDITOR="${EDITOR:-code}"

@@ -29,6 +29,9 @@ if command -v atuin &>/dev/null; then
   bindkey '^r' atuin-search  # Force Ctrl-R to Atuin
 fi
 
+# --- Bun (completions; PATH is set in exports.zsh) ---
+[[ -s "$HOME/.bun/_bun" ]] && source "$HOME/.bun/_bun"
+
 # --- Azure CLI (az completion) ---
 if command -v az &>/dev/null; then
   source /etc/bash_completion.d/azure-cli 2>/dev/null

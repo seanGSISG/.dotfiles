@@ -5,6 +5,14 @@
 # --- WSLg display for GUI apps ---
 export DISPLAY=:0
 
+# --- Zed under WSLg ---
+# Zed's GPU detection fails on WSLg's emulated device, and it picks the Wayland
+# backend by default, which renders a blank window. Force software GPU and X11.
+if command -v zed &>/dev/null; then
+  export ZED_ALLOW_EMULATED_GPU=1
+  alias zed='WAYLAND_DISPLAY= zed'
+fi
+
 # --- GNOME Keyring + dbus ---
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
   eval "$(dbus-launch --sh-syntax)"

@@ -22,6 +22,11 @@ for _dir in $fpath; do
 done
 unset _dir _file
 
+# Third-party completion dirs must join fpath BEFORE compinit runs.
+# The grok installer appends its own `compinit -C` to ~/.zshrc; that second
+# compinit is what breaks completions, so we take the fpath entry only.
+[[ -d "$HOME/.grok/completions/zsh" ]] && fpath=("$HOME/.grok/completions/zsh" $fpath)
+
 # Load completion system (call once only)
 autoload -Uz compinit
 
