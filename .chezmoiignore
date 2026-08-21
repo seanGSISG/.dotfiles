@@ -12,6 +12,49 @@ packages/
 bootstrap.sh
 verify.sh
 
+# --- Installer-owned, deliberately untracked ---
+# Most of ~/.claude and ~/.codex is installed or written at runtime by other
+# tools. Tracking it would make chezmoi and those installers fight: apply would
+# revert their updates, and their updates would read as permanent chezmoi drift.
+# Only the hand-written files are in the source tree.
+#
+# GSD installer (see ~/.claude/gsd-file-manifest.json) owns these:
+.claude/agents/gsd-*
+.claude/agents/gem-*
+.claude/hooks/gsd-*
+.claude/hooks/lib
+.claude/hooks/package.json
+.claude/hooks/managed-hooks-registry.cjs
+.claude/hooks/context-mode-cache-heal.mjs
+# Runtime state, caches, and history:
+.claude/projects
+.claude/plugins
+.claude/cache
+.claude/archives
+.claude/backup
+.claude/backups
+.claude/debug
+.claude/jobs
+.claude/ide
+.claude/paste-cache
+.claude/file-history
+.claude/daemon*
+.claude/history.jsonl
+.claude/*-cache.json
+.claude/gsd-*
+# 5.3 MB binary; recorded in packages/binary-installs.txt instead:
+.claude/bin
+# Credentials and runtime state:
+# GSD also generates the codex agent TOMLs and its update hook
+# (gsd-core/bin/lib/codex-agent-toml.cjs in its manifest):
+.codex/agents/gem-*
+.codex/hooks/gsd-*
+.codex/auth.json
+.codex/history.jsonl
+.codex/cache
+.codex/*.sqlite
+.config/gh/hosts.yml
+
 # --- OS-Conditional Ignores ---
 # chezmoi evaluates these as Go templates
 
