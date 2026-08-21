@@ -1,5 +1,8 @@
 README.md
 LICENSE
+# Repo docs, not deploy targets. Leading slash anchors to the source root so the
+# intentional per-workspace copies (labs/, projects/, tools/, tmp/) still deploy.
+/CLAUDE.md
 .pre-commit-config.yaml
 .secrets.baseline
 .secrets.env.example
