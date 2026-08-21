@@ -23,7 +23,6 @@ $env:FZF_DEFAULT_OPTS = '--height 40% --layout=reverse --border --info=inline'
 # Single authoritative location - no duplication
 $PathEntries = @(
     "$HOME\.local\bin"
-    "$env:APPDATA\fnm"
     "$HOME\.bun\bin"
     "$HOME\.opencode\bin"
 )

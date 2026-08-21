@@ -16,8 +16,9 @@ fi
 
 # --- PATH Construction ---
 # Single authoritative location - no duplication
-export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/bin:$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.atuin/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.atuin/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
 [[ -d /usr/local/go/bin ]] && export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
+[[ -d "$HOME/.kimi-code/bin" ]] && export PATH="$HOME/.kimi-code/bin:$PATH"
 
 # --- Environment Variables ---
 export EDITOR="${EDITOR:-code}"

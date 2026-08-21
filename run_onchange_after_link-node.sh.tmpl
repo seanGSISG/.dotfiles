@@ -1,32 +1,40 @@
 #!/bin/bash
-# Symlink fnm-managed node/npm/npx into /usr/local/bin so non-interactive
-# processes (Claude Code subagents, cron, systemd) can find them.
+# Symlink the Node.js install (~/.local/node) into ~/.local/bin so every shell —
+# interactive or not (Claude Code subagents, cron, systemd) — finds node/npm/npx
+# without any version-manager shell hook. Also pins npm's global prefix to
+# ~/.local so `npm i -g` needs no sudo and survives Node upgrades.
 # run_onchange_after_ re-runs whenever this script's content changes.
 
 set -euo pipefail
 
 {{ if eq .chezmoi.os "linux" -}}
 
-FNM_NODE="$HOME/.local/share/fnm/aliases/default/bin"
+NODE_BIN="$HOME/.local/node/bin"
 
-if [ ! -d "$FNM_NODE" ]; then
-  echo "fnm default alias not set — skipping node symlinks"
+if [ ! -x "$NODE_BIN/node" ]; then
+  echo "~/.local/node not installed yet — skipping node symlinks"
   exit 0
 fi
 
-for bin in node npm npx; do
-  src="$FNM_NODE/$bin"
-  dest="/usr/local/bin/$bin"
-  if [ -f "$src" ]; then
-    if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
-      echo "$bin: symlink already correct"
-    else
-      echo "$bin: linking $dest → $src"
-      sudo ln -sf "$src" "$dest"
-    fi
+mkdir -p "$HOME/.local/bin"
+for bin in node npm npx corepack; do
+  src="$NODE_BIN/$bin"
+  dest="$HOME/.local/bin/$bin"
+  [ -e "$src" ] || continue
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+    echo "$bin: symlink already correct"
+  else
+    echo "$bin: linking $dest -> $src"
+    ln -sfn "$src" "$dest"
   fi
 done
 
-echo "Node symlinks verified."
+# Pin npm's global prefix to ~/.local (user-writable, survives Node upgrades)
+if [ "$("$NODE_BIN/npm" config get prefix 2>/dev/null)" != "$HOME/.local" ]; then
+  "$NODE_BIN/npm" config set prefix "$HOME/.local"
+  echo "npm prefix -> $HOME/.local"
+fi
+
+echo "Node symlinks + npm prefix verified."
 
 {{ end -}}

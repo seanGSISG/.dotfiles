@@ -37,10 +37,31 @@ if ! command -v starship &>/dev/null; then
   rm -f /tmp/starship-install.sh
 fi
 
-# --- fnm (Fast Node Manager, installs to ~/.local/share/fnm/) ---
-if ! command -v fnm &>/dev/null && [ ! -f "$HOME/.local/share/fnm/fnm" ]; then
-  echo "Installing fnm..."
-  curl -fsSL https://fnm.vercel.app/install | bash
+# --- Node.js 24 LTS (official tarball -> ~/.local/node; no version manager) ---
+if [ ! -x "$HOME/.local/node/bin/node" ]; then
+  echo "Installing Node.js 24 LTS..."
+  case "$(dpkg --print-architecture)" in
+    amd64) NODE_ARCH="x64" ;;
+    arm64) NODE_ARCH="arm64" ;;
+    armhf) NODE_ARCH="armv7l" ;;
+    *)     NODE_ARCH="" ;;
+  esac
+  if [ -n "$NODE_ARCH" ]; then
+    NODE_BASE="https://nodejs.org/dist/latest-v24.x"
+    NODE_SHA=$(curl -fsSL "$NODE_BASE/SHASUMS256.txt" | grep "linux-${NODE_ARCH}.tar.xz$" || true)
+    NODE_TAR=$(printf '%s' "$NODE_SHA" | awk '{print $2}')
+    if [ -n "$NODE_TAR" ]; then
+      curl -fsSL "$NODE_BASE/$NODE_TAR" -o /tmp/node.tar.xz
+      if printf '%s  /tmp/node.tar.xz\n' "$(printf '%s' "$NODE_SHA" | awk '{print $1}')" | sha256sum -c - >/dev/null 2>&1; then
+        mkdir -p "$HOME/.local"
+        tar -xJf /tmp/node.tar.xz -C "$HOME/.local"
+        ln -sfn "$HOME/.local/${NODE_TAR%.tar.xz}" "$HOME/.local/node"
+      else
+        echo "Node.js checksum verification failed — skipping" >&2
+      fi
+      rm -f /tmp/node.tar.xz
+    fi
+  fi
 fi
 
 # --- fzf (GitHub binary, apt version is too old) ---

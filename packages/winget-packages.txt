@@ -3,7 +3,7 @@
 # Install with: winget install --id <PackageId> --exact --accept-source-agreements --accept-package-agreements
 #
 # Mirrors the WSL2 apt-packages.txt + binary-installs.txt for Windows native use
-# Some tools (uv, bun, fnm) install via their own scripts but are also in winget
+# Some tools (uv, bun) install via their own scripts but are also in winget
 
 # === Shell & Terminal ===
 Microsoft.PowerShell              # PowerShell 7 (modern cross-platform shell)
@@ -42,7 +42,7 @@ Python.Python.3.12                # Python 3.12 interpreter
 astral-sh.uv                     # Python package manager and tool installer (replaces pip, pipx)
 
 # === JavaScript Runtimes ===
-Schniz.fnm                        # Fast Node Manager (40x faster than nvm, Rust-based)
+OpenJS.NodeJS.LTS                 # Node.js LTS runtime (system-wide, replaces fnm)
 Oven-sh.Bun                       # JavaScript runtime, bundler, test runner, package manager
 
 # === Prompt ===

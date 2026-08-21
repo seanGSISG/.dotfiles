@@ -19,15 +19,14 @@ chezmoi|https://get.chezmoi.io|v2.69.3+|script
 
 # === JavaScript Runtimes ===
 
-fnm|https://fnm.vercel.app/install|latest|script
-# Fast Node Manager (40x faster than nvm, Rust-based)
-# post-install: eval "$(fnm env --use-on-cd --shell zsh)" in .zshrc
-# post-install: fnm install 22 && fnm default 22 (Node LTS)
-# note: Node.js LTS 22.x — fnm manages Node versions, not installed directly
+node|https://nodejs.org/dist/latest-v24.x/|24 LTS|binary
+# Node.js 24 LTS — official tarball unpacked to ~/.local/node (no version manager)
+# post-install: symlink node/npm/npx/corepack into ~/.local/bin (run_onchange_after_link-node)
+# post-install: npm config set prefix ~/.local (user-writable global installs, no sudo)
 
 bun|https://bun.sh/install|v1.3.4+|script
 # JavaScript runtime, bundler, test runner, package manager (all-in-one)
-# Primary JS runtime for new projects; Node via fnm for compatibility
+# Primary JS runtime for new projects; Node via ~/.local/node tarball for compatibility
 # post-install: shell integration automatic
 
 # === Shell & Prompt ===

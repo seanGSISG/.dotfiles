@@ -8,7 +8,7 @@ Cross-platform dev environment managed by chezmoi. Supports **WSL2 Ubuntu**, **W
 ## What Gets Installed
 
 - **Shell:** zsh (default) with antidote plugins, Starship prompt, 100k history with dedup
-- **Tools:** fzf, zoxide, atuin (shell history), uv (Python), fnm (Node.js), bun (JS runtime)
+- **Tools:** fzf, zoxide, atuin (shell history), uv (Python), Node.js 24 LTS, bun (JS runtime)
 - **Modern CLI:** lsd/eza (ls), bat (cat), dust (du), btop (top), nvim (vim) — conditional aliases
 - **Configs:** git (templated), tmux (TPM, XDG paths), Starship (Pure-style, SSH hostname)
 - **Dev tools:** basedpyright, pre-commit, detect-secrets, just, virtualenv
@@ -39,9 +39,9 @@ That's it. The script clones the repo, installs everything, and deploys configs.
 1. Configures WSL2 (`/etc/wsl.conf` with systemd)
 2. Adds APT repos (GitHub CLI, PowerShell, Charm) and installs 34 system packages
 3. Installs chezmoi and clones this repo
-4. Installs binary tools (Starship, fnm, fzf, uv, bun, age)
+4. Installs binary tools (Starship, fzf, uv, bun, age)
 5. Installs plugin managers (antidote for zsh, TPM for tmux)
-6. Installs Python tools via uv and Node.js 22 LTS via fnm
+6. Installs Python tools via uv and Node.js 24 LTS (official tarball → ~/.local/node)
 7. Backs up existing dotfiles to `~/.dotfiles-backup/<timestamp>/`
 8. Deploys all configs via `chezmoi apply`
 9. Changes default shell to zsh
@@ -103,7 +103,7 @@ Zsh is the primary shell with a modular config structure:
 ~/.config/zsh/
 ├── exports.zsh          # PATH, env vars, history, SSH stty guard
 ├── plugins.zsh          # antidote + completion system
-├── tools.zsh            # fnm, fzf, zoxide, direnv, atuin, cargo
+├── tools.zsh            # node, fzf, zoxide, direnv, atuin, cargo
 ├── functions.zsh        # alias-help, mkcd, extract(), auto-ls
 ├── keybindings.zsh      # Ctrl/Alt+Arrow, Home/End, word deletion
 ├── dgx.zsh              # DGX Spark: CUDA, vLLM, HF env (conditional)
@@ -176,4 +176,4 @@ chezmoi add --encrypt ~/.keys  # Add encrypted file
 
 ## References
 
-- [chezmoi](https://www.chezmoi.io/) | [age](https://github.com/FiloSottile/age) | [Starship](https://starship.rs/) | [antidote](https://getantidote.github.io/) | [fnm](https://github.com/Schniz/fnm)
+- [chezmoi](https://www.chezmoi.io/) | [age](https://github.com/FiloSottile/age) | [Starship](https://starship.rs/) | [antidote](https://getantidote.github.io/) | [Node.js](https://nodejs.org/)

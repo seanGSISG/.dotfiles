@@ -55,7 +55,7 @@ dot_config/zsh/                # Zsh config modules (ZDOTDIR = ~/.config/zsh)
   dot_zshrc.tmpl               # Main .zshrc (pure sourcer, defines load order)
   exports.zsh                  # PATH, env vars, history, SSH stty guard, TERM fallback
   plugins.zsh                  # Antidote plugin manager + completion system
-  tools.zsh                    # fnm, fzf, zoxide, direnv, atuin, cargo
+  tools.zsh                    # node, fzf, zoxide, direnv, atuin, cargo
   functions.zsh                # halp, mkcd, reload, cheat, az-*, extract(), auto-ls
   keybindings.zsh              # Ctrl/Alt+Arrow, Home/End, word deletion
   dgx.zsh.tmpl                 # DGX Spark: CUDA, vLLM, HF env vars (conditional)
@@ -94,7 +94,7 @@ The `.zshrc` sources files in this exact order — order matters:
 
 1. `exports.zsh` — PATH, env vars, history config, SSH stty guard, TERM fallback
 2. `plugins.zsh` — Antidote + compinit (24h cache)
-3. `tools.zsh` — fnm, fzf, zoxide, direnv, atuin, cargo
+3. `tools.zsh` — node, fzf, zoxide, direnv, atuin, cargo
 4. `functions.zsh` — Shell functions, alias-help, extract(), auto-ls chpwd hook
 5. `aliases/*.zsh` — All alias files (loop, includes DGX aliases on Spark)
 6. `dgx.zsh` — DGX Spark env (conditional: `{{ if .is_dgx_spark }}`)

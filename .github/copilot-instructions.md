@@ -67,7 +67,7 @@ chezmoi add --encrypt <file> # Track with age encryption
 The `.zshrc` sources files in this exact order (order matters):
 1. `exports.zsh` - PATH, env vars, history config
 2. `plugins.zsh` - Antidote + compinit (24h cache)
-3. `tools.zsh` - fnm, fzf, zoxide integrations
+3. `tools.zsh` - node, fzf, zoxide integrations
 4. `functions.zsh` - Shell functions and alias-help system
 5. `aliases/*.zsh` - All alias files (loaded in a loop)
 6. `wsl.zsh` - WSL2-specific (conditional via chezmoi template)

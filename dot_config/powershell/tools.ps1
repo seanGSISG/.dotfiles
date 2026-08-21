@@ -2,10 +2,7 @@
 # Each tool is loaded only if available (graceful on fresh machines)
 # Equivalent of: dot_config/zsh/tools.zsh
 
-# --- fnm (Fast Node Manager) ---
-if (Get-Command fnm -ErrorAction SilentlyContinue) {
-    fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
-}
+# --- Node.js (system-wide via winget OpenJS.NodeJS.LTS; on PATH automatically) ---
 
 # --- fzf (Fuzzy Finder) ---
 if (Get-Command fzf -ErrorAction SilentlyContinue) {

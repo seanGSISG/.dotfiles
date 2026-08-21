@@ -268,9 +268,6 @@ install_binary_tools() {
   # Starship prompt
   install_starship
 
-  # fnm (Fast Node Manager)
-  install_fnm
-
   # fzf (fuzzy finder)
   install_fzf
 
@@ -309,24 +306,6 @@ install_starship() {
     rm -f "$tmp"
     log_error "Starship installation failed"
     FAILED_STEPS+=("Starship")
-    return 1
-  fi
-}
-
-install_fnm() {
-  if command -v fnm &>/dev/null; then
-    log_skip "fnm already installed"
-    SKIPPED+=("fnm")
-    return 0
-  fi
-
-  log_info "Installing fnm..."
-  if bash -c "$(curl -fsSL https://fnm.vercel.app/install)" -- --skip-shell </dev/null >/dev/null 2>&1; then
-    log_success "fnm installed"
-    INSTALLED+=("fnm")
-  else
-    log_error "fnm installation failed"
-    FAILED_STEPS+=("fnm")
     return 1
   fi
 }
@@ -621,35 +600,52 @@ install_python_tools() {
 install_node_tools() {
   section_header "Node.js & JavaScript Tools"
 
-  # Ensure fnm is on PATH (installs to ~/.local/share/fnm by default)
-  export PATH="$HOME/.local/share/fnm:$HOME/.local/bin:$PATH"
+  export PATH="$HOME/.local/bin:$PATH"
 
-  # Verify fnm is available
-  if ! command -v fnm &>/dev/null; then
-    log_error "fnm not found - Node.js tools installation skipped"
-    FAILED_STEPS+=("Node.js tools (fnm required)")
-    return 1
-  fi
-
-  # Check if Node LTS is already installed
-  if fnm list 2>/dev/null | grep -q "22"; then
-    log_skip "Node.js 22 (LTS) already installed"
-    SKIPPED+=("Node.js 22")
+  # Install Node.js 24 LTS from the official tarball (no version manager)
+  if [ -x "$HOME/.local/node/bin/node" ]; then
+    log_skip "Node.js already installed ($("$HOME/.local/node/bin/node" --version))"
+    SKIPPED+=("Node.js")
   else
-    log_info "Installing Node.js 22 (LTS)..."
-    if fnm install 22 >/dev/null 2>&1; then
-      log_success "Node.js 22 (LTS) installed"
-      INSTALLED+=("Node.js 22")
+    log_info "Installing Node.js 24 (LTS)..."
+    local node_arch
+    case "$(uname -m)" in
+      x86_64)  node_arch="x64" ;;
+      aarch64) node_arch="arm64" ;;
+      armv7l)  node_arch="armv7l" ;;
+      *)       node_arch="" ;;
+    esac
+    if [ -z "$node_arch" ]; then
+      log_error "Unsupported architecture for Node.js: $(uname -m)"
+      FAILED_STEPS+=("Node.js")
     else
-      log_error "Node.js installation failed"
-      FAILED_STEPS+=("Node.js 22")
-      return 1
+      local base="https://nodejs.org/dist/latest-v24.x" sha pkg
+      sha=$(curl -fsSL "$base/SHASUMS256.txt" | grep "linux-${node_arch}.tar.xz$" || true)
+      pkg=$(printf '%s' "$sha" | awk '{print $2}')
+      if [ -n "$pkg" ] \
+        && curl -fsSL "$base/$pkg" -o /tmp/node.tar.xz \
+        && printf '%s  /tmp/node.tar.xz\n' "$(printf '%s' "$sha" | awk '{print $1}')" | sha256sum -c - >/dev/null 2>&1 \
+        && mkdir -p "$HOME/.local" \
+        && tar -xJf /tmp/node.tar.xz -C "$HOME/.local" \
+        && ln -sfn "$HOME/.local/${pkg%.tar.xz}" "$HOME/.local/node"; then
+        log_success "Node.js installed ($("$HOME/.local/node/bin/node" --version))"
+        INSTALLED+=("Node.js")
+      else
+        log_error "Node.js installation failed"
+        FAILED_STEPS+=("Node.js")
+      fi
+      rm -f /tmp/node.tar.xz
     fi
   fi
 
-  # Always ensure default is set, THEN activate so node is on PATH
-  fnm default 22 >/dev/null 2>&1 || true
-  eval "$(fnm env --use-on-cd)" 2>/dev/null || true
+  # Symlink node/npm/npx/corepack into ~/.local/bin and pin npm's global prefix
+  if [ -x "$HOME/.local/node/bin/node" ]; then
+    for b in node npm npx corepack; do
+      ln -sfn "$HOME/.local/node/bin/$b" "$HOME/.local/bin/$b"
+    done
+    "$HOME/.local/node/bin/npm" config set prefix "$HOME/.local" >/dev/null 2>&1 || true
+    export PATH="$HOME/.local/bin:$PATH"
+  fi
 }
 
 install_mermaid_cli() {
@@ -1000,7 +996,7 @@ main() {
   # Ensure ~/.local/bin exists and set PATH to match shell configs
   # This ensures command -v checks work for already-installed tools on re-runs
   mkdir -p "$HOME/.local/bin"
-  export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$HOME/.bun/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
+  export PATH="$HOME/.local/bin:$HOME/.bun/bin:$HOME/.opencode/bin:$HOME/.fzf/bin:$PATH"
 
   # Run all sections via run_step
   # Phase 1: System foundation + repo clone

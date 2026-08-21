@@ -1,10 +1,7 @@
 # Tool integrations
 # Each tool is loaded only if available (graceful on fresh machines)
 
-# --- fnm (Fast Node Manager) ---
-if command -v fnm &>/dev/null; then
-  eval "$(fnm env --use-on-cd --shell zsh)"
-fi
+# --- Node.js (Node 24 LTS at ~/.local/node, symlinked into ~/.local/bin; fnm removed 2026-07-16) ---
 
 # --- fzf (Fuzzy Finder) ---
 if [ -f ~/.fzf.zsh ]; then
