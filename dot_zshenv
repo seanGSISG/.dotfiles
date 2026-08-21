@@ -4,3 +4,17 @@ export ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
 
 # Skip system compinit (we run our own in plugins.zsh)
 skip_global_compinit=1
+
+# --- mise shims (tool version pinning) ---
+# Deliberately in .zshenv, NOT .zshrc: zsh sources this file on EVERY invocation,
+# so non-interactive shells (scripts, CI, agent/herdr panes) also get the pinned
+# toolchain. .zshrc is never sourced there. Each shim resolves to whatever the
+# nearest mise.toml pins, and falls through to the normal PATH outside a project.
+# Guarded: this file re-runs in every nested zsh, so an unconditional prepend
+# would grow PATH without bound.
+if [[ -d "$HOME/.local/share/mise/shims" ]]; then
+  case ":$PATH:" in
+    *":$HOME/.local/share/mise/shims:"*) ;;
+    *) export PATH="$HOME/.local/share/mise/shims:$PATH" ;;
+  esac
+fi
