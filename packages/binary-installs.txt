@@ -13,6 +13,13 @@ uv|https://astral.sh/uv/install.sh|latest|script
 # Python package manager and tool installer (replaces pip, pipx)
 # post-install: shell integration automatic (adds to PATH via .local/bin)
 
+mise|https://mise.run|v2026.8.10+|script
+# Per-project toolchain pinning via shims (no shell hook, so non-interactive
+# shells get the pin too). Shims go on PATH in both .zshenv files and are
+# re-prepended in tools.zsh after exports.zsh.
+# post-install: nothing — outside a project with a mise.toml the shims fall
+# through to the Node 24 tarball and ~/.local/bin/uv.
+
 chezmoi|https://get.chezmoi.io|v2.69.3+|script
 # Dotfiles manager with templating and encryption
 # post-install: chezmoi init --apply (handled by bootstrap itself)
@@ -39,6 +46,13 @@ antidote|https://github.com/mattmc3/antidote|latest|git
 # Lightweight zsh plugin manager (replaces Oh My Zsh)
 # install: git clone --depth=1 to ~/.antidote
 # post-install: source ~/.antidote/antidote.zsh in .zshrc
+
+# === Agent CLIs ===
+
+codeagent-wrapper|(bundled with CCG)|n/a|binary
+# CCG multi-model collaboration wrapper at ~/.claude/bin/codeagent-wrapper.
+# 5.3 MB binary — deliberately NOT tracked by chezmoi; ~/.claude/bin is in
+# .chezmoiignore. PATH entry lives in dot_config/zsh/exports.zsh.
 
 # === Security ===
 

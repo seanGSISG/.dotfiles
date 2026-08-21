@@ -140,12 +140,20 @@ Bash is a minimal fallback that sources the same alias files and shows a hint to
 │   ├── starship.toml              # Starship prompt (SSH hostname support)
 │   ├── tmux/tmux.conf             # tmux config (XDG path)
 │   ├── zsh/                       # Modular zsh config + aliases
+│   ├── git/ignore                 # Global gitignore
+│   ├── gh/private_config.yml      # gh CLI prefs (hosts.yml excluded: OAuth token)
+│   ├── zed/, herdr/, opencode/    # Editor and agent tool configs
 │   └── powershell/                # PowerShell 7 config (Windows)
+├── dot_claude/                    # Claude Code: hand-written files only
+│   │                              # (GSD-installed agents/hooks are ignored)
+│   └── encrypted_private_settings.json.age  # settings.json — holds API keys
+├── dot_codex/                     # Codex: config, AGENTS.md, CCG agents/hooks
+├── private_dot_npmrc              # npm global prefix → ~/.local
 ├── bin/executable_cf-sync         # Cloudflare tunnel sync (DGX only)
 ├── private_dot_dgxspark/          # DGX Spark utilities (DGX only)
 ├── Documents/PowerShell/          # PowerShell profile (Windows)
 ├── AppData/                       # Windows Terminal settings (Windows)
-├── dot_ssh/                       # SSH keys (age-encrypted)
+├── private_dot_ssh/               # SSH keys (age-encrypted)
 ├── encrypted_dot_secrets.env.age  # Encrypted secrets
 ├── packages/
 │   ├── apt-packages.txt           # System packages manifest (Linux)

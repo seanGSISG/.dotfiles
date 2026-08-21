@@ -54,8 +54,8 @@ Template variables in `.chezmoi.toml.tmpl` control per-machine behavior:
 dot_config/zsh/                # Zsh config modules (ZDOTDIR = ~/.config/zsh)
   dot_zshrc.tmpl               # Main .zshrc (pure sourcer, defines load order)
   exports.zsh                  # PATH, env vars, history, SSH stty guard, TERM fallback
-  plugins.zsh                  # Antidote plugin manager + completion system
-  tools.zsh                    # node, fzf, zoxide, direnv, atuin, cargo
+  plugins.zsh                  # Antidote plugin manager + completion system (fpath additions go here, pre-compinit)
+  tools.zsh                    # node, fzf, zoxide, direnv, atuin, cargo, bun, mise shims
   functions.zsh                # halp, mkcd, reload, cheat, az-*, extract(), auto-ls
   keybindings.zsh              # Ctrl/Alt+Arrow, Home/End, word deletion
   dgx.zsh.tmpl                 # DGX Spark: CUDA, vLLM, HF env vars (conditional)
@@ -81,6 +81,21 @@ packages/
   apt-packages.txt             # APT manifest (34 packages, documented)
   uv-tools.txt                 # Python tools via uv
   binary-installs.txt          # Reference for manually-installed binaries
+dot_claude/                    # Claude Code config — HAND-WRITTEN FILES ONLY
+  CLAUDE.md                    # Global agent instructions (~/.claude/CLAUDE.md)
+  encrypted_private_settings.json.age  # settings.json (holds Tavily/Honcho API keys)
+  agents/                      # code-architect, code-explorer (the two not from GSD)
+  commands/docs.md
+  hooks/herdr-agent-state.sh
+dot_codex/                     # Codex config — hand-written + CCG only
+  private_config.toml, AGENTS.md, hooks.json
+  agents/ccg-*.toml, hooks/ccg-workflow.py
+dot_config/git/ignore          # Global gitignore
+dot_config/gh/private_config.yml  # gh CLI prefs (hosts.yml is ignored — holds OAuth token)
+dot_config/zed/private_settings.json
+dot_config/herdr/symlink_config.toml.tmpl  # Symlink → ~/projects/herdr-control/config/
+dot_config/cship.toml, dot_config/opencode/tui.jsonc, dot_config/private_toad/
+private_dot_npmrc              # npm global prefix → ~/.local
 private_dot_ssh/               # SSH keys (age-encrypted)
 encrypted_dot_secrets.env.age  # Secrets (age-encrypted → ~/.secrets.env)
 run_once_before_install-tools.sh.tmpl  # Auto-install CLI tools (starship, zoxide, etc.)
@@ -94,7 +109,7 @@ The `.zshrc` sources files in this exact order — order matters:
 
 1. `exports.zsh` — PATH, env vars, history config, SSH stty guard, TERM fallback
 2. `plugins.zsh` — Antidote + compinit (24h cache)
-3. `tools.zsh` — node, fzf, zoxide, direnv, atuin, cargo
+3. `tools.zsh` — node, fzf, zoxide, direnv, atuin, cargo, bun, mise shims (re-prepended after exports.zsh)
 4. `functions.zsh` — Shell functions, alias-help, extract(), auto-ls chpwd hook
 5. `aliases/*.zsh` — All alias files (loop, includes DGX aliases on Spark)
 6. `dgx.zsh` — DGX Spark env (conditional: `{{ if .is_dgx_spark }}`)
@@ -120,4 +135,17 @@ The `.zshrc` sources files in this exact order — order matters:
 - **`.chezmoiignore` matters** — Files listed there (README.md, packages/, bootstrap.sh, etc.) are NOT deployed by chezmoi. DGX/WSL conditional blocks exclude platform-specific files.
 - **ZDOTDIR architecture** — `~/.zshenv` sets `ZDOTDIR=~/.config/zsh` so all zsh config lives under XDG.
 - **Age encryption key** — Lives at `~/.config/age/keys.txt`, sourced from Bitwarden. Never committed to git.
+- **Agent config is installer-owned — track only hand-written files.** The GSD installer owns 47 of
+  49 `~/.claude/agents`, 26 of 31 `~/.claude/hooks`, and (via `gsd-core/bin/lib/codex-agent-toml.cjs`)
+  the `gem-*` agents under `~/.codex`. It tracks them in `~/.claude/gsd-file-manifest.json`. If chezmoi
+  also managed them, `apply` would revert GSD updates and GSD updates would read as permanent chezmoi
+  drift. `.chezmoiignore` excludes them deliberately — do not `chezmoi add` those directories wholesale.
+- **`~/.claude/settings.json` is written at runtime.** Claude Code rewrites it when you change settings
+  in-app, so expect it to show as drift. Re-capture with `chezmoi re-add ~/.claude/settings.json`
+  rather than letting `apply` clobber an in-app change. It is encrypted because it holds API keys.
+- **Node resolves in two tiers.** `mise` shims come first on PATH (set in both `.zshenv` files and
+  re-prepended in `tools.zsh` after `exports.zsh`), so a project's `mise.toml` wins inside that project.
+  Outside one, the shims fall through to the Node 24 tarball at `~/.local/node` that
+  `run_onchange_after_link-node.sh` symlinks into `~/.local/bin`. Both layers are intentional: the
+  tarball is what serves scripts, cron, and agent subshells that never load a project config.
 - **`skip_global_compinit=1`** — Set in `.zshenv` to prevent system compinit. Custom compinit runs in `plugins.zsh` with caching.
