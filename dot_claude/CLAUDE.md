@@ -12,10 +12,8 @@ Here are some of my preferences so we can be more aligned as we work together.
 - Typesafety is useful, take advantage of it.
 - You are encouraged to propose bold ideas if they can meaningfully benefit our work.
 - Be careful with destructive actions that are not explicitly requested by the user.
-- Tests are good!  Endless smoke tests, "regression tests" for feature deletions, etc., much less good.  Tests should
-be focused, not slop.
-- Comments are a great way to clarify functionality and how code is used for both the user and any future agent.  Do not
-comment every line but feel free to describe (concisely) how functions are used above function definitions, classes, etc.
+- Tests are good!  Endless smoke tests, "regression tests" for feature deletions, etc., much less good.  Tests should be focused, not slop.
+- Comments are a great way to clarify functionality and how code is used for both the user and any future agent.  Do not comment every line but feel free to describe (concisely) how functions are used above function definitions, classes, etc.
 - Keep comments up to date!  When making changes, it's vital to keep things in sync.
 
 ## Coding Preferences (PowerShell focused)
@@ -34,8 +32,7 @@ everywhere.
 - Avoid one-line functions that are just casting wrappers.
 - Write TypeScript in ways that Matt Pocock and Theo would be proud of.
 - If not already specified in project, I generally like to use the following tech: Convex, Tailwind, React, Vite, Bun/pnpm
-- When building more complex web and react native apps, I like to pull in Zustand, React Query, Tanstack Start, Clerk (or 
-better-auth if selfhosting), and ArkType (or zod if perf isn't an issue)
+- When building more complex web and react native apps, I like to pull in Zustand, React Query, Tanstack Start, Clerk (or better-auth if selfhosting), and ArkType (or zod if perf isn't an issue)
 
 ## Questions are read-only
 
