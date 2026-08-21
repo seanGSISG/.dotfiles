@@ -45,7 +45,7 @@ if [ -f /etc/dgx-release ]; then
   fi
 fi
 
-# --- Global Settings (hooks + disabled servers) ---
+# --- Global Settings (disabled servers) ---
 # claude mcp add-json strips the "disabled" field, so we set it via python
 python3 << 'PYEOF'
 import json, os
@@ -63,43 +63,13 @@ if os.path.exists(claude_json):
         f.write("\n")
     print("Disabled MCP servers: codex, Lokka")
 
-# --- Global hooks ---
-settings_path = os.path.expanduser("~/.claude/settings.json")
-if os.path.exists(settings_path):
-    with open(settings_path, "r") as f:
-        settings = json.load(f)
-else:
-    settings = {}
-
-settings["hooks"] = {
-    "SessionStart": [
-        {
-            "matcher": "",
-            "hooks": [
-                {
-                    "type": "command",
-                    "command": "echo '🧠 SESSION START: Read MEMORY.md and check for relevant context before responding.'"
-                }
-            ]
-        }
-    ],
-    "Stop": [
-        {
-            "hooks": [
-                {
-                    "type": "command",
-                    "command": "echo '📝 MEMORY CHECK: If this conversation produced useful insights, decisions, or fixes — update MEMORY.md directly. Skip if nothing worth persisting.'"
-                }
-            ]
-        }
-    ]
-}
-
-with open(settings_path, "w") as f:
-    json.dump(settings, f, indent=2)
-    f.write("\n")
-
-print("Claude Code hooks configured")
+# --- Hooks are deliberately NOT managed here ---
+# This script used to do `settings["hooks"] = {...}`, a wholesale replacement.
+# That silently deleted every hook installed by GSD, context-mode, honcho, and
+# herdr — 20 hook groups across 7 events — and because this is run_onchange_,
+# it did so again on every edit to this file. Those installers own the hooks and
+# write settings.json themselves. If you need a hook here, merge one key; never
+# reassign settings["hooks"].
 PYEOF
 
-echo "Claude Code MCP servers and hooks configured."
+echo "Claude Code MCP servers configured."
