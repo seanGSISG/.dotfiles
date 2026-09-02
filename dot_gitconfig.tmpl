@@ -6,7 +6,7 @@
 	email = {{ .git_email | quote }}
 
 [core]
-	editor = {{ .editor | default "code --wait" | quote }}
+{{ if .is_dgx_spark }}	# editor intentionally unset: dgx.zsh picks zed (desktop) or micro (ssh){{ else }}	editor = {{ .editor | default "code --wait" | quote }}{{ end }}
 	autocrlf = input
 	pager = delta
 

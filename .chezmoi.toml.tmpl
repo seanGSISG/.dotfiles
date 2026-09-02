@@ -13,6 +13,7 @@ hostname = "{{ .chezmoi.hostname }}"
 username = '{{ .chezmoi.username }}'
 git_name = "seanGSISG"
 git_email = "sswanson@gsisg.com"
+# Non-DGX machines only; Spark sets $EDITOR at runtime in dgx.zsh.
 editor = "code --wait"
 {{- $isDgxSpark := false -}}
 {{- if stat "/etc/dgx-release" -}}

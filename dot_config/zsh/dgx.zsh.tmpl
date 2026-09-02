@@ -3,20 +3,33 @@
 # Loaded only on DGX systems (guarded by chezmoi template)
 
 # --- CUDA paths ---
+# lib64 is deliberately NOT added to LD_LIBRARY_PATH: /etc/ld.so.conf.d/000_cuda.conf
+# already indexes targets/sbsa-linux/lib (what lib64 symlinks to), so the export was
+# redundant — and it expanded with a trailing ':', which makes the loader search $PWD.
 export CUDA_HOME="/usr/local/cuda"
 export PATH="/usr/local/cuda/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH:-}"
 
-# --- Blackwell SM120 / vLLM optimizations ---
-export TORCH_CUDA_ARCH_LIST="12.1a"
-export TRITON_PTXAS_PATH="/usr/local/cuda/bin/ptxas"
-export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
-export VLLM_USE_FLASHINFER_MXFP4_MOE=1
-export VLLM_FLASHINFER_MOE_BACKEND="latency"
+# --- vLLM / PyTorch tuning: NOT HERE ---
+# Removed 2026-09-02. vLLM runs in the `vllm_node` container; there is no host torch
+# or vllm, and Docker does not inherit the host shell env. The live values are baked
+# into the vllm-node image (TORCH_CUDA_ARCH_LIST, FLASHINFER_CUDA_ARCH_LIST,
+# TRITON_PTXAS_PATH) plus `docker run -e` (PYTORCH_CUDA_ALLOC_CONF). The copy that
+# used to live here had already drifted from the image. Edit the vLLM Dockerfile /
+# run flags instead — changing anything here will have no effect on serving.
 
 # --- HuggingFace ---
 # Use default ~/.cache/huggingface (don't override HF_HOME)
 
 # --- Editor (SSH environment, no VS Code) ---
-export EDITOR="nvim"
+# Overrides exports.zsh's `code` default; dgx.zsh is sourced after exports.zsh.
+# Spark is used both at the desktop and over SSH, so the editor is chosen per
+# session rather than per machine: a GUI editor as $EDITOR hangs a `git commit`
+# on a display-less SSH login. git has no core.editor on this host (see
+# dot_gitconfig.tmpl) precisely so it inherits whichever one this picks.
+if [[ -n "${DISPLAY:-}" || -z "${SSH_CONNECTION:-}" ]]; then
+  export EDITOR="zed --wait"
+else
+  export EDITOR="micro"
+fi
+export VISUAL="$EDITOR"
 {{ end -}}
