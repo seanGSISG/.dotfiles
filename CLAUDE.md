@@ -148,4 +148,9 @@ The `.zshrc` sources files in this exact order — order matters:
   Outside one, the shims fall through to the Node 24 tarball at `~/.local/node` that
   `run_onchange_after_link-node.sh` symlinks into `~/.local/bin`. Both layers are intentional: the
   tarball is what serves scripts, cron, and agent subshells that never load a project config.
+- **WSL runs with `appendWindowsPath=false`.** The ~58 appended `/mnt/c` dirs made every mise shim
+  call ~1.2s (it scans PATH over the 9p mount), which every Claude Code node hook paid. The Windows
+  programs we still use (`code`, `clip.exe`, `explorer.exe`, `powershell.exe`, `cmd.exe`, `wsl.exe`,
+  `wezterm.exe`) are symlinked into `~/.local/bin` by `run_onchange_after_link-windows-bins.sh`. Need
+  another one? Add it to that script's `BINS` table; do not put a Windows dir back on PATH.
 - **`skip_global_compinit=1`** — Set in `.zshenv` to prevent system compinit. Custom compinit runs in `plugins.zsh` with caching.

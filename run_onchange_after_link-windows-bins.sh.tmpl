@@ -1,0 +1,45 @@
+#!/bin/bash
+# Symlink the few Windows programs Linux tooling uses into ~/.local/bin, so WSL
+# can run with appendWindowsPath=false (see bootstrap.sh configure_wsl).
+#
+# Why: the appended Windows PATH is ~58 /mnt/c dirs, and every mise shim scans
+# them over WSL's slow 9p mount. That made each `node` call ~1.2s instead of
+# ~30ms, including every Claude Code hook. Symlinks keep the programs without
+# putting their directories back on PATH.
+# run_onchange_after_ re-runs whenever this script's content changes.
+
+set -euo pipefail
+
+{{ if .is_wsl -}}
+
+WIN_USER="$(/mnt/c/Windows/System32/cmd.exe /c 'echo %USERNAME%' 2>/dev/null | tr -d '\r')"
+WIN_HOME="/mnt/c/Users/$WIN_USER"
+
+# name in ~/.local/bin -> Windows path
+declare -A BINS=(
+  [code]="$WIN_HOME/AppData/Local/Programs/Microsoft VS Code/bin/code"
+  [clip.exe]="/mnt/c/Windows/System32/clip.exe"
+  [explorer.exe]="/mnt/c/Windows/explorer.exe"
+  [powershell.exe]="/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+  [cmd.exe]="/mnt/c/Windows/System32/cmd.exe"
+  [wsl.exe]="/mnt/c/Windows/System32/wsl.exe"
+  [wezterm.exe]="/mnt/c/Program Files/WezTerm/wezterm.exe"
+)
+
+mkdir -p "$HOME/.local/bin"
+for bin in "${!BINS[@]}"; do
+  src="${BINS[$bin]}"
+  dest="$HOME/.local/bin/$bin"
+  if [ ! -e "$src" ]; then
+    echo "$bin: $src not found, skipping"
+    continue
+  fi
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+    echo "$bin: symlink already correct"
+  else
+    echo "$bin: linking $dest -> $src"
+    ln -sfn "$src" "$dest"
+  fi
+done
+
+{{ end -}}

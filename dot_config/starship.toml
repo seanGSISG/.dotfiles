@@ -58,7 +58,7 @@ behind = '⇣${count}'
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'
 up_to_date = '✓'
 untracked = '?'
-stashed = '$'
+stashed = '\$'
 modified = '!'
 staged = '+'
 renamed = '»'
@@ -80,6 +80,11 @@ detect_files = ['.python-version', 'Pipfile', 'pyproject.toml', 'requirements.tx
 # Node.js
 # ===================================
 [nodejs]
+# Disabled: rendering $version shells out to the mise `node` shim, which
+# starts the full mise binary on every prompt and trips starship's
+# command_timeout. Shims stay on PATH for toolchain pinning; only the
+# prompt decoration is dropped.
+disabled = true
 symbol = ' '
 format = 'via [$symbol($version )]($style)'
 style = 'bold green'

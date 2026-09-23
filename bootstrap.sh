@@ -133,7 +133,10 @@ systemd=true
 
 [interop]
 enabled=true
-appendWindowsPath=true
+# The Windows PATH (~58 /mnt/c dirs) makes every mise shim ~1.2s. The few
+# Windows programs we use are symlinked into ~/.local/bin by
+# run_onchange_after_link-windows-bins.sh.tmpl instead.
+appendWindowsPath=false
 EOF
 
   log_success "/etc/wsl.conf configured (WSL restart required: wsl.exe --shutdown)"
