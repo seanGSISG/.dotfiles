@@ -67,3 +67,8 @@ setopt AUTO_CD              # cd by typing directory name
 setopt AUTO_PUSHD           # push directories to stack
 setopt PUSHD_IGNORE_DUPS    # no duplicates in dir stack
 setopt PUSHD_SILENT         # don't print dir stack after pushd/popd
+
+# --- claudecodex ---
+# Launcher is ~/.local/bin/claudecodex (env-var driven, no config file).
+# Model stays gpt-5.6-sol; drop thinking effort from max to xhigh.
+export CLAUDECODEX_EFFORT=xhigh

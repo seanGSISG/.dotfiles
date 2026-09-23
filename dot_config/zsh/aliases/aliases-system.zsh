@@ -4,6 +4,7 @@
 # Claude Code
 alias cc='claude'
 alias ccd='claude --dangerously-skip-permissions'
+alias ccx='claudecodex'  # Claude Code via GPT-5.6 (Codex proxy)
 
 # Azure Key Vault (GSI)
 alias az-login='az login --tenant 07e978d3-49bb-4f6c-948d-2908f2e20014'
